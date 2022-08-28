@@ -49,5 +49,5 @@ for i in range(5):
 
 print(f"El mas caro de los barbijos tiene una cantidad de:  {cantidad_barbijo}  y es fabricado por {fabricante_barbijo} ")
 print(f"El item con mas unidades es de fabricante:  {fabricante_mas_unidades} y tiene {item_mas_unidades}  unidades")
-print(f"La cantidad de jabones es: ({acumulador_jabon}")
+print(f"La cantidad de jabones es: {acumulador_jabon}")
 print(f"Gracias por usar el programa")
