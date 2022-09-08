@@ -237,10 +237,8 @@ while(True):
     elif (opcion == "11"):
         calcular_cantidad_inteligencia()
     elif (opcion == "12"):
-        calcular_cantidad_pelo()
+        calcular_cantidad_pelo()                                              
     elif (opcion == "13"):
-        calcular_cantidad_pelo()                                               
-    elif (opcion == "14"):
         break
 '''
 grupo_ojos = []
