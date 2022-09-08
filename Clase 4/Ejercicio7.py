@@ -108,7 +108,70 @@ def calcular_promedio_altura_femenino():
 
     print("Promedio de altura: {0}".format(acumulador_femenino / contador_femenino))  
 
-    print("-------------------------------------\n")        
+    print("-------------------------------------\n")   
+
+def calcular_cantidad_ojos():
+    colores_de_ojos = []
+    for color_ojos in lista_personajes:
+        colores_de_ojos.append(color_ojos["color_ojos"])
+
+    colores_de_ojos = set(colores_de_ojos)
+
+    lista_colores_ojos = []
+    for color in colores_de_ojos:
+        dic_color_ojos={"color":color,"cantidad":0}
+        for personaje in lista_personajes:
+            if (personaje["color_ojos"] == color):
+                dic_color_ojos["cantidad"] += 1
+
+        lista_colores_ojos.append(dic_color_ojos)        
+
+    for lista in lista_colores_ojos:
+        print("Color: {0} - Cantidad: {1}".format(lista["color"],lista["cantidad"]))
+    print("------------------------\n")
+
+def calcular_cantidad_pelo():
+    colores_de_pelo = []
+    for color_pelo in lista_personajes:
+        colores_de_pelo.append(color_pelo["color_pelo"])
+
+    colores_de_pelo = set(colores_de_pelo)
+
+    lista_colores_de_pelo = []
+    for color in colores_de_pelo:
+        dic_color_pelo={"color":color,"cantidad":0}
+        for personaje in lista_personajes:
+            if (personaje["color_pelo"] == color):
+                dic_color_pelo["cantidad"] += 1
+
+        lista_colores_de_pelo.append(dic_color_pelo)        
+
+    for lista in lista_colores_de_pelo:
+        print("Color: {0} - Cantidad: {1}".format(lista["color"],lista["cantidad"]))
+    
+def calcular_cantidad_inteligencia():
+    nivel_inteligencia = []
+    for inteligencia in lista_personajes:
+        nivel_inteligencia.append(inteligencia["inteligencia"])
+
+    nivel_inteligencia = set(nivel_inteligencia)
+
+    lista_inteligencia = []
+    for nivel in nivel_inteligencia:
+        if (nivel == ""):
+            nivel = "No tiene"
+        dic_inteligencia={"inteligencia":nivel,"cantidad":0}
+        for personaje in lista_personajes:
+            if (personaje["inteligencia"] == ""):
+                personaje["inteligencia"] = "No tiene"
+            if (personaje["inteligencia"] == nivel):
+                dic_inteligencia["cantidad"] += 1
+        lista_inteligencia.append(dic_inteligencia)        
+
+    for lista in lista_inteligencia:
+        print("Inteligencia: {0} - Cantidad: {1}".format(lista["inteligencia"],lista["cantidad"]))
+
+
 '''
 lista_heroes =
 [
@@ -137,10 +200,19 @@ lista_heroes =
    "inteligencia": "average"
  }
 ]
-'''
 
+'''
 while(True):
-    opcion = input("Elija una opcion: \n1 = Lista de Heroes  \n2 = Lista de Heroinas \n3 = Heroe mas alto\n4 = Heroina mas alta\n5 = Heroe mas bajo\n6 = Heroina mas baja\n7 = Promedio de altura masculino\n8 = Promedio de altura femenino\n\n> ")
+    opcion = input("Elija una opcion: \n"
+                   "1 = Lista de Heroes  \n"
+                   "2 = Lista de Heroinas \n"
+                   "3 = Heroe mas alto\n"
+                   "4 = Heroina mas alta\n"
+                   "5 = Heroe mas bajo\n"
+                   "6 = Heroina mas baja\n"
+                   "7 = Promedio de altura masculino\n"
+                   "8 = Promedio de altura femenino\n"
+                   "9 = Cantidad ojos\n\n> ")
 
     if (opcion == "1"):
         calcular_nombre_heroes()
@@ -159,57 +231,34 @@ while(True):
     elif (opcion == "8"):
         calcular_promedio_altura_femenino()
     elif (opcion == "9"):
-        pass                           
+        calcular_cantidad_ojos()
     elif (opcion == "10"):
+        calcular_cantidad_pelo()
+    elif (opcion == "11"):
+        calcular_cantidad_inteligencia()
+    elif (opcion == "12"):
+        calcular_cantidad_pelo()
+    elif (opcion == "13"):
+        calcular_cantidad_pelo()                                               
+    elif (opcion == "14"):
         break
- 
- 
 '''
-contador_brown = 0
-contador_green = 0
-contador_blue = 0
-contador_yellow = 0
-contador_yellow_iris = 0
-contador_hazel = 0
-contador_red = 0
-contador_silver = 0
-
+grupo_ojos = []
+lista_grupo_ojos = []
 for personaje in lista_personajes:
-    if (personaje["color_ojos"] == "Brown"):
-        contador_brown += 1
-    elif (personaje["color_ojos"] == "Green"):
-        contador_green += 1
-    elif (personaje["color_ojos"] == "Blue"):
-        contador_blue += 1
-    elif (personaje["color_ojos"] == "Yellow"):
-        contador_yellow += 1
-    elif (personaje["color_ojos"] == "Yellow (without irises)"):
-        contador_yellow_iris += 1
-    elif (personaje["color_ojos"] == "Hazel"):
-        contador_hazel += 1
-    elif (personaje["color_ojos"] == "Red"):
-        contador_red += 1
-    elif (personaje["color_ojos"] == "Silver"):
-        contador_silver += 1    
+    dic_ojos = {}
+    dic_ojos["nombre"] = personaje["nombre"]
+    dic_ojos["color"] = personaje["color_ojos"]
+    grupo_ojos.append(dic_ojos)
+    i = 0
+    for ojos in grupo_ojos:
+        if (ojos["color"] == ojos[0]["color"]):
+            print("hola")
+            i += 1
 
-for personaje in lista_personajes:
-    if (personaje["color_pelo"] == "Brown"):
-        contador_brown += 1
-    elif (personaje["color_pelo"] == "Green"):
-        contador_green += 1
-    elif (personaje["color_pelo"] == "Black"):
-        contador_blue += 1
-    elif (personaje["color_pelo"] == "Yellow"):
-        contador_yellow += 1
-    elif (personaje["color_pelo"] == "Red / Orange"):
-        contador_yellow_iris += 1
-    elif (personaje["color_pelo"] == "Blond"):
-        contador_hazel += 1
-    elif (personaje["color_pelo"] == "White"):
-        contador_red += 1
-    elif (personaje["color_pelo"] == "Silver"):
-        contador_silver += 1  
 
-'''
+        
+print(grupo_ojos)
+'''   
 
 
