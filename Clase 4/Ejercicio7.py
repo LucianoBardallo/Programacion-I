@@ -158,19 +158,83 @@ def calcular_cantidad_inteligencia():
 
     lista_inteligencia = []
     for nivel in nivel_inteligencia:
-        if (nivel == ""):
-            nivel = "No tiene"
         dic_inteligencia={"inteligencia":nivel,"cantidad":0}
         for personaje in lista_personajes:
-            if (personaje["inteligencia"] == ""):
-                personaje["inteligencia"] = "No tiene"
             if (personaje["inteligencia"] == nivel):
                 dic_inteligencia["cantidad"] += 1
         lista_inteligencia.append(dic_inteligencia)        
-
+    
+    imprimir_lista(lista_inteligencia,"inteligencia")
+'''
     for lista in lista_inteligencia:
+        if (lista["inteligencia"] == ""):
+          lista["inteligencia"] = "No tiene"  
         print("Inteligencia: {0} - Cantidad: {1}".format(lista["inteligencia"],lista["cantidad"]))
+'''
 
+def imprimir_lista(lista:list,clave:str):
+    for dato in lista:
+        if (dato[clave] == ""):
+            dato[clave] = "No tiene"  
+        print("{2} - {0} - Cantidad: {1}".format(dato[clave],dato["cantidad"],clave))  
+
+def agrupar_heroes_por_ojos():
+    grupo_ojos = []
+    for personaje in lista_personajes:
+        grupo_ojos.append(personaje["color_ojos"])
+
+    grupo_ojos = set(grupo_ojos)
+
+    lista_nombre_por_ojos = []
+    for ojos in grupo_ojos:
+        dic_ojos = {"ojos":ojos,"heroe":[]}
+        for personaje in lista_personajes:
+            if (personaje["color_ojos"] == ojos):
+                dic_ojos["heroe"].append(personaje["nombre"])
+        lista_nombre_por_ojos.append(dic_ojos)                
+
+    for lista in lista_nombre_por_ojos:
+        print("Color de ojos: {0} - Heroe: {1}".format(lista["ojos"],lista["heroe"]))
+
+def agrupar_heroes_por_pelo():    
+    grupo_pelo = []
+    for personaje in lista_personajes:
+        grupo_pelo.append(personaje["color_pelo"])
+
+    grupo_pelo = set(grupo_pelo)
+
+    lista_nombre_por_pelo = []
+    for pelo in grupo_pelo:
+        dic_pelo = {"pelo":pelo,"heroe":[]}
+        for personaje in lista_personajes:
+            if (personaje["color_pelo"] == pelo):
+                dic_pelo["heroe"].append(personaje["nombre"])
+        lista_nombre_por_pelo.append(dic_pelo)                
+
+    for lista in lista_nombre_por_pelo:
+        if (lista["pelo"] == ""):
+            lista["pelo"] = "Sin pelo"
+        print("Color de pelo: {0} - Heroe: {1}".format(lista["pelo"],lista["heroe"]))
+
+def agrupar_heroes_por_inteligencia():
+    grupo_inteligencia = []
+    for personaje in lista_personajes:
+        grupo_inteligencia.append(personaje["inteligencia"])
+
+    grupo_inteligencia = set(grupo_inteligencia)
+
+    lista_nombre_por_inteligencia = []
+    for nivel in grupo_inteligencia:
+        dic_inteligencia = {"nivel":nivel,"heroe":[]}
+        for personaje in lista_personajes:
+            if (personaje["inteligencia"] == nivel):
+                dic_inteligencia["heroe"].append(personaje["nombre"])
+        lista_nombre_por_inteligencia.append(dic_inteligencia)                
+
+    for lista in lista_nombre_por_inteligencia:
+        if (lista["nivel"] == ""):
+            lista["nivel"] = "No tiene"
+        print("Inteligencia: {0} - Heroe: {1}".format(lista["nivel"],lista["heroe"]))
 
 '''
 lista_heroes =
@@ -203,16 +267,22 @@ lista_heroes =
 
 '''
 while(True):
-    opcion = input("Elija una opcion: \n"
-                   "1 = Lista de Heroes  \n"
-                   "2 = Lista de Heroinas \n"
-                   "3 = Heroe mas alto\n"
-                   "4 = Heroina mas alta\n"
-                   "5 = Heroe mas bajo\n"
-                   "6 = Heroina mas baja\n"
-                   "7 = Promedio de altura masculino\n"
-                   "8 = Promedio de altura femenino\n"
-                   "9 = Cantidad ojos\n\n> ")
+    opcion = input("\nElija una opcion: \n"
+                   " 1 = Lista de Heroes  \n"
+                   " 2 = Lista de Heroinas \n"
+                   " 3 = Heroe mas alto\n"
+                   " 4 = Heroina mas alta\n"
+                   " 5 = Heroe mas bajo\n"
+                   " 6 = Heroina mas baja\n"
+                   " 7 = Promedio de altura masculino\n"
+                   " 8 = Promedio de altura femenino\n"
+                   " 9 = Cantidad color de ojos\n"
+                   "10 = Cantidad color de pelo\n"
+                   "11 = Cantidad nivel de inteligencia\n"
+                   "12 = Grupo de Heroes por color de ojos\n"
+                   "13 = Grupo de Heroes por color de pelo\n"
+                   "14 = Grupo de Heroes por tipo de inteligencia\n"
+                   "15 = Salir del programa\n\n> ")
 
     if (opcion == "1"):
         calcular_nombre_heroes()
@@ -237,26 +307,14 @@ while(True):
     elif (opcion == "11"):
         calcular_cantidad_inteligencia()
     elif (opcion == "12"):
-        calcular_cantidad_pelo()                                              
+        agrupar_heroes_por_ojos()
     elif (opcion == "13"):
+        agrupar_heroes_por_pelo()
+    elif (opcion == "14"):
+        agrupar_heroes_por_inteligencia()                                                    
+    elif (opcion == "15"):
         break
-'''
-grupo_ojos = []
-lista_grupo_ojos = []
-for personaje in lista_personajes:
-    dic_ojos = {}
-    dic_ojos["nombre"] = personaje["nombre"]
-    dic_ojos["color"] = personaje["color_ojos"]
-    grupo_ojos.append(dic_ojos)
-    i = 0
-    for ojos in grupo_ojos:
-        if (ojos["color"] == ojos[0]["color"]):
-            print("hola")
-            i += 1
 
 
-        
-print(grupo_ojos)
-'''   
 
 
