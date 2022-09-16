@@ -1,5 +1,5 @@
 from calendar import c
-from csv import list_dialects
+from csv import excel, list_dialects
 from data_stark import lista_personajes
 
 '''
@@ -355,9 +355,9 @@ def stark_navegar_fichas(lista_heroes:list):
     elif (int(opcion) == 2):
       posicion += 1
     elif (opcion == "S"):
-      break
+      break 
 
-stark_navegar_fichas(lista_personajes)                
+#stark_navegar_fichas(lista_personajes)                
 
 '''
 {
@@ -373,3 +373,51 @@ stark_navegar_fichas(lista_personajes)
    "inteligencia": "average"
  },
 '''
+
+#---------------------PUNTO 6----------------
+
+#6.1
+def imprimir_menu():
+  separador = generar_separador("'",57,True)
+  print(f"\n{separador}"
+        "\n1 - Imprimir la lista de nombres junto con sus iniciales"
+        "\n2 - Generar códigos de héroes"
+        "\n3 - Normalizar datos"
+        "\n4 - Imprimir índice de nombres"
+        "\n5 - Navegar fichas"
+        "\nS - Salir" 
+        f"\n{separador}")
+
+#imprimir_menu()
+
+#6.2
+def stark_menu_principal():
+  imprimir_menu()
+  opcion = input("Ingrese una opcion: ")
+  return opcion
+
+#stark_menu_principal()
+
+#6.3
+def stark_marvel_app_3(lista_heroes:list):
+  while True:
+    opcion = stark_menu_principal()
+    try:
+      if (opcion == "S"):
+        break
+      elif (int(opcion) == 1):
+        stark_imprimir_nombres_con_iniciales(lista_heroes)
+      elif (int(opcion) == 2):
+        stark_generar_codigos_heroes(lista_heroes)
+      elif (int(opcion) == 3):
+        stark_normalizar_datos(lista_heroes)
+      elif (int(opcion) == 4):
+        stark_imprimir_indice_nombre(lista_heroes)
+      elif (int(opcion) == 5):
+        stark_navegar_fichas(lista_heroes)
+    except:
+      continue
+
+stark_marvel_app_3(lista_personajes)
+
+
