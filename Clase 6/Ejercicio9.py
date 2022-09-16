@@ -109,7 +109,7 @@ def generar_codigo_heroe(id_heroe:int,genero_heroe:str):
     codigo_heroe = "{0}-{1}".format(genero_heroe,id_heroe)
     return codigo_heroe
 
-#generar_codigo_heroe(15,"F")
+generar_codigo_heroe(15,"F")
 
 #2.2
 def agregar_codigo_heroe(heroe:dict):
@@ -139,7 +139,7 @@ def stark_generar_codigos_heroes(lista_heroes:list):
   else:
     print("El origen de datos no contiene el formato correcto")
 
-#stark_generar_codigos_heroes(lista_personajes)   
+stark_generar_codigos_heroes(lista_personajes)   
 
 #---------------------PUNTO 3----------------
 
@@ -271,8 +271,105 @@ def stark_imprimir_indice_nombre(lista_heroes:list):
     separador = separador.join(lista_nombre)
     print(separador)
       
-stark_imprimir_indice_nombre(lista_personajes)
+#stark_imprimir_indice_nombre(lista_personajes)
 
 #---------------------PUNTO 5----------------
 
 #5.1
+def convertir_cm_a_mtrs(valor_cm:float):
+  if (type(valor_cm) == type(float()) and valor_cm > 0):
+    valor_cm = valor_cm // 100
+    retorno = f"{valor_cm}m"
+  else:
+    retorno = -1
+  return retorno
+
+#print(convertir_cm_a_mtrs(1000.0))  
+
+#5.2
+def generar_separador(patron:str,largo:int,imprimir:bool):
+  if (imprimir == True):
+    if(len(patron) > 0 and len(patron) < 3):
+      patron_completo = ""
+      for indice in range(largo):
+        patron_completo += patron
+      retorno = patron_completo
+    else:
+      retorno = "N/A"
+  else:
+    retorno = patron
+  return retorno
+
+
+#print(generar_separador("#",3,True))
+
+#5.3
+def generar_encabezado(titulo:str):
+  titulo = titulo.upper()
+  separador = generar_separador("*",150,True)
+  separador2 = generar_separador(" ",30,True)
+  
+  print("\n{0}\n{2}{1}\n{3}".format(separador,titulo,separador2,separador))
+ 
+#generar_encabezado("principal")
+
+#5.4
+def imprimir_ficha_heroe(heroe:dict):
+  separador = generar_separador(" ",30,True)
+  nombre = heroe["nombre"]
+  identidad = heroe["identidad"]
+  consultora = heroe["empresa"]
+  codigo = heroe["codigo"]
+  altura = heroe["altura"]
+  peso = heroe["peso"]
+  fuerza = heroe["fuerza"]
+  color_ojos = heroe["color_ojos"]
+  color_pelo = heroe["color_pelo"]
+
+  generar_encabezado("Principal")
+  print(f"\n{separador}NOMBRE DEL HÉROE:                                                 {nombre}\n",
+        f"\n{separador}IDENTIDAD SECRETA:                                                {identidad}\n",
+        f"\n{separador}CONSULTORA:                                                       {consultora}\n",
+        f"\n{separador}CODIGO DE HÉROE:                                                  {codigo}\n",)
+  generar_encabezado("Fisico")
+  print(f"\n{separador}ALTURA:                                                           {altura}\n",
+        f"\n{separador}PESO:                                                             {peso}\n",
+        f"\n{separador}FUERZA:                                                           {fuerza}\n")
+  generar_encabezado("Señas particulares")
+  print(f"\n{separador}COLOR DE OJOS:                                                    {color_ojos}\n",
+        f"\n{separador}COLOR DE PELO:                                                    {color_pelo}\n")
+        
+
+#imprimir_ficha_heroe(lista_personajes[1])
+
+#5.3
+def stark_navegar_fichas(lista_heroes:list):
+  posicion = 0
+  while (True):
+    imprimir_ficha_heroe(lista_heroes[posicion])
+    generar_encabezado("Seguir navegando")
+    print("[ 1 ] Ir a la izquierda   [ 2 ] Ir a la derecha   [ S ] Salir\n")
+    opcion = input("Ingrese una de estas opciones: ")
+    if (int(opcion) == 1):
+      posicion -= 1
+    elif (int(opcion) == 2):
+      posicion += 1
+    elif (opcion == "S"):
+      break
+
+stark_navegar_fichas(lista_personajes)                
+
+'''
+{
+   "nombre": "Howard the Duck",
+   "identidad": "Howard (Last name unrevealed)",
+   "empresa": "Marvel Comics",
+   "altura": "79.349999999999994",
+   "peso": "18.449999999999999",
+   "genero": "M",
+   "color_ojos": "Brown",
+   "color_pelo": "Yellow",
+   "fuerza": "2",
+   "inteligencia": "average"
+ },
+'''
