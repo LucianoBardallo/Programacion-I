@@ -165,12 +165,6 @@ def calcular_cantidad_inteligencia():
         lista_inteligencia.append(dic_inteligencia)        
     
     imprimir_lista(lista_inteligencia,"inteligencia")
-'''
-    for lista in lista_inteligencia:
-        if (lista["inteligencia"] == ""):
-          lista["inteligencia"] = "No tiene"  
-        print("Inteligencia: {0} - Cantidad: {1}".format(lista["inteligencia"],lista["cantidad"]))
-'''
 
 def imprimir_lista(lista:list,clave:str):
     for dato in lista:
@@ -236,36 +230,6 @@ def agrupar_heroes_por_inteligencia():
             lista["nivel"] = "No tiene"
         print("Inteligencia: {0} - Heroe: {1}".format(lista["nivel"],lista["heroe"]))
 
-'''
-lista_heroes =
-[
- {
-   "nombre": "Howard the Duck",
-   "identidad": "Howard (Last name unrevealed)",
-   "empresa": "Marvel Comics",
-   "altura": "79.349999999999994",
-   "peso": "18.449999999999999",
-   "genero": "M",
-   "color_ojos": "Brown",
-   "color_pelo": "Yellow",
-   "fuerza": "2",
-   "inteligencia": "average"
- },
- {
-   "nombre": "Rocket Raccoon",
-   "identidad": "Rocket Raccoon",
-   "empresa": "Marvel Comics",
-   "altura": "122.77",
-   "peso": "25.73",
-   "genero": "M",
-   "color_ojos": "Brown",
-   "color_pelo": "Brown",
-   "fuerza": "5",
-   "inteligencia": "average"
- }
-]
-
-'''
 while(True):
     opcion = input("\nElija una opcion: \n"
                    " 1 = Lista de Heroes  \n"
