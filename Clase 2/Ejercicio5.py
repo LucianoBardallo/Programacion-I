@@ -1,6 +1,3 @@
-from ast import Lambda
-
-
 habilidades = [
     {
         "Nombre": "Vision-X",
@@ -34,7 +31,6 @@ for habilidad in habilidades:
     habilidades_selec["Nombre"] = habilidad["Nombre"]
     habilidades_selec["Poder"] = int(habilidad["Poder"])
     habilidades_UTN.append(habilidades_selec)
-
 
 for poder in habilidades_UTN:
     print(poder)
