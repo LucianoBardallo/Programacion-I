@@ -1,41 +1,16 @@
-from calendar import c
-from csv import excel, list_dialects
 from data_stark import lista_personajes
 
-'''
-lista_heroes =
-[
- {
-   "nombre": "Howard the Duck",
-   "identidad": "Howard (Last name unrevealed)",
-   "empresa": "Marvel Comics",
-   "altura": "79.349999999999994",
-   "peso": "18.449999999999999",
-   "genero": "M",
-   "color_ojos": "Brown",
-   "color_pelo": "Yellow",
-   "fuerza": "2",
-   "inteligencia": "average"
- },
- {
-   "nombre": "Rocket Raccoon",
-   "identidad": "Rocket Raccoon",
-   "empresa": "Marvel Comics",
-   "altura": "122.77",
-   "peso": "25.73",
-   "genero": "M",
-   "color_ojos": "Brown",
-   "color_pelo": "Brown",
-   "fuerza": "5",
-   "inteligencia": "average"
- }
-]
-
-'''
 #---------------------PUNTO 1----------------
 
 #1.1
 def extraer_iniciales(nombre_heroe:str):
+  '''
+  Esta funcion se encarga de extraer las inicianes de un string separada por puntos.
+
+  Parametros: Recibe un string representando el nombre de un heroe
+
+  Retorna: "N/A" en caso de que el string este vacio
+  '''
   retorno = "N/A"
   if (len(nombre_heroe) > 0):
     nombre_heroe = nombre_heroe.replace(" the "," ")
@@ -50,11 +25,15 @@ def extraer_iniciales(nombre_heroe:str):
     
   return retorno
 
-#for personaje in lista_personajes:
-#  print(extraer_iniciales(personaje["nombre"]))
-
 #1.2
 def definir_iniciales_nombre(heroe:dict)->bool:
+  '''
+  Esta funcion se encarga de agregar las iniciales de los heroes a un diccionario como nueva clave
+
+  Parametros: Recibe un diccionario representando a los datos de un heroe
+
+  Retorna: True en caso de que todo salga bien, False en caso contrario
+  '''
   retorno = False 
   if (type(heroe) == type(dict()) and len(heroe["nombre"]) > 0):
     iniciales = extraer_iniciales(heroe["nombre"])
@@ -63,12 +42,15 @@ def definir_iniciales_nombre(heroe:dict)->bool:
   
   return retorno
 
-#for personaje in lista_personajes:
-#  print(definir_iniciales_nombre(personaje) ) 
-
 #1.3
 def agregar_iniciales_nombre(lista_heroes:list) -> bool:
-  
+  '''
+  Esta funcion se encarga de iterar la lista y agregarle las iniciales donde corresponda
+
+  Parametros: Recibe una lista representando a todos los heroes
+
+  Retorna: True en caso de haber finalizado con éxito o False en caso de que haya ocurrido un error
+  '''
   for heroe in lista_heroes:
     retorno = "Error lista no es del tipo list o esta vacia"
     if (type(lista_heroes) == type([]) and len(lista_heroes) > 0):
@@ -82,24 +64,32 @@ def agregar_iniciales_nombre(lista_heroes:list) -> bool:
 
   return retorno
 
-#print(agregar_iniciales_nombre(lista_personajes))
-#print(lista_personajes)
 
 #1.3
 def stark_imprimir_nombres_con_iniciales(lista_heroes:list):
+  '''
+  Esta funcion se encarga de tomar el nombre del heroe con sus iniciales y 
+  mostrarlos en pantalla con el formato "Iron Man (I.M.)"
+
+  Parametros: Recibe una lista reprensentado a todos los heroes
+  '''
   if (type(lista_heroes) == type([]) and len(lista_heroes) > 0):
     agregar_iniciales_nombre(lista_heroes)
     for heroe in lista_heroes:
       agregar_iniciales_nombre(heroe)
       print("*{0} - ({1})".format(heroe["nombre"],heroe["iniciales"]))
-    
-
-#stark_imprimir_nombres_con_iniciales(lista_personajes)
 
 #---------------------PUNTO 2----------------
 
 #2.1
-def generar_codigo_heroe(id_heroe:int,genero_heroe:str):
+'''
+Esta funcion se encarga de generar un codigo para los heroes con maximo 10 caracteres con el formato "F-00000001"
+
+Parametros: Recibe un id de heroe del tipo entero, y el genero del heroe.
+
+Retorna: El codigo generado de tipo string
+'''
+def generar_codigo_heroe(id_heroe:int,genero_heroe:str) -> str:
   if (type(id_heroe) == type(int()) and len(genero_heroe) > 0 and (genero_heroe == "F" or genero_heroe == "M" or genero_heroe == "NB")):
     id_heroe = str(id_heroe)
     if (genero_heroe == "NB"):
@@ -112,7 +102,14 @@ def generar_codigo_heroe(id_heroe:int,genero_heroe:str):
 generar_codigo_heroe(15,"F")
 
 #2.2
-def agregar_codigo_heroe(heroe:dict):
+def agregar_codigo_heroe(heroe:dict)->bool:
+  '''
+  Esta funcion se encarga de generar un codigo y agregarlo al diccionario como una clave nueva
+
+  Parametros: Recibe un diccionario representando a los datos de un heroe
+
+  Retorna: True si todo sale bien, False en caso contrario
+  '''
   retorno = False
   if (len(heroe) > 0):
     codigo_heroe = generar_codigo_heroe(heroe["posicion"],heroe["genero"])
@@ -121,10 +118,14 @@ def agregar_codigo_heroe(heroe:dict):
       retorno = True
   return retorno
 
-#agregar_codigo_heroe(lista_personajes[0])
-
 #2.3
 def stark_generar_codigos_heroes(lista_heroes:list):
+  '''
+  Esta funcion se encarga de iterar una lista de heroes y agregarles el codigo a cada uno,
+  despues imprime en pantalla cuantos codigos se asignaron y cual fue el primer y el ultimo codigo 
+
+  Parametros: Recibe una lista que representa a todos los heroes
+  '''
   if (len(lista_heroes) > 0):
     i = 0
     for heroe in lista_heroes:
@@ -144,7 +145,15 @@ stark_generar_codigos_heroes(lista_personajes)
 #---------------------PUNTO 3----------------
 
 #3.1
-def sanitizar_entero(numero_str:str):
+def sanitizar_entero(numero_str:str) -> int:
+  '''
+  Esta función se encarga de analizar el string recibido y determinar si se puede transformar a un numero flotante
+
+  Parametros: Recibe un string
+
+  Retorna: El numero si es valido, -1 en caso de contiene caracteres no numericos, -2 en caso de ser negativo, 
+  y -3 en caso de que no sea ninguno de los casos anteriores
+  '''
   numero_str = numero_str.strip()
   try:
     try:
@@ -160,11 +169,17 @@ def sanitizar_entero(numero_str:str):
     return retorno
   except:
       return -3  
-  
-#print(sanitizar_entero("323.2"))
 
 #3.2
-def sanitizar_flotante(numero_str:str):
+def sanitizar_flotante(numero_str:str) -> float:
+  '''
+  Esta funcion se encarga de analizar un string recibido y determinar si se puede transformar a un numero flotante
+
+  Parametros: Recibe un string
+
+  Retorna: El numero si es valido, -1 en caso de contiene caracteres no numericos, -2 en caso de ser negativo, 
+  y -3 en caso de que no sea ninguno de los casos anteriores
+  '''
   numero_str = numero_str.strip()
   try:
     try:
@@ -181,10 +196,16 @@ def sanitizar_flotante(numero_str:str):
   except:
       return -3  
 
-#print(sanitizar_flotante("3.2"))
-
 #3.3
-def sanitizar_string(valor_str:str):
+def sanitizar_string(valor_str:str) -> str:
+  '''
+  Esta funcion se encarga de analizar un string recibido y convierte todos sus caracteres a minuscula en caso que se pueda
+
+  Parametros: Recibe un string
+
+  Retorna: El string en minuscula en caso de ser valido, "N/A" si el string contiene numeros y 
+  el valor por defecto en caso de que el string este vacio
+  '''
   valor_por_defecto = "#ERROR"
   if (len(valor_str) > 0):
     valor_str = valor_str.strip()
@@ -199,10 +220,16 @@ def sanitizar_string(valor_str:str):
     retorno = valor_por_defecto
   return retorno
 
-#print(sanitizar_string("SDdS/Ddsa"))
-
 #3.4
-def sanitizar_dato(heroe:dict,clave:str,tipo_dato:str):
+def sanitizar_dato(heroe:dict,clave:str,tipo_dato:str) -> bool:
+  '''
+  Esta función se encarga de sanitizar el valor del diccionario correspondiente a la clave y al tipo de dato recibido
+
+  Parametros: Recibe un diccionario representando a un heroe, una clave representando a la key que queremos cambiar y 
+  un tipo de dato que puede tomar los valores "string","entero","flotante"
+
+  Retorna: True en caso de que se haya cambiado algun valor, False en caso contrario
+  '''
   retorno = False
   if clave in heroe:
     tipo_dato = tipo_dato.lower()
@@ -225,6 +252,14 @@ def sanitizar_dato(heroe:dict,clave:str,tipo_dato:str):
 
 #3.5
 def stark_normalizar_datos(lista_heroes:list):
+  '''
+  Esta función se encarga de recorrer la lista de héroes y sanitizar los valores solo de las siguientes claves: 
+  ‘altura’, ‘peso’, ‘color_ojos’, ‘color_pelo’, ‘fuerza’ e ‘inteligencia’
+
+  Parametros: Recibe una lista de heroes
+
+  Retorna: Imprime en pantalla "Datos normalizados" si todo sale bien, "Error" en caso contrario
+  '''
   if (len(lista_heroes) > 0):
     claves_heroes = {"altura","peso","color_ojos","color_pelo","fuerza","inteligencia"}
     for heroe in lista_heroes:
@@ -239,13 +274,18 @@ def stark_normalizar_datos(lista_heroes:list):
   else:
     print("Error: Lista de héroes vacía") 
 
-
-#stark_normalizar_datos(lista_personajes)
-
 #---------------------PUNTO 4----------------
 
 #4.1
-def generar_indice_nombres(lista_heroes:list):
+def generar_indice_nombres(lista_heroes:list) -> list:
+  '''
+  Esta función se encarga de iterar la lista de personajes y 
+  generar una lista donde cada elemento es cada palabra que componen el nombre de los personajes.
+
+  Parametros: Recibe una lista de heroes
+
+  Retorna: Una lista con todos los nombres agrupados
+  '''
   lista_valores_separados = []
   for heroe in lista_heroes:
     for clave in heroe:
@@ -255,10 +295,14 @@ def generar_indice_nombres(lista_heroes:list):
         lista_valores_separados += heroe[clave]
   return lista_valores_separados         
 
-#generar_indice_nombres(lista_personajes)
-
 #4.2
 def stark_imprimir_indice_nombre(lista_heroes:list):
+  '''
+  Esta función se encarga de mostrar por pantalla el índice generado por la función generar_indice_nombres 
+  con todos los nombres separados con un guión.
+
+  Parametros: Recibe una lista de heroes
+  '''
   for heroe in lista_heroes:
     if (len(lista_heroes) > 0 and type(heroe) == type({}) and "nombre" in heroe):
       validacion = True
@@ -270,13 +314,18 @@ def stark_imprimir_indice_nombre(lista_heroes:list):
     separador = "-"
     separador = separador.join(lista_nombre)
     print(separador)
-      
-#stark_imprimir_indice_nombre(lista_personajes)
 
 #---------------------PUNTO 5----------------
 
 #5.1
-def convertir_cm_a_mtrs(valor_cm:float):
+def convertir_cm_a_mtrs(valor_cm:float) -> float:
+  '''
+  Esta función se encarga de convertir una numero flotante a su unidad en metros
+
+  Parametros: Recibe un valor en cm del tipo float
+
+  Retorna: El valor pasado a metros si es un flotante positivo, -1 en caso contrario
+  '''
   if (type(valor_cm) == type(float()) and valor_cm > 0):
     valor_cm = valor_cm // 100
     retorno = f"{valor_cm}m"
@@ -284,12 +333,18 @@ def convertir_cm_a_mtrs(valor_cm:float):
     retorno = -1
   return retorno
 
-#print(convertir_cm_a_mtrs(1000.0))  
-
 #5.2
-def generar_separador(patron:str,largo:int,imprimir:bool):
+def generar_separador(patron:str,largo:int,imprimir:bool) -> str:
+  '''
+  Esta función se encarga de generar un string que contenga el patrón especificado repitiendo tantas veces como la cantidad recibida como parámetro
+
+  Parametros: Recibe un patron del tipo string, un largo del tipo entero y un bool
+
+  Retorna: Retorna el patron que le indicamosen caso de estar todo bien, "N/A" caso contrario 
+  y solo el patron en caso del que bool sea False.
+  '''
   if (imprimir == True):
-    if(len(patron) > 0 and len(patron) < 3):
+    if(len(patron) > 0 and len(patron) < 3 and int(largo) > 0 and int(largo) <= 235):
       patron_completo = ""
       for indice in range(largo):
         patron_completo += patron
@@ -300,21 +355,29 @@ def generar_separador(patron:str,largo:int,imprimir:bool):
     retorno = patron
   return retorno
 
-
-#print(generar_separador("#",3,True))
-
 #5.3
-def generar_encabezado(titulo:str):
+def generar_encabezado(titulo:str) -> str:
+  '''
+  Esta función se encarga de generar un string que contenga el título envuelto entre dos separadores. 
+
+  Parametros: Recibe el un dato string que representa el titulo a generar
+
+  Retorna: Un string con el titulo generado
+  '''
   titulo = titulo.upper()
   separador = generar_separador("*",150,True)
   separador2 = generar_separador(" ",30,True)
   
-  print("\n{0}\n{2}{1}\n{3}".format(separador,titulo,separador2,separador))
- 
-#generar_encabezado("principal")
+  titulo_generado = ("\n{0}\n{2}{1}\n{3}".format(separador,titulo,separador2,separador))
+  return titulo_generado
 
 #5.4
 def imprimir_ficha_heroe(heroe:dict):
+  '''
+  Esta función se encarga de imprimir la ficha de heroe. 
+
+  Parametros: Recibe un diccionario que representa los datos del heroe
+  '''
   separador = generar_separador(" ",30,True)
   nombre = heroe["nombre"]
   identidad = heroe["identidad"]
@@ -326,28 +389,31 @@ def imprimir_ficha_heroe(heroe:dict):
   color_ojos = heroe["color_ojos"]
   color_pelo = heroe["color_pelo"]
 
-  generar_encabezado("Principal")
+  print(generar_encabezado("Principal"))
   print(f"\n{separador}NOMBRE DEL HÉROE:                                                 {nombre}\n",
         f"\n{separador}IDENTIDAD SECRETA:                                                {identidad}\n",
         f"\n{separador}CONSULTORA:                                                       {consultora}\n",
         f"\n{separador}CODIGO DE HÉROE:                                                  {codigo}\n",)
-  generar_encabezado("Fisico")
+  print(generar_encabezado("Fisico"))
   print(f"\n{separador}ALTURA:                                                           {altura}\n",
         f"\n{separador}PESO:                                                             {peso}\n",
         f"\n{separador}FUERZA:                                                           {fuerza}\n")
-  generar_encabezado("Señas particulares")
+  print(generar_encabezado("Señas particulares"))
   print(f"\n{separador}COLOR DE OJOS:                                                    {color_ojos}\n",
         f"\n{separador}COLOR DE PELO:                                                    {color_pelo}\n")
-        
-
-#imprimir_ficha_heroe(lista_personajes[1])
 
 #5.3
 def stark_navegar_fichas(lista_heroes:list):
+  '''
+  Esta función se encarga de imprimir la primer ficha de heroe en pantalla 
+  y luego pedirle al usuario que ingrese una opcion para seguir navegando entre fichas
+
+  Parametros: Recibe un diccionario que representa los datos del heroe
+  '''
   posicion = 0
   while (True):
     imprimir_ficha_heroe(lista_heroes[posicion])
-    generar_encabezado("Seguir navegando")
+    print(generar_encabezado("Seguir navegando"))
     print("[ 1 ] Ir a la izquierda   [ 2 ] Ir a la derecha   [ S ] Salir\n")
     opcion = input("Ingrese una de estas opciones: ")
     if (int(opcion) == 1):
@@ -355,29 +421,15 @@ def stark_navegar_fichas(lista_heroes:list):
     elif (int(opcion) == 2):
       posicion += 1
     elif (opcion == "S"):
-      break 
-
-#stark_navegar_fichas(lista_personajes)                
-
-'''
-{
-   "nombre": "Howard the Duck",
-   "identidad": "Howard (Last name unrevealed)",
-   "empresa": "Marvel Comics",
-   "altura": "79.349999999999994",
-   "peso": "18.449999999999999",
-   "genero": "M",
-   "color_ojos": "Brown",
-   "color_pelo": "Yellow",
-   "fuerza": "2",
-   "inteligencia": "average"
- },
-'''
+      break              
 
 #---------------------PUNTO 6----------------
 
 #6.1
 def imprimir_menu():
+  '''
+  Esta función se encarga de imprimir el menu
+  '''
   separador = generar_separador("'",57,True)
   print(f"\n{separador}"
         "\n1 - Imprimir la lista de nombres junto con sus iniciales"
@@ -388,18 +440,22 @@ def imprimir_menu():
         "\nS - Salir" 
         f"\n{separador}")
 
-#imprimir_menu()
-
 #6.2
-def stark_menu_principal():
+def stark_menu_principal() -> str:
+  '''
+  Esta función se encarga de tomar la opcion elegida por el usuario
+
+  Retorna: Un string que representa la opcion del usuario
+  '''
   imprimir_menu()
   opcion = input("Ingrese una opcion: ")
   return opcion
 
-#stark_menu_principal()
-
 #6.3
 def stark_marvel_app_3(lista_heroes:list):
+  '''
+  Es función se encarga de la ejecución principal del programa. 
+  '''
   while True:
     opcion = stark_menu_principal()
     try:
