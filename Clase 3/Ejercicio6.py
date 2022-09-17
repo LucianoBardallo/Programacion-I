@@ -61,18 +61,6 @@ def calcular_mas_liviano():
     #-------------------------------
 
 '''
-   "nombre": "Howard the Duck",
-   "identidad": "Howard (Last name unrevealed)",
-   "empresa": "Marvel Comics",
-   "altura": "79.349999999999994",
-   "peso": "18.449999999999999",
-   "genero": "M",
-   "color_ojos": "Brown",
-   "color_pelo": "Yellow",
-   "fuerza": "2",
-   "inteligencia": "average"
-
-
 #----Recorriendo nombres de la lista-----
 for personaje in lista_personajes:
     print(personaje["nombre"])
@@ -88,7 +76,15 @@ print("Personaje mas alto: {0} \nPersonaje mas bajo: {1}".format(superheroe_mas_
 '''
 
 while(True):
-    opcion = input("\nElija una opcion: \n1 = Personaje mas alto \n2 = Personaje mas bajo\n3 = Persoje mas pesado\n4 = Personaje mas liviano\n5 = Promedio de altura\n6 = Salir\n\n>")
+    opcion = input("\n--------MENU--------- \n"
+                    "1 = Personaje mas alto \n"
+                    "2 = Personaje mas bajo\n"
+                    "3 = Persoje mas pesado\n"
+                    "4 = Personaje mas liviano\n"
+                    "5 = Promedio de altura\n"
+                    "6 = Salir\n"
+                    "---------------------\n\n"
+                    "Ingrese una opcion: ")
 
     if (opcion == "1"):
         calcular_mas_alto()
