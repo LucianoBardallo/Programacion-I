@@ -11,7 +11,6 @@ El sexo y nombre de Heroe | Heroína de mayor edad.
 La cantidad de Heroinas que tienen habilidades de 'fuerza' o 'magia'.
 El promedio de edad entre Heroinas.
 El promedio de edad entre Heroes de fuerza.
-
 '''
 respuesta = "s"
 flag = 0
@@ -61,7 +60,7 @@ while (respuesta == "s"):
         if (habilidad == "Fuerza" or habilidad == "Magia"):
             contador_femenino_habilidad += 1
 
-    respuesta = input("Quiere continuar? (s)")        
+    respuesta = input("Quiere continuar? (s): ")        
 
 promedio_edad_femenino = acumulador_edad_femenino / contador_femenino
 promedio_edad_masculino_fuerza = acumulador_edad_masculino_fuerza / contador_masculino
