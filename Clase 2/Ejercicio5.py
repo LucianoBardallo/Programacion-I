@@ -25,6 +25,7 @@ habilidades = [
     }
 ]
 
+
 habilidades_UTN = []
 for habilidad in habilidades:
     habilidades_selec = {}
@@ -34,4 +35,5 @@ for habilidad in habilidades:
 
 for poder in habilidades_UTN:
     print(poder)
+
 
