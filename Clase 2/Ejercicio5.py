@@ -34,6 +34,6 @@ for habilidad in habilidades:
     habilidades_UTN.append(habilidades_selec)
 
 for poder in habilidades_UTN:
-    print(poder) 
+    print(poder)
 
 
