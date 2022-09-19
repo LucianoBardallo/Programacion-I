@@ -170,7 +170,7 @@ def pokedex_imprimir_nombres_poke_fmt(pokemones:list):
 #---------------------PUNTO 5----------------
 
 #5.1
-def calcular_max_dato(pokemones:list,max:str,clave:str) -> int:
+def calcular_max_dato(pokemones:list,tipo:str,clave:str) -> int:
     '''
     Esta funcion se encarga de saber cual es el dato maximo a analizar
 
@@ -208,17 +208,86 @@ def obtener_lista_pokemones(pokemones:list,clave:str,valor:int) -> list:
     lista_pokemones = []
     for pokemon in pokemones:
         if (pokemon[clave] == valor):
-            lista_pokemones.append(pokemon)
+            lista_pokemones.append(pokemon["nombre"])
         retorno = lista_pokemones
     return retorno
 
 #print(obtener_lista_pokemones(pokemones,"poder",30)) 
-
+ 
 #5.3
+def string_max_dato(pokemones:list,tipo:str,clave:str) -> str:
+    '''
+    Esta funcion se encarga de analizar la lista de pokemones y tomar los pokemones que cumplan con los requisitos
+
+    Parametros:  La lista de pokemones,
+    Un string que representará el máximo,
+    Un string que representará el dato/key a calcular
+
+    Retorna: Un string con el valor máximo del dato calculado
+    y todos los pokemones que cumplan dicha condición.
+
+    '''
+    pokemon_max = calcular_max_dato(pokemones,tipo,clave)
+    nombre_pokemon = obtener_lista_pokemones(pokemones,clave,pokemon_max)
+    nombres = ""
+    for pokemon in nombre_pokemon:
+        nombres += pokemon + " - "
+    retorno = f"{clave} máximo: {pokemon_max} | Pokemones: {nombres}"
+
+    return retorno
+    
+#print(string_max_dato(pokemones,"maximo","poder"))
+
 #5.4
+def imprimir_pokemones_fuertes(format:str):
+    '''
+    Esta funcion se encarga de imprimir los pokemones mas fuertes
+    '''
+    pokemones_mas_fuertes = format
+    print(pokemones_mas_fuertes)
+
+
+#imprimir_pokemones_fuertes(string_max_dato(pokemones,"maximo","poder"))
+
 #5.5
+def pokedex_imprimir_pokemones_fuertes(pokemones:list):
+    '''
+    Esta funcion se encargará de buscar el o los pokemones mas fuertes, 
+    formateara el mensaje con todos los que cumplan la condición y los imprimirá.
+
+    Parametros: Una lista que representa a los pokemones
+    '''
+    pokemones_mas_fuertes = string_max_dato(pokemones,"maximo","poder")
+    pokemones_mas_fuertes = f"Pokemones mas fuertes: {pokemones_mas_fuertes[30:]}"
+    imprimir_pokemones_fuertes(pokemones_mas_fuertes)
+
+#pokedex_imprimir_pokemones_fuertes(pokemones)  
 
 #---------------------PUNTO 6----------------
+
+#6.1
+def calcular_min_dato(pokemones:list,tipo:str,clave:str) -> int:
+    '''
+    Esta funcion se encarga de saber cual es el dato minimo a analizar
+
+    Parametros: Una lista que representa a los pokemones, 
+    un string que toma el valor "minimo" 
+    y una clave a analizar
+
+    Retorna: El dato minimo de tipo INT si se puede analizar, un mensaje de error en caso contrario
+    '''
+    pokemon_min = pokemones[0][clave]
+    try:
+        for pokemon in pokemones:
+            if (int(pokemon_min) > pokemon[clave]):
+                pokemon_min = pokemon[clave]
+            retorno = pokemon_min
+    except:
+        retorno = "ERROR! EL DATO NO SE PUEDE ANALIZAR"
+    return retorno    
+
+#print(calcular_min_dato(pokemones,"minimo","poder"))
+
 #---------------------PUNTO 7----------------
 #---------------------PUNTO 8----------------
 #---------------------PUNTO 9----------------
