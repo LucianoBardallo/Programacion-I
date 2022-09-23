@@ -82,14 +82,14 @@ def stark_imprimir_nombres_con_iniciales(lista_heroes:list):
 #---------------------PUNTO 2----------------
 
 #2.1
-'''
+def generar_codigo_heroe(id_heroe:int,genero_heroe:str) -> str:
+  '''
 Esta funcion se encarga de generar un codigo para los heroes con maximo 10 caracteres con el formato "F-00000001"
 
 Parametros: Recibe un id de heroe del tipo entero, y el genero del heroe.
 
 Retorna: El codigo generado de tipo string
 '''
-def generar_codigo_heroe(id_heroe:int,genero_heroe:str) -> str:
   if (type(id_heroe) == type(int()) and len(genero_heroe) > 0 and (genero_heroe == "F" or genero_heroe == "M" or genero_heroe == "NB")):
     id_heroe = str(id_heroe)
     if (genero_heroe == "NB"):
@@ -98,8 +98,6 @@ def generar_codigo_heroe(id_heroe:int,genero_heroe:str) -> str:
       id_heroe = id_heroe.zfill(8)  
     codigo_heroe = "{0}-{1}".format(genero_heroe,id_heroe)
     return codigo_heroe
-
-generar_codigo_heroe(15,"F")
 
 #2.2
 def agregar_codigo_heroe(heroe:dict)->bool:

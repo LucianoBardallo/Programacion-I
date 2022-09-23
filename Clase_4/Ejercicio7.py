@@ -1,4 +1,5 @@
 from data_stark import lista_personajes
+import re
 
 def calcular_nombre_heroes():
     print("---Heroes---")
@@ -229,56 +230,74 @@ def agrupar_heroes_por_inteligencia():
         if (lista["nivel"] == ""):
             lista["nivel"] = "No tiene"
         print("Inteligencia: {0} - Heroe: {1}".format(lista["nivel"],lista["heroe"]))
+  
+def imprimir_menu_principal():
+    print("\nElija una opcion: \n"
+                    " A = Lista de Heroes  \n"
+                    " B = Lista de Heroinas \n"
+                    " C = Heroe mas alto\n"
+                    " D = Heroina mas alta\n"
+                    " E = Heroe mas bajo\n"
+                    " F = Heroina mas baja\n"
+                    " G = Promedio de altura masculino\n"
+                    " H = Promedio de altura femenino\n"
+                    " I = Cantidad color de ojos\n"
+                    " J = Cantidad color de pelo\n"
+                    " K = Cantidad nivel de inteligencia\n"
+                    " L = Grupo de Heroes por color de ojos\n"
+                    " M = Grupo de Heroes por color de pelo\n"
+                    " N = Grupo de Heroes por tipo de inteligencia\n"
+                    " Z = Salir del programa\n")
 
-while(True):
-    opcion = input("\nElija una opcion: \n"
-                   " 1 = Lista de Heroes  \n"
-                   " 2 = Lista de Heroinas \n"
-                   " 3 = Heroe mas alto\n"
-                   " 4 = Heroina mas alta\n"
-                   " 5 = Heroe mas bajo\n"
-                   " 6 = Heroina mas baja\n"
-                   " 7 = Promedio de altura masculino\n"
-                   " 8 = Promedio de altura femenino\n"
-                   " 9 = Cantidad color de ojos\n"
-                   "10 = Cantidad color de pelo\n"
-                   "11 = Cantidad nivel de inteligencia\n"
-                   "12 = Grupo de Heroes por color de ojos\n"
-                   "13 = Grupo de Heroes por color de pelo\n"
-                   "14 = Grupo de Heroes por tipo de inteligencia\n"
-                   "15 = Salir del programa\n\n> ")
-
-    if (opcion == "1"):
-        calcular_nombre_heroes()
-    elif (opcion == "2"):
-        calcular_nombre_heroinas()
-    elif (opcion == "3"):
-        calcular_heroe_mas_alto()
-    elif (opcion == "4"):
-        calcular_heroina_mas_alta()
-    elif (opcion == "5"):
-        calcular_heroe_mas_bajo() 
-    elif (opcion == "6"):
-        calcular_heroina_mas_bajo() 
-    elif (opcion == "7"):
-        calcular_promedio_altura_masculino()
-    elif (opcion == "8"):
-        calcular_promedio_altura_femenino()
-    elif (opcion == "9"):
-        calcular_cantidad_ojos()
-    elif (opcion == "10"):
-        calcular_cantidad_pelo()
-    elif (opcion == "11"):
-        calcular_cantidad_inteligencia()
-    elif (opcion == "12"):
-        agrupar_heroes_por_ojos()
-    elif (opcion == "13"):
-        agrupar_heroes_por_pelo()
-    elif (opcion == "14"):
-        agrupar_heroes_por_inteligencia()                                                    
-    elif (opcion == "15"):
-        break
+def obtener_valor_opcion():
+    imprimir_menu_principal()
+    opcion = input(" >")
+    opcion = opcion[0]
+    opcion = opcion.upper()
+    validacion = re.search("[A-NZ]",opcion)
+    if (validacion == None):
+        retorno = -1
+    else:
+        retorno = opcion
+    return retorno
 
 
 
+def stark_menu_principal(lista_heroes:list):
+    while(True):
+        opcion = obtener_valor_opcion()
+
+        if (opcion == "A"):
+            calcular_nombre_heroes()
+        elif (opcion == "B"):
+            calcular_nombre_heroinas()
+        elif (opcion == "C"):
+            calcular_heroe_mas_alto()
+        elif (opcion == "D"):
+            calcular_heroina_mas_alta()
+        elif (opcion == "E"):
+            calcular_heroe_mas_bajo() 
+        elif (opcion == "F"):
+            calcular_heroina_mas_bajo() 
+        elif (opcion == "G"):
+            calcular_promedio_altura_masculino()
+        elif (opcion == "H"):
+            calcular_promedio_altura_femenino()
+        elif (opcion == "I"):
+            calcular_cantidad_ojos()
+        elif (opcion == "J"):
+            calcular_cantidad_pelo()
+        elif (opcion == "K"):
+            calcular_cantidad_inteligencia()
+        elif (opcion == "L"):
+            agrupar_heroes_por_ojos()
+        elif (opcion == "M"):
+            agrupar_heroes_por_pelo()
+        elif (opcion == "N"):
+            agrupar_heroes_por_inteligencia()                                                    
+        elif (opcion == "Z"):
+            break
+
+
+stark_menu_principal(lista_personajes)
 
