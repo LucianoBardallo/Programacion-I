@@ -18,7 +18,7 @@ print("Personaje mas alto: {0} \nPersonaje mas bajo: {1}".format(superheroe_mas_
 
 '''
 
-#--------------------- Punto J -------------------------------
+#--------------------- MENU -------------------------------
 def menu_app():
     while(True):
         opcion = input("\n--------MENU--------- \n"

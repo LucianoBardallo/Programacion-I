@@ -1,17 +1,8 @@
 import re
 
-def calcular_nombre_heroes(lista:list):
-    for personaje in lista:
-        if (personaje["genero"] == "M"):
-            print(personaje["nombre"])
-                 
+#--------------------- Iniciar -------------------------------
 
-def calcular_nombre_heroinas(lista:list):
-    for personaje in lista:
-        if (personaje["genero"] == "F"):
-            print(personaje["nombre"])
-      
-                             
+#I.1
 def buscar_primer_masculino(lista:list):
     personaje_masculino = {}   
     for personaje in lista:
@@ -21,6 +12,7 @@ def buscar_primer_masculino(lista:list):
     
     return personaje_masculino
 
+#I.2
 def buscar_primer_femenino(lista:list):   
     personaje_femenino = {}   
     for personaje in lista:
@@ -30,6 +22,21 @@ def buscar_primer_femenino(lista:list):
     
     return personaje_femenino
 
+#--------------------- Punto A -------------------------------
+def calcular_nombre_heroes(lista:list):
+    for personaje in lista:
+        if (personaje["genero"] == "M"):
+            print(personaje["nombre"])
+                 
+#--------------------- Punto B -------------------------------
+def calcular_nombre_heroinas(lista:list):
+    for personaje in lista:
+        if (personaje["genero"] == "F"):
+            print(personaje["nombre"])
+                         
+
+
+#--------------------- Punto C -------------------------------
 def calcular_heroe_mas_alto(lista:list):
     personaje_masculino_mas_alto = buscar_primer_masculino(lista)
     for personaje in lista:
@@ -41,7 +48,7 @@ def calcular_heroe_mas_alto(lista:list):
 
     print("\nNombre = {0} - Altura {1}".format(personaje_masculino_mas_alto["nombre"],personaje_masculino_mas_alto["altura"]))
 
-
+#--------------------- Punto D -------------------------------
 def calcular_heroina_mas_alta(lista:list):
     personaje_femenino_mas_alto = buscar_primer_femenino(lista)
     for personaje in lista:
@@ -53,7 +60,7 @@ def calcular_heroina_mas_alta(lista:list):
 
     print("\nNombre = {0} - Altura {1}".format(personaje_femenino_mas_alto["nombre"],personaje_femenino_mas_alto["altura"]))
 
-
+#--------------------- Punto E -------------------------------
 def calcular_heroe_mas_bajo(lista:list):
     personaje_masculino_mas_bajo = buscar_primer_masculino(lista)
     for personaje in lista:
@@ -65,7 +72,7 @@ def calcular_heroe_mas_bajo(lista:list):
 
     print("\nNombre = {0} - Altura {1}".format(personaje_masculino_mas_bajo["nombre"],personaje_masculino_mas_bajo["altura"]))
 
-
+#--------------------- Punto F -------------------------------
 def calcular_heroina_mas_bajo(lista:list):
     personaje_femenino_mas_bajo = buscar_primer_femenino(lista)
     for personaje in lista:
@@ -77,7 +84,7 @@ def calcular_heroina_mas_bajo(lista:list):
 
     print("\nNombre = {0} - Altura {1}".format(personaje_femenino_mas_bajo["nombre"],personaje_femenino_mas_bajo["altura"]))   
 
-
+#--------------------- Punto G -------------------------------
 def calcular_promedio_altura_masculino(lista:list):
     acumulador_masculino = 0
     contador_masculino = 0
@@ -88,7 +95,7 @@ def calcular_promedio_altura_masculino(lista:list):
 
     print("\nPromedio de altura: {0}".format(acumulador_masculino / contador_masculino)) 
 
-
+#--------------------- Punto H -------------------------------
 def calcular_promedio_altura_femenino(lista:list):
     acumulador_femenino = 0
     contador_femenino = 0
@@ -99,7 +106,7 @@ def calcular_promedio_altura_femenino(lista:list):
 
     print("Promedio de altura: {0}".format(acumulador_femenino / contador_femenino))  
  
-
+#--------------------- Punto J -------------------------------
 def calcular_cantidad_ojos(lista:list):
     colores_de_ojos = []
     for color_ojos in lista:
@@ -119,6 +126,7 @@ def calcular_cantidad_ojos(lista:list):
     for lista in lista_colores_ojos:
         print("Color: {0} - Cantidad: {1}".format(lista["color"],lista["cantidad"]))
 
+#--------------------- Punto K -------------------------------
 def calcular_cantidad_pelo(lista:list):
     colores_de_pelo = []
     for color_pelo in lista:
@@ -137,7 +145,8 @@ def calcular_cantidad_pelo(lista:list):
 
     for lista in lista_colores_de_pelo:
         print("Color: {0} - Cantidad: {1}".format(lista["color"],lista["cantidad"]))
-    
+
+#--------------------- Punto L -------------------------------   
 def calcular_cantidad_inteligencia(lista:list):
     nivel_inteligencia = []
     for inteligencia in lista:
@@ -155,12 +164,14 @@ def calcular_cantidad_inteligencia(lista:list):
     
     imprimir_lista(lista_inteligencia,"inteligencia")
 
+#--------------------- Punto M -------------------------------
 def imprimir_lista(lista:list,clave:str):
     for dato in lista:
         if (dato[clave] == ""):
             dato[clave] = "No tiene"  
         print("{2} - {0} - Cantidad: {1}".format(dato[clave],dato["cantidad"],clave))  
 
+#--------------------- Punto M -------------------------------
 def agrupar_heroes_por_ojos(lista:list):
     grupo_ojos = []
     for personaje in lista:
@@ -179,6 +190,7 @@ def agrupar_heroes_por_ojos(lista:list):
     for lista in lista_nombre_por_ojos:
         print("Color de ojos: {0} - Heroe: {1}".format(lista["ojos"],lista["heroe"]))
 
+#--------------------- Punto N -------------------------------
 def agrupar_heroes_por_pelo(lista:list):    
     grupo_pelo = []
     for personaje in lista:
@@ -199,6 +211,7 @@ def agrupar_heroes_por_pelo(lista:list):
             lista["pelo"] = "Sin pelo"
         print("Color de pelo: {0} - Heroe: {1}".format(lista["pelo"],lista["heroe"]))
 
+#--------------------- Punto O -------------------------------
 def agrupar_heroes_por_inteligencia(lista:list):
     grupo_inteligencia = []
     for personaje in lista:
@@ -218,7 +231,8 @@ def agrupar_heroes_por_inteligencia(lista:list):
         if (lista["nivel"] == ""):
             lista["nivel"] = "No tiene"
         print("Inteligencia: {0} - Heroe: {1}".format(lista["nivel"],lista["heroe"]))
-  
+
+#--------------------- MENU ------------------------------- 
 def imprimir_menu_principal():
     print("\n\n Opciones: \n"
                     " A = Lista de Heroes  \n"
