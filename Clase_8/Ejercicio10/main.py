@@ -2,6 +2,8 @@
 import re
 import json
 
+#---------------------PUNTO 0----------------
+
 def stark_normalizar_datos(lista:list):
     cambio = False
     for indice in range(len(lista)):
@@ -17,7 +19,6 @@ def stark_normalizar_datos(lista:list):
                 print("\nError: Lista de heroes vacia")   
     if (cambio == True):
         print("\n---Datos normalizados---\n") 
-
 
 def imprimir_dato(dato:str):
     '''
@@ -94,7 +95,7 @@ def leer_archivo(nombre_archivo:str)->list:
 #for personaje in lista_personajes:
 #    print("\n")
 #    print(personaje)
-lista_personajes = leer_archivo("Clase_8\data_stark.json")
+lista_personajes = leer_archivo("Clase_8\Ejercicio10\data_stark.json")
 stark_normalizar_datos(lista_personajes)
 
 #1.5
@@ -116,7 +117,7 @@ def guardar_archivo(archivo_a_guardar:str,archivo_contenido:str):
         retorno = True
     return retorno
 
-#guardar_archivo("Clase_8\data_nueva.json","Prueba")
+#guardar_archivo("Clase_8\Ejercicio10\data_nueva.json","Prueba")
 
 #1.6
 def capitalizar_palabras(dato:str):
@@ -170,7 +171,7 @@ def stark_guardar_heroe_genero(lista_heroes:list,genero:str):
             heroes += nombre + ","
 
             
-    guardar_archivo("Clase_8\personajes.csv",heroes)  
+    guardar_archivo("Clase_8\Ejercicio10\personajes.csv",heroes)  
     
 
 #stark_guardar_heroe_genero(lista_personajes,"f")
@@ -291,7 +292,7 @@ def stark_calcular_imprimir_guardar_promedio_altura_genero(lista_heroes:list,gen
         altura_promedio = calcular_promedio_genero(lista_heroes,"altura",genero)
         contenido = "Altura promedio de genero {1}: {0}".format(altura_promedio,genero)
         imprimir_dato(contenido)
-        guardar_archivo(f"Clase_8\heroes_promedio_altura_{genero}.csv",contenido)
+        guardar_archivo(f"Clase_8\Ejercicio10\heroes_promedio_altura_{genero}.csv",contenido)
         retorno = True
     else:
         imprimir_dato("Error: Lista de héroes vacia")
@@ -304,38 +305,67 @@ def stark_calcular_imprimir_guardar_promedio_altura_genero(lista_heroes:list,gen
 
 #5.1
 def calcular_cantidad_tipo(lista_heroes:list,key:str):
-    if (len(lista_heroes) > 0):
-        lista_agrupacion = []
-        for personaje in lista_personajes:
-            personaje[key] = capitalizar_palabras(personaje[key])
-            lista_agrupacion.append(personaje[key])
-        
-
-        lista_agrupacion = set(lista_agrupacion)
-        #print(lista_agrupacion)
-        
-        lista_resultado = []
-        for dato in lista_agrupacion:
-            dic_cantidad = {dato:0}
+    try:
+        if (len(lista_heroes) > 0):
+            lista_agrupacion = []
             for personaje in lista_personajes:
-                personaje[key] = capitalizar_palabras(personaje[key])
-                if (personaje[key] == dato):
-                    dic_cantidad[dato] += 1
-            lista_resultado.append(dic_cantidad)
+                if(type(personaje[key]) == type(str())):
+                    personaje[key] = capitalizar_palabras(personaje[key])
+                lista_agrupacion.append(personaje[key])
+        
+            lista_agrupacion = set(lista_agrupacion)
+            lista_agrupacion = list(lista_agrupacion)
 
-        retorno = lista_resultado
-    else:
-        dic_error = {"Error": "La lista se encuentra vacia"}
-        retorno = dic_error
+            lista_resultado = []
+            for dato in lista_agrupacion:
+                dic_dato = {dato:0}
+                for personaje in lista_heroes:
+                    if (personaje[key] == dato):
+                        dic_dato[dato] += 1
+                lista_resultado.append(dic_dato)  
+
+            dic_resultado = {}
+            for dato in lista_resultado:
+                dic_resultado = dic_resultado | dato
+                
+            retorno = dic_resultado
+        else:
+            dic_error = {"Error": "La lista se encuentra vacia"}
+            retorno = dic_error
+        
+    except:
+        retorno = "La key no puede ser evaluada"
     return retorno
 
+
 cantidad_tipo = calcular_cantidad_tipo(lista_personajes,"color_ojos")
-print(cantidad_tipo)
+#print(cantidad_tipo)
 
 #5.2
 def guardar_cantidad_heroes_tipo(dic_heroe:dict,key:str):
-    for elemento in dic_heroe:
-        print(elemento)
+    try:
+        mensaje = ""
+        for elemento in dic_heroe:
+            mensaje += "Caracteristica: {0} - {1} - Cantidad de Heroes - {2}\n".format(key,elemento,1)
+        guardar_archivo(f"Clase_8\Ejercicio10\heroes_cantidad_{key}.csv",mensaje)
+        retorno = True
+    except:
+        retorno = False
+    return retorno
+guardar_cantidad_heroes_tipo(cantidad_tipo,"color_ojos")
 
-#guardar_cantidad_heroes_tipo(cantidad_tipo,"color_pelo")
+#5.3
+def stark_calcular_cantidad_por_tipo(lista_heroes:list,key:str):
+    try:
+        dic_cantidad = calcular_cantidad_tipo(lista_heroes,key)
+        guardar_cantidad_heroes_tipo(dic_cantidad,key)
+        retorno = True
+    except:
+        retorno = False
+    return retorno
+
+#stark_calcular_cantidad_por_tipo(lista_personajes,"color_pelo")
+
 #---------------------PUNTO 6----------------
+def obtener_lista_de_tipos():
+    pass
