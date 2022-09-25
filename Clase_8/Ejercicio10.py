@@ -1,13 +1,43 @@
+
 import re
 import json
 
-#from Clase_4.Ejercicio7 import *
+def stark_normalizar_datos(lista:list):
+    cambio = False
+    for indice in range(len(lista)):
+        for clave in lista[indice]:
+            if (len(lista) > 0):
+                if(type(clave) == type("") and type(clave) != type(float()) and type(clave) != type(int())):
+                    if (clave == "altura" or clave == "peso"):
+                        cambio = True
+                        lista[indice][clave] = float(lista[indice][clave])
+                    elif (clave == "fuerza"):
+                        lista[indice][clave] = int(lista[indice][clave]) 
+            else:
+                print("\nError: Lista de heroes vacia")   
+    if (cambio == True):
+        print("\n---Datos normalizados---\n") 
+
 
 def imprimir_dato(dato:str):
     '''
     Imprime un dato del tipo string pasado por parametro
     '''
     print(dato)
+
+def dividir(dividendo:int,divisor:int):
+    '''
+    Esta funcion se encarga de dividir
+
+    Parametros: Recibe un numero que representa el dividendo y otro que representa el divisor
+
+    Retorna el resultado de la division o un (0) en caso de no poder hacerse
+    '''
+    if (divisor == 0):
+        return 0
+    else:
+        division = dividendo // divisor
+        return division
 
 #---------------------PUNTO 1----------------
 
@@ -65,6 +95,7 @@ def leer_archivo(nombre_archivo:str)->list:
 #    print("\n")
 #    print(personaje)
 lista_personajes = leer_archivo("Clase_8\data_stark.json")
+stark_normalizar_datos(lista_personajes)
 
 #1.5
 def guardar_archivo(archivo_a_guardar:str,archivo_contenido:str):
@@ -120,6 +151,7 @@ def obtener_nombre_y_dato(heroe:dict,key:str) -> str:
 #2.1
 def es_genero(heroe:dict,genero:str) -> bool:
     retorno = False
+    genero = genero.upper()
     if (genero == heroe["genero"]):
         retorno = True
     return retorno
@@ -128,15 +160,182 @@ def es_genero(heroe:dict,genero:str) -> bool:
 
 #2.2
 def stark_guardar_heroe_genero(lista_heroes:list,genero:str):
+    heroes = ""
     for heroe in lista_heroes:
         validacion = es_genero(heroe,genero)
         if (validacion == True):
-            guardar_archivo("Clase_8\personajes.csv",heroe["nombre"])   
-         
+            nombre = obtener_nombre_capitalizado(heroe)
+            print(nombre)
+            nombre = nombre.replace("Nombre: ","")
+            heroes += nombre + ","
 
+            
+    guardar_archivo("Clase_8\personajes.csv",heroes)  
+    
 
-stark_guardar_heroe_genero(lista_personajes,"F")
+#stark_guardar_heroe_genero(lista_personajes,"f")
+
 #---------------------PUNTO 3----------------
+
+#3.1
+def calcular_min_genero(lista_heroes:list,key:str,genero:str) -> str:
+    flag = False
+    for heroe in lista_heroes:
+        if(flag == False or float(heroe[key]) < minimo):
+            validacion = es_genero(heroe,genero)
+            if(validacion == True):
+                minimo = float(heroe[key])
+                heroe_minimo = f"{obtener_nombre_y_dato(heroe,key)}"
+                flag = True
+    return heroe_minimo
+
+#print(calcular_min_genero(lista_personajes,"fuerza","M"))
+
+#3.2
+def calcular_max_genero(lista_heroes:list,key:str,genero:str) -> str:
+    flag = False
+    for heroe in lista_heroes:
+        if(flag == False or float(heroe[key]) > maximo):
+            validacion = es_genero(heroe,genero)
+            if(validacion == True):
+                maximo = float(heroe[key])
+                heroe_maximo = f"{obtener_nombre_y_dato(heroe,key)}"
+                flag = True
+    return heroe_maximo
+
+#print(calcular_max_genero(lista_personajes,"altura","M"))
+
+#3.3
+def calcular_max_min_dato(lista_heroes:list,key:str,genero:str,tipo:str) -> str:
+    tipo = tipo.lower()
+    if(tipo == "maximo"):
+        retorno = calcular_max_genero(lista_heroes,key,genero)
+    elif(tipo == "minimo"):
+        retorno = calcular_min_genero(lista_heroes,key,genero)
+    return retorno
+
+#print(calcular_max_min_dato(lista_personajes,"altura","M","minimo"))   
+
+#3.4
+def stark_calcular_imprimir_guardar_heroe_genero(lista_heroes:list,key:str,genero:str,tipo:str):
+    heroe = calcular_max_min_dato(lista_heroes,key,genero,tipo)
+    tipo = tipo.lower()
+    if (tipo == "minimo"):
+        principio = "Menor"
+    elif (tipo == "maximo"):
+        principio = "Mayor"
+    nombre_formato = f"{principio} {key}: {heroe}"
+    nombre_formato = capitalizar_palabras(nombre_formato)
+    imprimir_dato(nombre_formato)
+    try:
+        guardar_archivo(f"Clase_8\heroes_{tipo}_{key}_{genero}.csv",nombre_formato)
+        retorno = True
+    except:
+        retorno = False
+    return retorno
+
+#stark_calcular_imprimir_guardar_heroe_genero(lista_personajes,"peso","M","maximo")
 #---------------------PUNTO 4----------------
+
+#4.1
+def sumar_dato_heroe_genero(lista_heroes:list,key:str,genero:str):
+    try:
+        lista_suma = []
+        for heroe in lista_heroes:
+            flag = True
+            if (type(heroe) == type({}) and len(heroe) > 0 and heroe["genero"] == genero):
+                if (flag == True and type(heroe[key]) == type(str())):
+                    suma = ""
+                    flag = False
+                elif(flag == True and type(heroe[key]) == type(int())):
+                    suma = 0
+                    flag = False
+                elif(flag == True and type(heroe[key]) == type(float())):
+                    suma = 0.0
+                    flag = False
+                lista_suma.append(heroe[key])  
+
+        for heroe in lista_suma:
+            if (type(heroe) == type(str())):
+                suma += " "
+            suma += heroe
+        retorno = suma
+    except:
+        retorno = -1               
+    return retorno
+
+#print(sumar_dato_heroe_genero(lista_personajes,"fuerza","F"))
+
+#4.2
+def cantidad_heroes_genero(lista_heroes:list,genero:str):
+    cantidad = 0
+    for heroe in lista_heroes:
+        if (heroe["genero"] == genero):
+            cantidad += 1
+    return cantidad
+
+#print(cantidad_heroes_genero(lista_personajes,"F"))
+
+#4.3
+def calcular_promedio_genero(lista_heroes:list,key:str,genero:str):
+    suma = sumar_dato_heroe_genero(lista_heroes,key,genero)
+    cantidad = cantidad_heroes_genero(lista_heroes,genero)
+    retorno = dividir(suma,cantidad)
+    return retorno
+
+#print(calcular_promedio_genero(lista_personajes,"fuerza","F"))
+
+#4.4
+def stark_calcular_imprimir_guardar_promedio_altura_genero(lista_heroes:list,genero:str):
+    if (len(lista_heroes) > 0):
+        altura_promedio = calcular_promedio_genero(lista_heroes,"altura",genero)
+        contenido = "Altura promedio de genero {1}: {0}".format(altura_promedio,genero)
+        imprimir_dato(contenido)
+        guardar_archivo(f"Clase_8\heroes_promedio_altura_{genero}.csv",contenido)
+        retorno = True
+    else:
+        imprimir_dato("Error: Lista de héroes vacia")
+        retorno = False
+    return retorno
+
+#stark_calcular_imprimir_guardar_promedio_altura_genero(lista_personajes,"M")
+
 #---------------------PUNTO 5----------------
+
+#5.1
+def calcular_cantidad_tipo(lista_heroes:list,key:str):
+    if (len(lista_heroes) > 0):
+        lista_agrupacion = []
+        for personaje in lista_personajes:
+            personaje[key] = capitalizar_palabras(personaje[key])
+            lista_agrupacion.append(personaje[key])
+        
+
+        lista_agrupacion = set(lista_agrupacion)
+        #print(lista_agrupacion)
+        
+        lista_resultado = []
+        for dato in lista_agrupacion:
+            dic_cantidad = {dato:0}
+            for personaje in lista_personajes:
+                personaje[key] = capitalizar_palabras(personaje[key])
+                if (personaje[key] == dato):
+                    dic_cantidad[dato] += 1
+            lista_resultado.append(dic_cantidad)
+
+        retorno = lista_resultado
+    else:
+        dic_error = {"Error": "La lista se encuentra vacia"}
+        retorno = dic_error
+    return retorno
+
+cantidad_tipo = calcular_cantidad_tipo(lista_personajes,"color_ojos")
+print(cantidad_tipo)
+
+#5.2
+def guardar_cantidad_heroes_tipo(dic_heroe:dict,key:str):
+    for elemento in dic_heroe:
+        print(elemento)
+
+#guardar_cantidad_heroes_tipo(cantidad_tipo,"color_pelo")
 #---------------------PUNTO 6----------------
