@@ -1,16 +1,31 @@
-'''
-Archivos
-Modos de apertura
+import re
 
-r = abre un archivo en modo lectura
-w = abre un archivo en solo escritura (si existe lo sobrescribe)
-a = abre un archivo para anexar informacion (como el append)
+def validar_respuesta(respuesta:str,patron:str):
+    retorno = -1
+    if respuesta:
+        if(re.match(patron,respuesta)):
+            retorno = respuesta
+    return retorno
 
-Para trabajar con archivos siempre hay acordarnos de abrirlo (open), y cerrarlo una vez termino de ejecutar las cosas (close)
-Dentro del archivo open le pasamos el nombre del archivo al que queremos acceder y despues el modo de apertura (r,w,a,etc)
-Todo eso devuelde un archivo file que lo guardamos en una variable
+def validar_respuesta(respuesta:str):
+    retorno = -1
+    if respuesta:
+        if(re.match("[0-9]+",respuesta)):
+            retorno = respuesta
+    return retorno
 
-Para cerrar el archivo usamos la funcion .close()
+def validar_respuesta(respuesta:str):
+    retorno = -1
+    if respuesta:
+        if(re.match("[a-zA-Z]+",respuesta)):
+            respuesta.upper()
+            retorno = respuesta
+    return retorno
 
-
-'''
+def validar_respuesta(respuesta:str):
+    retorno = -1
+    if respuesta:
+        if(re.match("^good|average|high$",respuesta)):
+            respuesta.upper()
+            retorno = respuesta
+    return retorno
