@@ -1,67 +1,64 @@
 from funciones import *
 
-Lista_personajes = leer_archivo("Clase_10\Ejercicio12\data_stark.json")
+Lista_personajes = importar_archivo("Repaso\Heroes\data_stark.json")
 
 def heroes_app(lista_heroes:list):
     while(True):
         opcion = menu_principal()
-        if (opcion == "1"):
-            cantidad = input("Ingrese la cantidad: ")
-            cantidad = int(validar_respuesta(cantidad,"[0-9]+"))
+        if(opcion == "1"):
+            cantidad = input("Ingrese cantidad: ")
+            cantidad = int(validar_respuesta_general(cantidad,"[0-9]+"))
             if (cantidad == -1):
                 print("Error: Ingrese un numero entero")
                 continue
             lista = mostrar_heroes(lista_heroes,cantidad)
-            mensaje = convertir_lista_str_formateado(lista,"identidad")
+            mensaje = mostrar_heroe_formateado(lista)
             print(mensaje)
         elif(opcion == "2"):
-            orden = input("Quiere ordenar la lista de manera ascendente (asc) o descendente (desc)? ")
-            orden = orden.lower()
-            orden = validar_respuesta(orden,"^asc|desc$")
+            orden = input("Ingrese el orden (asc/desc)")
+            orden = validar_respuesta_general(orden,"^asc|desc$")
             if (orden == -1):
-                print("Error, Ingrese asc o desc")
+                print("Error: Ingrese 'asc' o 'desc'")
                 continue
-            lista_altura = ordenar_dato(lista_heroes,"altura",orden)
-            mensaje = convertir_lista_str_formateado(lista_altura,"altura")
+            lista = ordenar_lista(lista_heroes,"altura",orden)
+            mensaje = mostrar_heroe_formateado(lista)
             print(mensaje)
         elif(opcion == "3"):
-            orden = input("Quiere ordenar la lista de manera ascendente (asc) o descendente (desc)? ")
-            orden = orden.lower()
-            orden = validar_respuesta(orden,"^asc|desc$")
+            orden = input("Ingrese el orden (asc/desc): ")
+            orden = validar_respuesta_general(orden,"^asc|desc$")
             if (orden == -1):
-                print("Error, Ingrese asc o desc")
+                print("Error: Ingrese 'asc' o 'desc'")
                 continue
-            lista_fuerza = ordenar_dato(lista_heroes,"fuerza",orden)
-            mensaje = convertir_lista_str_formateado(lista_fuerza,"fuerza")
+            lista = ordenar_lista(lista_heroes,"fuerza",orden)
+            mensaje = mostrar_heroe_formateado(lista)
             print(mensaje)
         elif(opcion == "4"):
-            tipo = input("Quiere filtrar los datos menores o mayores al promedio (menor/mayor)? ")
+            key = input("Ingrese la clave a promediar: ")
+            key = validar_respuesta_general(key,"^altura|peso|fuerza$")
+            tipo = input("Ingrese menor o mayor: ")
             tipo = tipo.lower()
-            tipo = validar_respuesta(tipo,"^menor|mayor$")
-            key = input("Ingrese una key del tipo numerico: ")
-            key = validar_respuesta(key,"^altura|peso|fuerza$")
+            tipo = validar_respuesta_general(tipo,"^menor|mayor$")
             if(tipo == -1):
                 print("Error: Tipo invalido, Ingrese menor o mayor")
                 continue
             if(key == -1):
                 print("Error: La key no es numerica")    
                 continue
-            lista_filtro = filtrar_por_dato(lista_heroes,key,tipo)
-            mensaje = convertir_lista_str_formateado(lista_filtro,key)
+            lista = filtrar_heroes_por_dato(lista_heroes,key,tipo)
+            mensaje = mostrar_heroe_formateado(lista)
             print(mensaje)
         elif(opcion == "5"):
-            tipo = input("Ingrese que tipo de inteligencia quiere buscar (good,average,high): ")
+            tipo = input("Ingrese good/average/high: ")
             tipo = tipo.lower()
-            tipo = validar_respuesta(tipo,"^good|average|high$")
-            if(tipo == -1):
-                print("Error: Tipo invalido, Ingrese alguna de las opciones correctas")
-                continue
-            lista_int = buscar_heroe_tipo(lista_heroes,"inteligencia",tipo)
-            mensaje = convertir_lista_str_formateado(lista_int,"inteligencia")
-            print(mensaje)
+            tipo = validar_respuesta_general(tipo,"^good|average|high$")
+            buscar_e_imprimir_heroe_tipo(lista_heroes,"inteligencia",tipo)
         elif(opcion == "6"):
-            exportar_csv(mensaje)
+            try:
+                exportar_csv(mensaje)
+            except:
+                print("Primero ingrese alguna de estas opciones (1-4)")
+                continue
         elif(opcion == "7"):
             break
-
+    
 heroes_app(Lista_personajes)

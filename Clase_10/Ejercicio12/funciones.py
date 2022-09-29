@@ -1,21 +1,38 @@
 import json
 import re
 
-#------------------ Punto 0 -------------------
-
-def leer_archivo(nombre_archivo:str) -> list:
+#VALIDACIONES
+def validar_dato_menu(texto_usuario:str) -> str:
     '''
-    Esta funcion se encarga de cargar un archivo de solo lectura
+    Esta funcion se encarga de obtener y validar un dato ingresado por el usuario
 
-    Parametros: La ruta del archivo que queremos cargar
+    Parametros: Un dato del tipo str que contiene lo que ingresa el usuario
 
-    Retorna: Una lista con los heroes
+    Retorna: El dato ingresado, o -1 en caso contrario
     '''
-    lista_archivo = {}
-    with open(nombre_archivo,"r") as archivo:
-        lista_archivo = json.load(archivo)
-    return lista_archivo["heroes"]
+    retorno = -1
+    dato_ingresado = input(texto_usuario)
+    dato_validado = re.match("^[1-7]{1}$",dato_ingresado)
+    if (dato_validado != None):
+        retorno = dato_ingresado
+    return retorno
 
+def validar_respuesta_general(respuesta:str,patron:str) -> str:
+    '''
+    Esta funcion se encarga de validar el dato ingresado por el usuario
+
+    Parametros: Un dato del tipo str que contiene lo que ingresa el usuario, 
+    y un dato del tipo str que contiene el patron que vamos a usar para validar
+
+    Retorna: El dato ingresado, o -1 en caso contrario
+    '''
+    retorno = -1
+    if respuesta:
+        if(re.match(patron,respuesta)):
+            retorno = respuesta
+    return retorno
+
+#MENU
 def imprimir_menu():
     '''
     Esta funcion se encarga de imprimir el menu
@@ -32,42 +49,106 @@ def imprimir_menu():
 
 def menu_principal():
     '''
-    Esta funcion se encarga de obtener un dato del usuario y validarlo
+    Esta funcion se encarga de imprimir el menu principal e tomar la opcion ingresada por el usuario
 
-    Retorna: El dato en caso de estar todo bien, -1 en caso contrario
+    Retona: La opcion dada por el usuario
     '''
     imprimir_menu()
-    opcion = validar_dato_ingresado("Ingrese una opcion: ")
+    opcion = validar_dato_menu("Ingrese una opcion: ")
     return opcion
 
-def validar_dato_ingresado(texto_usuario:str) -> str:
+def importar_archivo(path:str) -> list:
     '''
-    Esta funcion se encarga de validar el dato ingresado en el menu principal
+    Esta funcion se encarga de importar el archivo que le pasemos por parametro a una lista nueva
 
-    Parametros: Un dato del tipo str que contiene lo que se le muestra al usuario
+    Parametros: Una direccion del tipo str que va a ser la ruta de donde exportemos
 
-    Retorna: El dato ingresado, o -1 en caso contrario
+    Retorna: Una lista con los datos importados
     '''
-    dato_ingresado = input(texto_usuario)
-    dato_validado = re.match("^[1-7]{1}$",dato_ingresado)
-    if (dato_validado == None):
-        retorno = -1
-    else:
-        retorno = dato_ingresado
+    with open(path,"r") as archivo:
+        lista = json.load(archivo)
+    return lista["heroes"]
+
+#PUNTOS
+def mostrar_heroe_formateado(lista_heroes:list) -> str:
+    mensaje = ""
+    for heroe in lista_heroes:
+        mensaje += "\nNombre: {0}\nIdentidad: {1}\nAltura: {2}\nPeso: {3}\nFuerza {4}\nInteligencia: {5}\n".format(heroe["nombre"],heroe["identidad"],heroe["altura"],heroe["peso"],heroe["fuerza"],heroe["inteligencia"])
+    return mensaje
+
+def convertir_lista_a_str():
+    pass
+
+def mostrar_heroes(lista_hereos:list,cantidad:int) -> list:
+    '''
+    Esta funcion mostrara los heroes dependiendo de la cantidad seleccionada por el usuario
+    
+    Parametro: Una lista de heroes del tipo list, un dato cantidad del tipo int que representa hasta donde leer la lista
+
+    Retorna: Una lista cortada por la cantidad ingresada
+    '''
+    lista = lista_hereos[:]
+    lista_cortada = lista[:cantidad]
+    return lista_cortada
+
+def buscar_min_max(lista_heroes:list,key:str,orden:str) -> int:
+    '''
+    Esta funcion se encarga de buscar la posicion de la lista con el valor maximo o minimo
+
+    Parametros: Una lista de heroes del tipo list, Una key que representa la clave a evaluar 
+    y un orden que decide si devuelve la posicion maxima o minima
+
+    Retorna: Posicion minima o maxima del dato evaluado
+    '''
+    retorno = -1
+    if (len(lista_heroes) > 0):
+        min_max = 0
+        for i in range(len(lista_heroes)):
+            if (orden == "asc" and lista_heroes[min_max][key] > lista_heroes[i][key] or orden == "desc" and lista_heroes[min_max][key] < lista_heroes[i][key]):
+                min_max = i
+        retorno = min_max
     return retorno
 
-def convertir_lista_str_formateado(lista:list,key:str) -> str:
+def ordenar_lista(lista_heroes:list,key:str,orden:str) -> list:
     '''
-    Esta funcion se encarga de convertir una lista a un str
+    Esta funcion se encarga de ordenar una lista
 
-    Parametros: Una lista del tipo list, una key del tipo str
+    Parametros: Una lista de heroes del tipo list, una key que representa la clave a ordenar, y el orden que determminar el ordenamiento de la lista
 
-    Retorna: Toda la lista formateada en un str
+    Retorna: Una lista ordenada por la clave ingresada y el orden dado
     '''
-    mensaje = ""
-    for elemento in lista:
-        mensaje += "{0} - {1}\n".format(elemento["nombre"],elemento[key])
-    return mensaje
+    lista = lista_heroes[:]
+    lista_ordenada = []
+    while(len(lista) > 0):
+        min_max = buscar_min_max(lista,key,orden)
+        lista_ordenada.append(lista.pop(min_max))
+    return lista_ordenada
+
+def sumar_dato(lista_heroes:list,key:str):
+    '''
+    Esta funcion se encarga de sumar datos numericos y agregarlo en una nueva variable
+
+    Parametros: Una lista de heroes del tipo list, y una key del tipo str que representa la clave a ser evaluada
+
+    Retona: La suma obtenida
+    '''
+    suma = 0
+    for heroe in lista_heroes:
+        suma += heroe[key]
+    return suma
+
+def calcular_cantidad_heroe(lista_heroes:list) -> int:
+    '''
+    Esta funcion se encarga de contar la cantidad de heroes de la lista
+
+    Parametros: Una lista de heroes del tipo str
+
+    Retona: La cantidad de heroes
+    '''
+    cantidad = 0
+    for elemento in lista_heroes:
+        cantidad += 1
+    return cantidad
 
 def dividir(dividendo:int,divisor:int) -> int:
     '''
@@ -78,101 +159,11 @@ def dividir(dividendo:int,divisor:int) -> int:
     Retorna: El resultado de la division o un - 0 - en caso de no poder hacerse
     '''
     if (divisor == 0):
-        retorno = 0
+        retorno = -1
     else:
         division = dividendo // divisor
         retorno = division
     return retorno
-
-def validar_respuesta(respuesta:str,patron:str):
-    '''
-    Esta funcion se encarga de validar datos en general
-
-    Parametros: Una respuesta del tipo str que es el dato a validar, Un patron del tipo str que es la expresion regular
-
-    Retorna: El dato validado o -1 en caso contrario
-    '''
-    retorno = -1
-    if respuesta:
-        if(re.match(patron,respuesta)):
-            retorno = respuesta
-    return retorno
-
-
-#------------------ Punto 1 -------------------
-
-def mostrar_heroes(lista_heroes:list,cantidad:int) -> list:
-    '''
-    Esta funcion se encarga de mostrar la lista de heroes hasta la cantidad que nosotros queramos
-
-    Parametros: Una lista de heroes del tipo str, una cantidad que va a ser nuestro maximo
-
-    Retorna: Una lista cortada hasta el punto que le hayamos indicado
-    '''
-    lista = lista_heroes[:]
-    lista = lista[:cantidad]
-    return lista
-
-#------------------ Punto 2 -------------------
-#------------------ Punto 3 -------------------
-def buscar_max_minimo(lista:list,key:str,order:str) -> int:
-    '''
-    Esta funcion se encarga de encontrar la posicion minima o maxima de una lista
-
-    Parametros: Una lista de heroes del tipo list, una key del tipo str que representa la clave a buscar, y un orden que determina el ordenamiento de la lista
-
-    Retorna: La posicion del elemento a buscar o -1 en caso contrario
-    '''
-    retorno = -1
-    if (len(lista) > 0):
-        min_max = 0
-        for i in range(len(lista)):
-            if ((order == "asc" and lista[min_max][key] > lista[i][key]) or (order == "desc" and lista[min_max][key] < lista[i][key])):
-                min_max = i
-        retorno = min_max
-    return retorno       
-
-def ordenar_dato(lista:list,key:str,order:str) -> list:
-    '''
-    Esta funcion se encarga de ordenar una lista
-
-    Parametros: Una lista de heroes del tipo list, una key que representa la clave a ordenar, y el orden que determminar el ordenamiento de la lista
-
-    Retorna: Una lista ordenada por la clave ingresada y el orden dado
-    '''
-    lista_copiada = lista[:]
-    lista_ordenada = []
-    while(len(lista_copiada) > 0):
-        max_min = buscar_max_minimo(lista_copiada,key,order)
-        lista_ordenada.append(lista_copiada.pop(max_min))
-    return lista_ordenada   
-
-#------------------ Punto 4 -------------------
-def sumar_dato(lista_heroes:list,key:str) -> str:
-    '''
-    Esta funcion se encarga de sumar datos numericos y agregarlo en una nueva variable
-
-    Parametros: Una lista de heroes del tipo list, y una key del tipo str que representa la clave a ser evaluada
-
-    Retona: La suma obtenida
-    '''
-    sumar = 0
-    for heroe in lista_heroes:
-        sumar += heroe[key]
-    return sumar
-
-def cantidad_heroes(lista_heroes:list) -> int:
-    '''
-    Esta funcion se encarga de contar la cantidad de heroes de la lista
-
-    Parametros: Una lista de heroes del tipo str
-
-    Retona: La cantidad de heroes
-    '''
-    cantidad = 0
-    for heroe in lista_heroes:
-        cantidad += 1
-    return cantidad
 
 def calcular_promedio(lista_heroes:list,key:str) -> int:
     '''
@@ -183,11 +174,11 @@ def calcular_promedio(lista_heroes:list,key:str) -> int:
     Retona: El promedio obtenido
     '''
     suma = sumar_dato(lista_heroes,key)
-    cantidad = cantidad_heroes(lista_heroes)
-    retorno = dividir(suma,cantidad)
-    return retorno
+    cantidad = calcular_cantidad_heroe(lista_heroes)
+    promedio = suma // cantidad
+    return promedio
 
-def filtrar_por_dato(lista_heroes:list,key:str,tipo:str) -> list:
+def filtrar_heroes_por_dato(lista_heroes:list,key:str,tipo:str):
     '''
     Esta funcion se encarga de filtrar los datos que esten por debajo o arriba del promedio
 
@@ -197,35 +188,32 @@ def filtrar_por_dato(lista_heroes:list,key:str,tipo:str) -> list:
     Retorna: Una lista que muestre datos debajo del promedio o arriba del mismo
     '''
     promedio = calcular_promedio(lista_heroes,key)
-    print(f"Promedio - {promedio}")
-    tipo = tipo.lower()
-    lista_promedio = []
+    print(f"\nPromedio - {promedio}")
+    lista_ordenada = []
     for heroe in lista_heroes:
-        if(tipo == "mayor" and promedio < heroe[key]):
-            lista_promedio.append(heroe)
-            order = "asc"
-        elif(tipo == "menor" and promedio > heroe[key]):
-            lista_promedio.append(heroe)
-            order = "desc"
-    lista_promedio = ordenar_dato(lista_promedio,key,order)
-    return lista_promedio
+        if (tipo == "menor" and promedio < heroe[key]):
+            lista_ordenada.append(heroe)
+            orden = "asc"
+        elif (tipo == "mayor" and promedio > heroe[key]):
+            lista_ordenada.append(heroe)
+            orden = "desc"
+    lista_ordenada = ordenar_lista(lista_ordenada,key,orden)
+    return lista_ordenada
 
-#------------------ Punto 5 -------------------
-def buscar_heroe_tipo(lista_heroes:list,key:str,tipo:str) -> list:
+def buscar_e_imprimir_heroe_tipo(lista_heroes:list,key:str,tipo:str):
     '''
-    Esta funcion se encarga de buscar un heroe por alguna clave en especifico
+    Esta funcion se encarga de buscar un heroe por alguna clave en especifico e imprimirlo por pantalla
 
     Parametros: Una lista de heroes del tipo list, una key del tipo str que representa la clave a evaluar y tipo que es el valor de la clave que queremos buscar
-
-    Retorna: Una lista que contiene los heroes que coincidieron con la busqueda
     '''
-    lista_inteligencia = []
     for heroe in lista_heroes:
-        if (heroe[key] == tipo):
-            lista_inteligencia.append(heroe)
-    return lista_inteligencia
+        if(heroe["inteligencia"] == ""):
+            heroe["inteligencia"] = "No tiene"
+        match = re.search(tipo,heroe[key])
+        if(match != None):
+            mensaje = "\nNombre: {0}\nIdentidad: {1}\nAltura: {2}\nPeso: {3}\nFuerza {4}\nInteligencia: {5}".format(heroe["nombre"],heroe["identidad"],heroe["altura"],heroe["peso"],heroe["fuerza"],heroe["inteligencia"])
+            print(mensaje)
 
-#------------------ Punto 6 -------------------
 def exportar_csv(mensaje:str):
     '''
     Esta funcion se encarga de exportar un dato a un archivo .csv
@@ -234,4 +222,5 @@ def exportar_csv(mensaje:str):
     '''
     with open("Clase_10\Ejercicio12\lista_exportada.csv","w") as archivo:
         mensaje = archivo.write(mensaje)
+        print("El archivo se creo con exito")
 
