@@ -1,6 +1,6 @@
 from funciones import *
 
-lista_personajes = leer_archivo("Clase_8\Ejercicio10\data_stark.json")
+lista_personajes = leer_archivo("Clase_08\Ejercicio10\data_stark.json")
 stark_normalizar_datos(lista_personajes)
 
 #1.3

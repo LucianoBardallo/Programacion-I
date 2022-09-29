@@ -145,7 +145,7 @@ def stark_guardar_heroe_genero(lista_heroes:list,genero:str):
             heroes += nombre + ","
 
             
-    guardar_archivo("Clase_8\Ejercicio10\personajes.csv",heroes)  
+    guardar_archivo("Clase_08\Ejercicio10\personajes.csv",heroes)  
 
 #---------------------PUNTO 3----------------
 
@@ -197,7 +197,7 @@ def stark_calcular_imprimir_guardar_heroe_genero(lista_heroes:list,key:str,gener
     nombre_formato = capitalizar_palabras(nombre_formato)
     imprimir_dato(nombre_formato)
     try:
-        guardar_archivo(f"Clase_8\Ejercicio10\heroes_{tipo}_{key}_{genero}.csv",nombre_formato)
+        guardar_archivo(f"Clase_08\Ejercicio10\heroes_{tipo}_{key}_{genero}.csv",nombre_formato)
         retorno = True
     except:
         retorno = False
@@ -255,7 +255,7 @@ def stark_calcular_imprimir_guardar_promedio_altura_genero(lista_heroes:list,gen
         altura_promedio = calcular_promedio_genero(lista_heroes,"altura",genero)
         contenido = "Altura promedio de genero {1}: {0}".format(altura_promedio,genero)
         imprimir_dato(contenido)
-        guardar_archivo(f"Clase_8\Ejercicio10\heroes_promedio_altura_{genero}.csv",contenido)
+        guardar_archivo(f"Clase_08\Ejercicio10\heroes_promedio_altura_{genero}.csv",contenido)
         retorno = True
     else:
         imprimir_dato("Error: Lista de héroes vacia")
@@ -306,7 +306,7 @@ def guardar_cantidad_heroes_tipo(dic_heroe:dict,key:str):
         for elemento in dic_heroe:
             mensaje += "Caracteristica: {0} - {1} - Cantidad de Heroes - {2}\n".format(key,elemento,dic_heroe[elemento])
         print(mensaje)
-        guardar_archivo(f"Clase_8\Ejercicio10\heroes_cantidad_{key}.csv",mensaje)
+        guardar_archivo(f"Clase_08\Ejercicio10\heroes_cantidad_{key}.csv",mensaje)
         retorno = True
     except:
         retorno = False
@@ -386,7 +386,7 @@ def guardar_heroes_por_tipo(dic_valor:dict,key:str):
 
         separador = "\n"
         separador = separador.join(lista_nueva)
-        guardar_archivo(f"Clase_8\Ejercicio10\heroes_segun_{key}.csv",separador)
+        guardar_archivo(f"Clase_08\Ejercicio10\heroes_segun_{key}.csv",separador)
         retorno = True
     except:
         retorno = False
