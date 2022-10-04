@@ -1,3 +1,0 @@
-#Parcial Programacion
-
-
