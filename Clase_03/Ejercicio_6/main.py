@@ -2,22 +2,6 @@ from data_stark import lista_personajes
 
 from funciones import *
 
-'''
-#--------------------- Punto B -------------------------------
-#----Recorriendo nombres de la lista-----
-for personaje in lista_personajes:
-    print(personaje["nombre"])
-
-#--------------------- Punto C -------------------------------
-#---Recorriendo nombres con altura en la lista---
-for personaje in lista_personajes:
-    print(personaje["nombre"], personaje["altura"])
-
-#----Nombre personaje con mas y menos altura----
-print("Personaje mas alto: {0} \nPersonaje mas bajo: {1}".format(superheroe_mas_alto["nombre"], superheroe_mas_bajo["nombre"]))
-
-'''
-
 #--------------------- MENU -------------------------------
 def menu_app():
     while(True):

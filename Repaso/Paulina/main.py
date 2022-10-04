@@ -18,7 +18,7 @@
 import func
 
 def paulina_app():
-    lista_videos = func.cargar_json("./CLASE_repaso_pp/data_paulina.json")
+    lista_videos = func.cargar_json("Repaso\Paulina\data_paulina_reduce.json")
     while(True):
         print("1 - Listar TOP N videos\n2 - Ordenar videos por duracion (UP/DOWN)\n3 - Ordenar videos por cantidad de views (UP/DOWN)\n4 - Buscar videos por título \n5 - Exportar lista de videos a CSV\n6 - Salir")
         respuesta = input()
@@ -36,7 +36,7 @@ def paulina_app():
             patron = input("Burcar: ")
             func.buscar(lista_videos,patron)
         elif(respuesta=="5"):
-            func.exprotar_csv(lista_videos,"./CLASE_repaso_pp/paulina.csv")
+            func.exprotar_csv(lista_videos,"Repaso\Paulina/paulina.csv")
         elif(respuesta=="6"):
             break
 

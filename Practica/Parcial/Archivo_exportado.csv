@@ -1,0 +1,32 @@
+
+ID: 172
+Nombre: Pichu
+Tipo: ['electrico']
+Evoluciones: ['pikachu', 'raichu', 'raichu de alola']
+Poder: 3
+Fortaleza: ['agua']
+Debilidad: ['planta', 'piedra'],
+
+ID: 25
+Nombre: Pikachu
+Tipo: ['electrico']
+Evoluciones: ['raichu', 'raichu de alola']
+Poder: 5
+Fortaleza: ['agua', 'electrico']
+Debilidad: ['planta', 'piedra'],
+
+ID: 26
+Nombre: Raichu
+Tipo: ['electrico']
+Evoluciones: []
+Poder: 20
+Fortaleza: ['agua', 'electrico']
+Debilidad: ['planta', 'piedra'],
+
+ID: 145
+Nombre: Zapdos
+Tipo: ['electrico', 'volador']
+Evoluciones: []
+Poder: 30
+Fortaleza: ['agua']
+Debilidad: ['planta', 'piedra'],

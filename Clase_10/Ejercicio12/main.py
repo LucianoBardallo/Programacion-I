@@ -1,64 +1,60 @@
 from funciones import *
 
-Lista_personajes = importar_archivo("Repaso\Heroes\data_stark.json")
 
-def heroes_app(lista_heroes:list):
+
+def heroes_app():
+    lista_heroes = importar_archivo("Repaso\Heroes\data_stark.json")
+    lista_heroes = normalizar_datos(lista_heroes)
+    lista = ""
     while(True):
         opcion = menu_principal()
         if(opcion == "1"):
-            cantidad = input("Ingrese cantidad: ")
-            cantidad = int(validar_respuesta_general(cantidad,"[0-9]+"))
-            if (cantidad == -1):
-                print("Error: Ingrese un numero entero")
-                continue
+            cantidad = int(validar_dato_general("Ingrese cantidad: ","[0-9]+"))
+            if(cantidad == -1 or cantidad > len(lista_heroes)):
+                print("Error: La cantidad no es correcta")
+                continue   
             lista = mostrar_heroes(lista_heroes,cantidad)
-            mensaje = mostrar_heroe_formateado(lista)
-            print(mensaje)
+            lista = mostrar_heroe_formateado(lista)
+            print(lista)
         elif(opcion == "2"):
-            orden = input("Ingrese el orden (asc/desc)")
-            orden = validar_respuesta_general(orden,"^asc|desc$")
-            if (orden == -1):
-                print("Error: Ingrese 'asc' o 'desc'")
-                continue
+            orden = validar_dato_general("Ingrese el orden (asc/desc): ","^asc|desc$")
+            if(orden == -1):
+                print("Error: El orden no es correcto")
+                continue   
             lista = ordenar_lista(lista_heroes,"altura",orden)
-            mensaje = mostrar_heroe_formateado(lista)
-            print(mensaje)
+            lista = mostrar_heroe_formateado(lista)
+            print(lista)
         elif(opcion == "3"):
-            orden = input("Ingrese el orden (asc/desc): ")
-            orden = validar_respuesta_general(orden,"^asc|desc$")
-            if (orden == -1):
-                print("Error: Ingrese 'asc' o 'desc'")
-                continue
+            orden = validar_dato_general("Ingrese el orden (asc/desc): ","^asc|desc$")
+            if(orden == -1):
+                print("Error: El orden no es correcto")
+                continue   
             lista = ordenar_lista(lista_heroes,"fuerza",orden)
-            mensaje = mostrar_heroe_formateado(lista)
-            print(mensaje)
+            lista = mostrar_heroe_formateado(lista)
+            print(lista)
         elif(opcion == "4"):
-            key = input("Ingrese la clave a promediar: ")
-            key = validar_respuesta_general(key,"^altura|peso|fuerza$")
-            tipo = input("Ingrese menor o mayor: ")
-            tipo = tipo.lower()
-            tipo = validar_respuesta_general(tipo,"^menor|mayor$")
-            if(tipo == -1):
-                print("Error: Tipo invalido, Ingrese menor o mayor")
-                continue
+            key = validar_dato_general("Ingrese la clave a promediar: ","^altura|peso|fuerza$")
             if(key == -1):
-                print("Error: La key no es numerica")    
+                print("Error: La key no es numerica")
+                continue   
+            tipo = validar_dato_general("Ingrese menor o mayor: ","^menor|mayor$")
+            if(tipo == -1):
+                print("Error: Tipo invalido")
                 continue
             lista = filtrar_heroes_por_dato(lista_heroes,key,tipo)
-            mensaje = mostrar_heroe_formateado(lista)
-            print(mensaje)
+            lista = mostrar_heroe_formateado(lista)
+            print(lista)
         elif(opcion == "5"):
-            tipo = input("Ingrese good/average/high: ")
-            tipo = tipo.lower()
-            tipo = validar_respuesta_general(tipo,"^good|average|high$")
-            buscar_e_imprimir_heroe_tipo(lista_heroes,"inteligencia",tipo)
-        elif(opcion == "6"):
-            try:
-                exportar_csv(mensaje)
-            except:
-                print("Primero ingrese alguna de estas opciones (1-4)")
+            tipo = validar_dato_general("Ingrese good/average/high: ","^good|average|high$")
+            if (tipo == -1):
+                print("Error: Tipo invalido")
                 continue
+            lista = buscar_heroe_tipo(lista_heroes,"inteligencia",tipo)
+            lista = mostrar_heroe_formateado(lista)
+            print(lista)
+        elif(opcion == "6" and len(lista) > 0):
+            exportar_csv(lista)
         elif(opcion == "7"):
             break
     
-heroes_app(Lista_personajes)
+heroes_app()
