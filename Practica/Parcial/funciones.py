@@ -186,11 +186,11 @@ def filtrar_pokemon_por_promedio(lista_pokemones:list,key:str,tipo:str):
 
 def buscar_pokemon_dato(lista_pokemones:list,key:str,tipo:str):
     lista_filtrada = []
-    for heroe in lista_pokemones:
-        for i in range(len(heroe[key])):
-            match = re.search(tipo,heroe[key][i])
+    for pokemon in lista_pokemones:
+        for i in range(len(pokemon[key])):
+            match = re.search(tipo,pokemon[key][i])
             if match != None:
-                lista_filtrada.append(heroe)
+                lista_filtrada.append(pokemon)
     return lista_filtrada
 
 def exportar_archivo(contenido:str):

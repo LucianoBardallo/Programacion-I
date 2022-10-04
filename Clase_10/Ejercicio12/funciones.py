@@ -31,25 +31,6 @@ def validar_respuesta(respuesta:str,patron:str) -> str:
     return retorno
 
 #MENU
-def normalizar_datos(lista_pokemones:list):
-    lista = lista_pokemones[:]
-    cambio = False
-    for pokemon in lista:
-        for clave in pokemon:
-            if (len(lista) > 0):
-                if (type(pokemon[clave]) == type("")):
-                    if (re.match("[a-zA-Z]+",pokemon[clave])):
-                        pokemon[clave] = pokemon[clave].capitalize()
-                    elif (re.match("[0-9]+",pokemon[clave])):
-                        pokemon[clave] = int(pokemon[clave])
-                    elif (re.match("[0-9.,]+",pokemon[clave])):
-                        pokemon[clave] = float(pokemon[clave])
-            else:
-                print("\nError: Lista de heroes vacia")   
-    if (cambio == True):
-        print("\n---Datos normalizados---\n")
-    return lista 
-
 def imprimir_menu():
     '''
     Esta funcion se encarga de imprimir el menu
@@ -89,13 +70,17 @@ def importar_archivo(path:str) -> list:
 #PUNTOS
 def mostrar_lista(lista:list):
     for heroe in lista:
+        if(heroe["inteligencia"] == ""):
+            heroe["inteligencia"] = "N/A"
         print("\nNombre: {0}\nIdentidad: {1}\nAltura: {2}\nPeso: {3}\nFuerza {4}\nInteligencia: {5}\n".format(heroe["nombre"],heroe["identidad"],heroe["altura"],heroe["peso"],heroe["fuerza"],heroe["inteligencia"]))
 
 
 def mostrar_heroe_formateado(lista_heroes:list) -> str:
     mensaje = ""
     for heroe in lista_heroes:
-        mensaje += "\nNombre: {0}\nIdentidad: {1}\nAltura: {2}\nPeso: {3}\nFuerza {4}\nInteligencia: {5}\n".format(heroe["nombre"],heroe["identidad"],heroe["altura"],heroe["peso"],heroe["fuerza"],heroe["inteligencia"])
+        if(heroe["inteligencia"] == ""):
+            heroe["inteligencia"] = "N/A"
+        mensaje += "{0},{1},{2},{3},{4},{5}\n".format(heroe["nombre"],heroe["identidad"],heroe["altura"],heroe["peso"],heroe["fuerza"],heroe["inteligencia"])
     return mensaje
 
 def mostrar_heroes(lista_hereos:list,cantidad:int) -> list:
@@ -156,34 +141,6 @@ def sumar_dato(lista_heroes:list,key:str):
         suma += heroe[key]
     return suma
 
-def calcular_cantidad_heroe(lista_heroes:list) -> int:
-    '''
-    Esta funcion se encarga de contar la cantidad de heroes de la lista
-
-    Parametros: Una lista de heroes del tipo str
-
-    Retona: La cantidad de heroes
-    '''
-    cantidad = 0
-    for elemento in lista_heroes:
-        cantidad += 1
-    return cantidad
-
-def dividir(dividendo:int,divisor:int) -> int:
-    '''
-    Esta funcion se encarga de dividir
-
-    Parametros: Recibe un numero que representa el dividendo y otro que representa el divisor
-
-    Retorna: El resultado de la division o un - 0 - en caso de no poder hacerse
-    '''
-    if (divisor == 0):
-        retorno = -1
-    else:
-        division = dividendo // divisor
-        retorno = division
-    return retorno
-
 def calcular_promedio(lista_heroes:list,key:str) -> int:
     '''
     Esta funcion se encarga de calcular el promedio de un dato en especifico
@@ -193,7 +150,7 @@ def calcular_promedio(lista_heroes:list,key:str) -> int:
     Retona: El promedio obtenido
     '''
     suma = sumar_dato(lista_heroes,key)
-    cantidad = calcular_cantidad_heroe(lista_heroes)
+    cantidad = len(lista_heroes)
     promedio = suma // cantidad
     return promedio
 
@@ -211,10 +168,10 @@ def filtrar_heroes_por_dato(lista_heroes:list,key:str,tipo:str):
     lista_ordenada = []
     orden = "menor"
     for heroe in lista_heroes:
-        if (tipo == "menor" and promedio < heroe[key]):
+        if (tipo == "mayor" and promedio < heroe[key]):
             lista_ordenada.append(heroe)
             orden = "asc"
-        elif (tipo == "mayor" and promedio > heroe[key]):
+        elif (tipo == "menor" and promedio > heroe[key]):
             lista_ordenada.append(heroe)
             orden = "desc"
     lista_ordenada = ordenar_lista(lista_ordenada,key,orden)
@@ -227,7 +184,6 @@ def buscar_heroe_tipo(lista_heroes:list,key:str,tipo:str):
     Parametros: Una lista de heroes del tipo list, una key del tipo str que representa la clave a evaluar y tipo que es el valor de la clave que queremos buscar
     '''
     lista_heroes_int = []
-    tipo = tipo.capitalize()
     for heroe in lista_heroes:
         match = re.search(tipo,heroe[key])
         if(match != None):
@@ -241,6 +197,6 @@ def exportar_csv(mensaje:str):
     Parametros: Un mensaje del tipo str que contiene los datos a ingresar al archivo
     '''
     with open("Clase_10\Ejercicio12\lista_exportada.csv","w") as archivo:
-        mensaje = archivo.write(mensaje)
+        archivo.write(mensaje)
         print("El archivo se creo con exito")
 
