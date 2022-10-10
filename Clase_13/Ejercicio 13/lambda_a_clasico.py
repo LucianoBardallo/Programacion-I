@@ -27,10 +27,10 @@ lista_palabras = [
 # Refactorizar a la version clasica de la funcion
 superficie_circulo = lambda x: pow(x, 2) * 3.1415
 
-def calcular_superficie(x:int,y:int) -> float:
-    superficie = pow(x,y) * 3.1415
+def calcular_superficie(x:int) -> float:
+    superficie = pow(x,2) * 3.1415
     return superficie
-print(f'Superficie de circulo: {round(calcular_superficie(15,2))}')
+print(f'Superficie de circulo: {round(calcular_superficie(15))}')
 
 # Refactorizar a la version clasica
 minisculizar = lambda x: str(x).lower()

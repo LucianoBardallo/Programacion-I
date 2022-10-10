@@ -126,10 +126,7 @@ for ind_h in range(len(heroes)):
             break
         break
 '''
-heroes = list(map(lambda palabra, : palabra.capitalize(),heroes))
-villanos = list(map(lambda palabra, : palabra.capitalize(),villanos))
-ataques = list(map(lambda palabra, : palabra.capitalize(),ataques))
 
 print("\nRefactorizar usando zip")
 for dato1, dato2, dato3 in zip(heroes,ataques,villanos):
-    print("{0} Lanza un {1} a {2}".format(dato1,dato2,dato3))
+    print("{0} Lanza un {1} a {2}".format(dato1.capitalize(),dato2.capitalize(),dato3.capitalize()))
