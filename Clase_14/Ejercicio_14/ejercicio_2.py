@@ -43,6 +43,7 @@ from copy import deepcopy
 #       "'ID de persona_1 es: id_persona_1 y el ID de persona_2 es: id_persona_2 entonces son el mismo diccionario' caso contrario imprimir "No son el mismo diccionario"
 #   Modificar el nombre y apellido de persona_1 por Emilio Ravenna
 #   Imprimir persona_1 y persona_2 y analizar los resultados
+persona_2 = deepcopy(persona_1) 
 
 # Punto 5: 
 #   Crear persona_3 a partir de una copia superficial de persona_1
@@ -59,17 +60,37 @@ from copy import deepcopy
 #--------------------------------------------------------------------------------
 
 # Punto 1:
-persona_1.update({"domicilio":{"calle":"Ramón Franco","altura":"5050"}})
+direccion_2 = {"domicilio": {
+        "calle": "Ramón Franco",
+        "altura": "5050",
+        "localidad": "Avellaneda",
+        "barrio": "Avellaneda Centro",
+        "cod_postal" : "C1870"
+    }} 
+
+persona_1.update(direccion_2)
 
 # Punto 2:
-persona_1["telefonos"].append({"etiqueta":"trabajo","cod_pais":"+54","cod_area":"11","numero":"4201-4133"})
+telefono_trabajo = {
+            "etiqueta":"trabajo",
+            "cod_pais":"+54",
+            "cod_area":"11",
+            "numero":"4201-4133"}
+
+for telefono in persona_1["telefonos"]:
+    if(telefono.get("trabajo") == None):
+        phone = False
+    else:
+        phone = True
+
+if(phone == False):
+    persona_1["telefonos"].append(telefono_trabajo)
 
 # Punto 3:
 #for dato in persona_1:
 #    print("{0} - {1}".format(dato,persona_1[dato]))
 
 # Punto 4:
-persona_2 = deepcopy(persona_1)
 id_persona_1 = id(persona_1)
 id_persona_2 = id(persona_2)
 
@@ -81,10 +102,21 @@ else:
 
 # Punto 5:
 persona_3 = persona_1.copy()
-persona_3.update({"nombre":"Gabriel","apellido":"Medina","identificacion":{"nro":"28.307.401"}})
+identificacion_2 = {"identificacion": {
+        "tipo": "dni",
+        "nro": "28.307.401"
+    }}
+persona_3.update({"nombre":"Gabriel","apellido":"Medina"})
+persona_3.update(identificacion_2)
 
 # Punto 6:
 persona_4 = deepcopy(persona_1)
-persona_4.update({"nombre":"Mario","apellido":"Santos","identificacion":{"nro":"28.407.901"}})
+
+identificacion_3 = {"identificacion": {
+        "tipo": "dni",
+        "nro": "28.407.901"
+    }}
+persona_4.update({"nombre":"Mario","apellido":"Santos"})
+persona_4.update(identificacion_3)
 
 print("\nPERSONA 1:\n{0}\n\nPERSONA 2:\n{1}\n\nPERSONA 3:\n{2}\n\nPERSONA 4:\n{3}".format(persona_1,persona_2,persona_3,persona_4))
