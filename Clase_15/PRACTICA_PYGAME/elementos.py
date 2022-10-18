@@ -17,12 +17,17 @@ def update(lista_pilas):
         rect_pila = pila["rect"]
         rect_pila.x = rect_pila.x - 20
 
-def actualizar_pantalla(lista_pilas,player,pantalla):
+def actualizar_pantalla(lista_pilas,player,pantalla,sonido):
     for pila in lista_pilas:
         #pygame.draw.rect(pantalla,colores.ROJO,pila["rect"])
         pantalla.blit(pila["surface"],pila["rect"])
         if player["rect"].colliderect(pila["rect"]):
-            restart(pila)  
+            if player["vida"] <= 90:
+                player["vida"] += 10
+                sonido.play()
+            else:
+                player["vida"] = 100
+            restart(pila)
         if pila["rect"].x < 0:
             restart(pila)
 

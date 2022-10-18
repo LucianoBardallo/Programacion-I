@@ -6,8 +6,9 @@ def crear_personaje(x,y,ancho,largo):
     dic_personaje["surface"] = pygame.image.load(r"Clase_15\PRACTICA_PYGAME\01.png")
     dic_personaje["surface"] = pygame.transform.scale(dic_personaje["surface"],(ancho,largo))
     dic_personaje["rect_pos"] = pygame.Rect(x,y,50,50)
-    dic_personaje["rect"] = pygame.Rect(x+50,y+100,150,50)
+    dic_personaje["rect"] = pygame.Rect(x+50,y+100,150,35)
     dic_personaje["distancia"] = 0
+    dic_personaje["vida"] = 100
     return dic_personaje
 
 def actualizar_pantalla(player,pantalla):

@@ -9,6 +9,7 @@ def crear(x,y,ancho,alto):
     dict_personaje["rect_pos"] = pygame.Rect(x,y,200,200)
     dict_personaje["rect"] = pygame.Rect((x+ancho/2)-10,y+90,40,20)
     dict_personaje["score"] = 0
+    dict_personaje["vida"] = 3
     return dict_personaje
 
 def actualizar_pantalla(personaje,ventana_ppal):
