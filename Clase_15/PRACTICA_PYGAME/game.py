@@ -24,10 +24,10 @@ fondo = background.crear_fondo(1200,600)
 pila = elementos.crear_pila(1000,500,40,40)
 player = personaje.crear_personaje(10,350,250,225)
 logo = background.crear_decoracion(1100,550,100,150)
-cono = obstaculos.crear_obstaculo(1000,500,40,40)
 
 lista_pilas = elementos.crear_lista_pila(10)
 lista_obstaculos = obstaculos.crear_lista_obstaculos(4)
+lista_piedras = obstaculos.crear_lista_piedra(1)
 
 posicion = 0
 
@@ -40,6 +40,9 @@ sonido_choque = pygame.mixer.Sound(r"Clase_15\PRACTICA_PYGAME\Choque.wav")
 sonido_choque.set_volume(0.1)
 sonido_energia = pygame.mixer.Sound(r"Clase_15\PRACTICA_PYGAME\Energia.wav")
 sonido_energia.set_volume(0.1)
+sonido_crash = pygame.mixer.Sound(r"Clase_15\PRACTICA_PYGAME\autocrash.wav")
+sonido_crash.set_volume(0.1)
+
 
 # SISTEMA PRINCIPAL DEL JUEGO
 running = True
@@ -67,6 +70,7 @@ while (running):
                 player["vida"] = player["vida"] - 0.5
                 elementos.update(lista_pilas)
                 obstaculos.update(lista_obstaculos)
+                obstaculos.update(lista_piedras)
                 if player["vida"] <= 0:
                     game_over = True
 
@@ -84,6 +88,7 @@ while (running):
     ventana_ppal.blit(vida,(20,40))
 
     elementos.actualizar_pantalla(lista_pilas,player,ventana_ppal,sonido_energia)
+    obstaculos.actualizar_pantalla2(lista_piedras,player,ventana_ppal,sonido_crash)
     obstaculos.actualizar_pantalla(lista_obstaculos,player,ventana_ppal,sonido_choque)
     personaje.actualizar_pantalla(player,ventana_ppal)
     
