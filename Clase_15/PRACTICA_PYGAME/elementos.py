@@ -14,8 +14,8 @@ def crear_pila(x,y,ancho,alto):
 
 def update(lista_pilas):
     for pila in lista_pilas:
-        rect_pila = pila["rect"]
-        rect_pila.x = rect_pila.x - 20
+        rect_pila = pila["rect"] 
+        rect_pila.x = rect_pila.x - 1
 
 def actualizar_pantalla(lista_pilas,player,pantalla,sonido):
     for pila in lista_pilas:

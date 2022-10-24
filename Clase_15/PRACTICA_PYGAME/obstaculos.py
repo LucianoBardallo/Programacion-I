@@ -15,7 +15,7 @@ def crear_obstaculo(path,x,y,ancho,alto):
 def update(lista_obstaculos):
     for obstaculo in lista_obstaculos:
         rect_obstaculo = obstaculo["rect"]
-        rect_obstaculo.x = rect_obstaculo.x - 20
+        rect_obstaculo.x = rect_obstaculo.x - 1
 
 def actualizar_pantalla(lista_obstaculos,player,pantalla,sonido):
     for obstaculo in lista_obstaculos:
