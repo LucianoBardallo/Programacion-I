@@ -31,13 +31,16 @@ class Tablero:
         for tarjeta, rectangulo in zip(self.lista_tarjetas, lista_rectangulos):
             tarjeta.rect = rectangulo    
 
-def colicion(tablero,pos_xy):
+def colicion(tablero,icon,pos_xy):
     '''
     verifica si existe una colicion alguna tarjetas del tablero y la coordenada recivida como parametro
     Recibe como parametro el tablero y una tupla (X,Y)
     Retorna el indice de la tarjeta que colisiono con la coordenada
     '''
     
+    if(icon.rect.collidepoint(pos_xy)):
+        return False
+
     lista_tarjetas = tablero.lista_tarjetas
     if(tarjeta.cantidad_tarjetas_visibles_no_descubiertas(lista_tarjetas) < 2):
         for aux_tarjeta in lista_tarjetas:
@@ -59,11 +62,13 @@ def update(tablero):
         for aux_tarjeta in lista_tarjetas:
             if(aux_tarjeta.descubierto==False):
                 aux_tarjeta.visible=False
+                
     
     if(tablero.tiempo > 0):
         if(tarjeta.match(tablero.lista_tarjetas)):
             tablero.tiempo = 0
             reproducir_sonidos(r"Clase_17\recursos\clic.wav",0.1)
+
 
 def update_background(pantalla,imagen,fase):
     if fase == "0":
@@ -72,11 +77,12 @@ def update_background(pantalla,imagen,fase):
         pantalla.blit(imagen.surface, [0,0])
     elif fase == "2":
         pantalla.blit(imagen.surface, [0,0])
-        text = textos.Texto(int(ALTO_PANTALLA/10),"Juego completado",int(ANCHO_PANTALLA/2),int(ALTO_PANTALLA/2))
-        text2 = textos.Texto(int(ALTO_PANTALLA/10),"Aprete 'Enter' para reiniciar",int(ANCHO_PANTALLA/2),int(ALTO_PANTALLA/2)+int(ALTO_PANTALLA/10))
-        #text2 = font2.render("APRETE 'ENTER' PARA REINICIAR", True, (0,0,0))
+        text = textos.Texto(int(ALTO_PANTALLA/15),"Juego completado",int(ANCHO_PANTALLA/5),int(ALTO_PANTALLA/2)-int(ALTO_PANTALLA/12))
+        text2 = textos.Texto(int(ALTO_PANTALLA/15),"'ENTER' para reiniciar",int(ANCHO_PANTALLA/5),int(ALTO_PANTALLA/2))
+        text3 = textos.Texto(int(ALTO_PANTALLA/15),"'ESC' para salir",int(ANCHO_PANTALLA/5),int(ALTO_PANTALLA/2)+int(ALTO_PANTALLA/12))
         pantalla.blit(text.texto,(text.rect))
         pantalla.blit(text2.texto,(text2.rect))
+        pantalla.blit(text3.texto,(text3.rect))
 
 def render(tablero,pantalla_juego):
     '''
@@ -101,20 +107,12 @@ def reproducir_musica_principal(sonido,volumen):
     pygame.mixer.music.load(sonido)
     pygame.mixer.music.play(-1)
 
-
 #FUNCIONES
 def comprobar_juego(tablero):
     retorno = True
     for tarjeta in tablero.lista_tarjetas:
         if tarjeta.visible == False:
             retorno = False  
-    return retorno
-
-def comienzo_juego(tablero):
-    retorno = True
-    for tarjeta in tablero.lista_tarjetas:
-        if tarjeta.descubierto == True:
-            retorno = False
     return retorno
 
 def reiniciar_tablero(tablero,sonido):
@@ -125,3 +123,5 @@ def reiniciar_tablero(tablero,sonido):
         tarjeta.descubierto = False
         tarjeta.visible = False
 
+def update_icon(pantalla,icon,posicion):
+    pantalla.blit(icon.surface, posicion)

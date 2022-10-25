@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+import tablero
 from constantes import *
 
 class Tarjeta:
@@ -44,4 +45,5 @@ def match(lista_tarjetas):
                         aux_primer_tarjeta.descubierto=True
                         aux_segunda_tarjeta.descubierto=True
                         return True
+                    
     return False
