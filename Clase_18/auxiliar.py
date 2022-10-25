@@ -39,3 +39,16 @@ while running:
 
 # Done! Time to quit.
 pygame.quit()
+
+'''
+nueva_tarjeta = {}
+nueva_tarjeta["visible"]=False
+nueva_tarjeta["descubierto"]=False
+nueva_tarjeta["path_imagen"] = PATH_RECURSOS+nombre_imagen
+nueva_tarjeta["surface"] = pygame.transform.scale(pygame.image.load(nueva_tarjeta["path_imagen"]), (ANCHO_TARJETA,ALTO_TARJETA))
+nueva_tarjeta["surface_hide"] = pygame.transform.scale(pygame.image.load(PATH_RECURSOS+nombre_imagen_hide), (ANCHO_TARJETA,ALTO_TARJETA))
+nueva_tarjeta["rect"] = nueva_tarjeta["surface"].get_rect()
+nueva_tarjeta["rect"].x = x
+nueva_tarjeta["rect"].y = y
+return nueva_tarjeta
+'''

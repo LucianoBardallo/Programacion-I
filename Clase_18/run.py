@@ -1,6 +1,7 @@
 import pygame
 import tablero
 import random
+import imagenes
 from constantes import *
 
 pygame.init() #Se inicializa pygame
@@ -16,17 +17,22 @@ pygame.time.set_timer(tick_1s,1000)
 tick_1500ms = pygame.USEREVENT+1
 pygame.time.set_timer(tick_1500ms,1500)
 
-#MUSICA DE FONDO
+#MUSICA
 tablero.reproducir_musica_principal(r"Clase_17\recursos\fondo.wav",0.1)
+sonido_ganador = pygame.mixer.Sound(r"Clase_17\recursos\ganador.mp3")
+sonido_ganador.set_volume(0.1)
 
 #CREACION DE IMAGENES
-tablero_fondo = tablero.crear_imagen(r"Clase_17\recursos\fondo.jpg",ANCHO_PANTALLA,ALTO_PANTALLA,0,0)
-tablero_fondo_win = tablero.crear_imagen(r"Clase_17\recursos\win.jpg",ANCHO_PANTALLA,ALTO_PANTALLA,0,0)
-tablero_fondo_start = tablero.crear_imagen(r"Clase_17\recursos\fondo_start.jpg",ANCHO_PANTALLA,ALTO_PANTALLA,0,0)
-icon_start = tablero.crear_imagen(r"Clase_17\recursos\start.png",200,100,50,50)
+tablero_fondo = imagenes.Imagen(r"Clase_17\recursos\fondo.jpg",ANCHO_PANTALLA,ALTO_PANTALLA,0,0)
+tablero_fondo_win = imagenes.Imagen(r"Clase_17\recursos\win.jpg",ANCHO_PANTALLA,ALTO_PANTALLA,0,0)
+tablero_fondo_start = imagenes.Imagen(r"Clase_17\recursos\fondo_start.jpg",ANCHO_PANTALLA,ALTO_PANTALLA,0,0)
+icon_start = imagenes.Imagen(r"Clase_17\recursos\start.png",200,100,50,50)
 
 #CREACION DE TABLERO
-tablero_juego = tablero.init()
+tablero_juego = tablero.Tablero()
+tablero_juego.mezclar_posicion_tarjetas()
+
+#INICIO DE RELOJ
 clock_fps = pygame.time.Clock()
 
 #BAANDERAS
@@ -38,7 +44,7 @@ running = True
 while running:
     #SETEA FPS
     tiempo = clock_fps.tick(60)
-
+    #LISTA DE EVENTOS
     for event in pygame.event.get():
         #VERIFICA SI EL USAURIO CERRO EL JUEGO
         if event.type == pygame.QUIT:
@@ -50,30 +56,28 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 terminar_juego = False
-                tablero.reiniciar_tablero(tablero_juego)
+                una_pasada = True
+                tablero.reiniciar_tablero(tablero_juego,sonido_ganador)
         #EVENTOS DE TIEMPO
         if event.type == tick_1s:
             pass
         if event.type == tick_1500ms:
             pass
-    
     #VERIFICA SI EL USUARIO EMPEZO EL JUEGO
     terminar_juego = tablero.comprobar_juego(tablero_juego)
     if terminar_juego == False:
-        if una_pasada:
-            una_pasada = False
         tablero.update(tablero_juego)
         tablero.update_background(pantalla_juego,tablero_fondo,"1")
         tablero.render(tablero_juego,pantalla_juego)
     else:
         pygame.mixer.music.stop()
         if una_pasada2:
-            tablero.reproducir_sonidos(r"Clase_17\recursos\ganador.mp3",0.1)
+            pygame.mixer.Sound.play(sonido_ganador)
             una_pasada2= False
         tablero.update_background(pantalla_juego,tablero_fondo_win,"2")
     pygame.display.flip()
 
-# DONE! TIME TO QUIT
+#TIEMPO DE SALIR
 pygame.quit()
 
 # Se pinta el fondo de la ventana de blanco
