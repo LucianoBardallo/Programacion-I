@@ -52,3 +52,6 @@ nueva_tarjeta["rect"].x = x
 nueva_tarjeta["rect"].y = y
 return nueva_tarjeta
 '''
+
+# Se pinta el fondo de la ventana de blanco
+    #pantalla_juego.fill((255, 255, 255))

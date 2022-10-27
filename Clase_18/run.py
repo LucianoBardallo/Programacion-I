@@ -1,7 +1,8 @@
 import pygame
-import tablero
 import random
 import imagenes
+import tablero
+import musica
 from constantes import *
 
 pygame.init() #Se inicializa pygame
@@ -18,7 +19,7 @@ tick_1500ms = pygame.USEREVENT+1
 pygame.time.set_timer(tick_1500ms,1500)
 
 #MUSICA
-tablero.reproducir_musica_principal(r"Clase_18\recursos\fondo.wav",0.1)
+musica.Musica.reproducir_musica_principal(r"Clase_18\recursos\fondo.wav",0.1)
 sonido_ganador = pygame.mixer.Sound(r"Clase_18\recursos\ganador.mp3")
 sonido_ganador.set_volume(0.1)
 
@@ -42,71 +43,119 @@ una_pasada2 = True
 comienzo_juego = True
 running = True
 
-#BUCLE PRINCIPAL DEL JUEGO
-while running:
-    #SETEA FPS
-    tiempo = clock_fps.tick(60)
-    #LISTA DE EVENTOS
-    for event in pygame.event.get():
-        #VERIFICA SI EL USAURIO CERRO EL JUEGO
-        if event.type == pygame.QUIT:
-            running = False
-        #VERIFICA SI EL USUARIO INTERACTUO CON EL MOUSE
-        if event.type == pygame.MOUSEBUTTONDOWN :
-            comienzo_juego = tablero.colicion(tablero_juego,icon_start,event.pos)
-            tablero.colicion(tablero_juego,icon_start,event.pos)
-        #VERIFICA SI EL USUARIO APRETO EL ENTER
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                terminar_juego = False
-                una_pasada = True
-                tablero.reiniciar_tablero(tablero_juego,sonido_ganador)
-            if event.key == pygame.K_ESCAPE:
-                comienzo_juego = True
-                tablero.reiniciar_tablero(tablero_juego,sonido_ganador)
-            if event.key == pygame.K_1:
-                dificultad = "facil"
-            if event.key == pygame.K_2:
-                dificultad = "intermedio"
-            if event.key == pygame.K_3:
-                dificultad = "avanzado"
-        #EVENTOS DE TIEMPO
-        if event.type == tick_1s:
-            pass
-        if event.type == tick_1500ms:
-            pass
-    #VERIFICA EL ESTADO DEL JUEGO
-    terminar_juego = tablero.comprobar_juego(tablero_juego)
-    if comienzo_juego:
-        tablero.update_background(pantalla_juego,tablero_fondo_start,"0")
-        tablero.update_icon(pantalla_juego,icon_start,(50,50))
-        #tablero.update_icon(pantalla_juego,icon_exit,(ANCHO_PANTALLA-250,ALTO_PANTALLA-300))
-    else:
-        if terminar_juego == False:
-            tablero.update(tablero_juego)
-            tablero.update_background(pantalla_juego,tablero_fondo,"1")
-            tablero.render(tablero_juego,pantalla_juego)
+def play():
+    running = True
+
+    while running:
+        #SETEA FPS
+        tiempo = clock_fps.tick(60)
+
+        #LISTA DE EVENTOS
+        for event in pygame.event.get():
+
+            #VERIFICA SI EL USAURIO CERRO EL JUEGO
+            if event.type == pygame.QUIT:
+                running = False
+
+            #VERIFICA SI EL USUARIO INTERACTUO CON EL MOUSE
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                comienzo_juego = tablero_juego.colicion(event.pos)
+                tablero_juego.colicion(event.pos)
+
+            #VERIFICA SI EL USUARIO APRETO EL ENTER
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    terminar_juego = False
+                    una_pasada = True
+                    tablero_juego.reiniciar_tablero(sonido_ganador)
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+            #EVENTOS DE TIEMPO
+            if event.type == tick_1s:
+                pass
+            if event.type == tick_1500ms:
+                pass
+            
+        #VERIFICA EL ESTADO DEL JUEGO
+        terminar_juego = tablero_juego.comprobar_juego()
+        if comienzo_juego:
+            tablero_juego.update_background(pantalla_juego,tablero_fondo_start,"0")
+            tablero_juego.update_icon(pantalla_juego,icon_start,(50,50))
+            #tablero.update_icon(pantalla_juego,icon_exit,(ANCHO_PANTALLA-250,ALTO_PANTALLA-300))
         else:
-            pygame.mixer.music.stop()
-            if una_pasada:
-                pygame.mixer.Sound.play(sonido_ganador)
-                una_pasada= False
-            tablero.update_background(pantalla_juego,tablero_fondo_win,"2")
-        
+            if terminar_juego == False:
+                tablero_juego.update()
+                tablero_juego.update_background(pantalla_juego,tablero_fondo,"1")
+                tablero_juego.render(pantalla_juego)
+            else:
+                pygame.mixer.music.stop()
+                if una_pasada:
+                    pygame.mixer.Sound.play(sonido_ganador)
+                    una_pasada= False
+                tablero_juego.update_background(pantalla_juego,tablero_fondo_win,"2")
+            
+        pygame.display.flip()
 
+#BUCLE PRINCIPAL DEL JUEGO
+def main_menu():
+    #BAANDERAS
+    una_pasada = True
+    comienzo_juego = True
+    running = True
 
-    pygame.display.flip()
+    while running:
+        #SETEA FPS
+        tiempo = clock_fps.tick(60)
+
+        #LISTA DE EVENTOS
+        for event in pygame.event.get():
+
+            #VERIFICA SI EL USAURIO CERRO EL JUEGO
+            if event.type == pygame.QUIT:
+                running = False
+
+            #VERIFICA SI EL USUARIO INTERACTUO CON EL MOUSE
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                comienzo_juego = tablero_juego.colicion(event.pos)
+                tablero_juego.colicion(event.pos)
+
+            #VERIFICA SI EL USUARIO APRETO EL ENTER
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    terminar_juego = False
+                    una_pasada = True
+                    tablero_juego.reiniciar_tablero(sonido_ganador)
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+            #EVENTOS DE TIEMPO
+            if event.type == tick_1s:
+                pass
+            if event.type == tick_1500ms:
+                pass
+            
+        #VERIFICA EL ESTADO DEL JUEGO
+        terminar_juego = tablero_juego.comprobar_juego()
+        if comienzo_juego:
+            tablero_juego.update_background(pantalla_juego,tablero_fondo_start,"0")
+            tablero_juego.update_icon(pantalla_juego,icon_start,(50,50))
+            #tablero.update_icon(pantalla_juego,icon_exit,(ANCHO_PANTALLA-250,ALTO_PANTALLA-300))
+        else:
+            if terminar_juego == False:
+                tablero_juego.update()
+                tablero_juego.update_background(pantalla_juego,tablero_fondo,"1")
+                tablero_juego.render(pantalla_juego)
+            else:
+                pygame.mixer.music.stop()
+                if una_pasada:
+                    pygame.mixer.Sound.play(sonido_ganador)
+                    una_pasada= False
+                tablero_juego.update_background(pantalla_juego,tablero_fondo_win,"2")
+            
+        pygame.display.flip()
+
+main_menu()
 
 #TIEMPO DE SALIR
 pygame.quit()
-
-# Se pinta el fondo de la ventana de blanco
-    #pantalla_juego.fill((255, 255, 255))
-
-'''
-if start:
-        tablero.update_background(pantalla_juego,tablero_fondo_start,"0")
-        tablero.update_icon(pantalla_juego,icon_start)
-    else:
-        #VERIFICA SI EL USUARIO TERMINO EL JUEGO
-'''
