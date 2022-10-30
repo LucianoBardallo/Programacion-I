@@ -102,7 +102,7 @@ while (running):
     if (posicion == -ANCHO_VENTANA):
         ventana_ppal.blit(fondo["surface"],(ANCHO_VENTANA + posicion,0))
         posicion = 0
-    posicion -= 15
+    posicion -= 1
 
     pygame.display.flip()
 pygame.quit()

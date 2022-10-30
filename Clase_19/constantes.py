@@ -1,0 +1,5 @@
+ANCHO_VENTANA = 1500
+ALTO_VENTANA = 800
+FPS = 60
+
+PATH_IMAGE = r"Clase_19\images\\"

@@ -12,7 +12,7 @@ def crear_personaje(x,y,ancho,largo):
     return dic_personaje
 
 def actualizar_pantalla(player,pantalla):
-    #pygame.draw.rect(pantalla,colores.ROJO,player["rect"])
+    pygame.draw.rect(pantalla,colores.ROJO,player["rect"])
     pantalla.blit(player["surface"],player["rect_pos"])
 
 def update(player,incremento_y):

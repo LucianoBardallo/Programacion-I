@@ -1,7 +1,6 @@
 import pygame
 import math
 import random
-import tablero
 from constantes import *
 
 class Tarjeta:
@@ -20,30 +19,3 @@ class Tarjeta:
         self.rect.x = x
         self.rect.y = y
 
-def cantidad_tarjetas_descubiertas(lista_tarjetas):
-    cantidad = 0
-    for tarjeta in lista_tarjetas:
-        if(tarjeta.descubierto):
-            cantidad += 1
-    return cantidad
-     
-def cantidad_tarjetas_visibles_no_descubiertas(lista_tarjetas):
-    cantidad = 0
-    for tarjeta in lista_tarjetas:
-        if(tarjeta.visible and not tarjeta.descubierto):
-            cantidad += 1
-    return cantidad
-     
-def match(lista_tarjetas):
-    for index_p in range(len(lista_tarjetas)):
-        if(lista_tarjetas[index_p].visible and not lista_tarjetas[index_p].descubierto):
-            aux_primer_tarjeta = lista_tarjetas[index_p]
-            for index_s in range(index_p+1,len(lista_tarjetas)):
-                if(lista_tarjetas[index_s].visible and not lista_tarjetas[index_s].descubierto ):
-                    aux_segunda_tarjeta = lista_tarjetas[index_s]
-                    if(aux_primer_tarjeta.path_imagen == aux_segunda_tarjeta.path_imagen):
-                        aux_primer_tarjeta.descubierto=True
-                        aux_segunda_tarjeta.descubierto=True
-                        return True
-                    
-    return False
