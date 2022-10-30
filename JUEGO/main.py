@@ -6,61 +6,82 @@ from imagenes import Imagen
 from constantes import *
 from botones import *
 
+#SETEA LA VENTANA
 SCREEN = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA))
 pygame.init()
 clock = pygame.time.Clock()
+
+#CARGA IMAGENES
 fondo_juego = Imagen(PATH_IMAGE + r"locations\forest\all.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer01 = Imagen(PATH_IMAGE + r"locations\forest\layer_01_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer02 = Imagen(PATH_IMAGE + r"locations\forest\layer_02_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer03 = Imagen(PATH_IMAGE + r"locations\forest\layer_03_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer04 = Imagen(PATH_IMAGE + r"locations\forest\layer_04_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer05 = Imagen(PATH_IMAGE + r"locations\forest\layer_05_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer06 = Imagen(PATH_IMAGE + r"locations\forest\layer_06_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-# layer07 = Imagen(PATH_IMAGE + r"locations\forest\layer_07_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_menu = Imagen(PATH_IMAGE + r"menu\frog.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 cuadro_menu = Imagen(PATH_IMAGE + r"menu\rect.png",ANCHO_VENTANA-int(ANCHO_VENTANA/3),ALTO_VENTANA,0,0)
 
-def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font(PATH_IMAGE + r"\menu\font.ttf", size)
+#CARGA UNA FUENTE
+def get_font(tamaño):
+    return pygame.font.Font(PATH_IMAGE + r"\menu\font.ttf", tamaño)
 
+#CODIGO DEL JUEGO
 def play():
     clock.tick(FPS)
     tiempo = pygame.time.get_ticks()
-    player_1 = player.Player(0,500,5,10,10,15)
+
+    #ASIGNACION DE CLASSES
+    player_1 = player.Player(0,500,8,16,2,10)
     enemigo_1 = enemigo.Enemigo(1000,450,2,tiempo)
     enemigo_2 = enemigo.Enemigo(1100,450,2,tiempo)
     enemigo_3 = enemigo.Enemigo(1200,450,2,tiempo)
+    muercielagos = enemigo.GrupoBatterflies(4)
+
+    #BUBLE PRINCIPAL DEL JUEGO
     while True:
+        #TOMA POSICION DEL MOUSE
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         
+        #INICIO DE EVENTOS
         for event in pygame.event.get():
+            #EVENTO PARA SALIR
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
+            #EVENTO CUANDO APRETA UNA TECLA
+            if event.type == pygame.KEYDOWN:
+                #EVENTO PARA SALTAR
+                if event.key == pygame.K_SPACE:
+                    player_1.control("JUMP")
+
+            #EVENTO CUANDO DEJA DE APRETAR ALGUNA TECLA
             if event.type == pygame.KEYUP:
+                #EVENTO PARA QUEDARSE QUIETO
                 if event.key == pygame.K_RIGHT and event.key == pygame.K_LEFT:
                     player_1.control("STAY")
                 
+        #EVENTOS DE MANTENER APRETADO ALGUNA TECLA
         lista_teclas = pygame.key.get_pressed()
+        #EVENTO PARA MOVER A LA DERECHA
         if(lista_teclas[pygame.K_RIGHT] and not lista_teclas[pygame.K_LEFT]):
             player_1.direccion = "right"
             player_1.control("WALK_R")
+            player_1.speed_walk = 8
+            #EVENTO DE CORRER A LA DERECHA
+            if lista_teclas[pygame.K_LSHIFT]:
+                player_1.speed_walk = player_1.speed_run
+        #EVENTO PARA MOVER A LA IZQUIERDA
         elif(lista_teclas[pygame.K_LEFT] and not lista_teclas[pygame.K_RIGHT]):
             player_1.direccion = "left"
             player_1.control("WALK_L")
+            player_1.speed_walk = 8
+            #EVENTO PARA CORRER A LA IZQUIERDA
+            if lista_teclas[pygame.K_LSHIFT]:
+                player_1.speed_walk = player_1.speed_run
+        #EVENTO PARA QUEDARSE QUIETO
         else:
             player_1.control("STAY")
 
+        #CARGA FONDO
         SCREEN.blit(fondo_juego.surface,fondo_juego.rect)
-        # SCREEN.blit(layer07.surface,layer07.rect)
-        # SCREEN.blit(layer06.surface,layer06.rect)
-        # SCREEN.blit(layer05.surface,layer05.rect)
-        # SCREEN.blit(layer04.surface,layer04.rect)
-        # SCREEN.blit(layer03.surface,layer03.rect)
-        # SCREEN.blit(layer02.surface,layer02.rect)
-        # SCREEN.blit(layer01.surface,layer01.rect)
         
+        #ACTUALIZA JUEGO
         player_1.draw(SCREEN)
         player_1.update()
         enemigo_1.draw(SCREEN)
@@ -73,10 +94,12 @@ def play():
         enemigo_3.update()
         enemigo_3.colicion(player_1.rect)
 
-        # dibujar todo el nivel
-
+        #DIBUJA EL NIVEL
+        muercielagos.updatear_murcielagos(SCREEN,player_1.rect)
+        #ACTUALIZA PANTALLA
         pygame.display.flip()
-        
+
+#MENU OPCIONES        
 def options():
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
@@ -103,6 +126,7 @@ def options():
 
         pygame.display.flip()
 
+#MENU PRINCIPAL
 def main_menu():
     while True:
         SCREEN.blit(fondo_menu.surface, (0,0))
@@ -144,6 +168,7 @@ def main_menu():
 
         pygame.display.flip()
 
+#INICIA EL MENU DEL JUEGO
 main_menu()
 
 # if(lista_teclas[pygame.K_SPACE] and lista_teclas[pygame.K_LEFT]):
@@ -176,3 +201,24 @@ main_menu()
 #         player_1.control("JUMP_L")
 #     elif lista_teclas[pygame.K_RIGHT]:
 #         player_1.control("JUMP_R")
+
+# if (posicion == -ANCHO_VENTANA):
+#     SCREEN.blit(fondo_juego.surface,(ANCHO_VENTANA + posicion,0))
+#     posicion = 0
+# posicion -= 1
+
+# layer01 = Imagen(PATH_IMAGE + r"locations\forest\layer_01_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+# layer02 = Imagen(PATH_IMAGE + r"locations\forest\layer_02_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+# layer03 = Imagen(PATH_IMAGE + r"locations\forest\layer_03_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+# layer04 = Imagen(PATH_IMAGE + r"locations\forest\layer_04_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+# layer05 = Imagen(PATH_IMAGE + r"locations\forest\layer_05_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+# layer06 = Imagen(PATH_IMAGE + r"locations\forest\layer_06_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+# layer07 = Imagen(PATH_IMAGE + r"locations\forest\layer_07_1920 x 1080.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+
+# SCREEN.blit(layer07.surface,layer07.rect)
+# SCREEN.blit(layer06.surface,layer06.rect)
+# SCREEN.blit(layer05.surface,layer05.rect)
+# SCREEN.blit(layer04.surface,layer04.rect)
+# SCREEN.blit(layer03.surface,layer03.rect)
+# SCREEN.blit(layer02.surface,layer02.rect)
+# SCREEN.blit(layer01.surface,layer01.rect)
