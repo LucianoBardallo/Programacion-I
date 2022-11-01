@@ -33,21 +33,39 @@ class Player:
 
     def control(self,action):
         if(action == "WALK_R"):
+            self.speed_walk = 4
             self.move_x = self.speed_walk
-            if self.rect.y == 500:
+            if self.rect.y == 550:
                 self.animation = self.walk_r
             else:
                 self.animation = self.jump_r
 
         elif(action == "WALK_L"):
+            self.speed_walk = 4
             self.move_x = -self.speed_walk
-            if self.rect.y == 500:
+            if self.rect.y == 550:
+                self.animation = self.walk_l
+            else:
+                self.animation = self.jump_l
+        
+        if(action == "RUN_R"):
+            self.speed_walk = self.speed_run
+            self.move_x = self.speed_walk
+            if self.rect.y == 550:
+                self.animation = self.walk_r
+            else:
+                self.animation = self.jump_r
+
+        elif(action == "RUN_L"):
+            self.speed_walk = self.speed_run
+            self.move_x = -self.speed_walk
+            if self.rect.y == 550:
                 self.animation = self.walk_l
             else:
                 self.animation = self.jump_l
 
         elif(action == "STAY"):
-            if self.rect.y == 500:
+            if self.rect.y == 550:
                 self.animation = self.stay_r
                 if self.direccion == "left":
                     self.animation = self.stay_l
@@ -84,10 +102,10 @@ class Player:
 
         self.rect.x += self.move_x
         
-        if(self.rect.y < 500):
+        if(self.rect.y < 550):
             self.rect.y += self.gravity
-        elif (self.rect.y >= 500):
-            self.rect.y = 500
+        elif (self.rect.y >= 550):
+            self.rect.y = 550
 
 
     def draw(self,screen):
