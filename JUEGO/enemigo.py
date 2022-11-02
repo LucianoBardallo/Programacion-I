@@ -82,6 +82,7 @@ class Enemigo:
                     self.animation = self.muerte_l
 
 
+
 class Batterfly:
     def __init__(self, x, y, speed_x, speed_y, invertido, maximo_x, maximo_y) -> None:
 

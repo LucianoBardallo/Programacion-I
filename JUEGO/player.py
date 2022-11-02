@@ -4,7 +4,7 @@ from constantes import *
 from auxiliar import Auxiliar
 
 class Player:
-    def __init__(self,x,y,speed_walk,speed_run,gravity,jump) -> None:
+    def __init__(self,x,y,speed_walk,speed_run,gravity,jump_power) -> None:
         self.walk_r = Auxiliar.getSurfaceFromSpriteSheet("Clase_19/images/caracters/stink/walk.png",15,1)[:12]
         self.walk_l = Auxiliar.getSurfaceFromSpriteSheet("Clase_19/images/caracters/stink/walk.png",15,1,True)[:12]
         self.stay_r = Auxiliar.getSurfaceFromSpriteSheet("Clase_19/images/caracters/stink/idle.png",16,1)
@@ -19,7 +19,7 @@ class Player:
         self.speed_walk = speed_walk
         self.speed_run = speed_run
         self.gravity = gravity
-        self.jump = jump
+        self.jump_power = jump_power
         self.animation = self.stay_r
         self.image = self.animation[self.frame]
         self.rect = self.image.get_rect()
@@ -30,6 +30,15 @@ class Player:
         self.distancia = 0
         self.animation_anterior = self.stay_r
         
+    def walk():
+        pass
+    def stay():
+        pass
+    def jump():
+        pass
+    def run():
+        pass
+
 
     def control(self,action):
         if(action == "WALK_R"):
@@ -93,11 +102,11 @@ class Player:
             self.frame = 0
 
         if self.is_jump:
-            if self.jump >= -10:
-                self.rect.y -= (self.jump * abs(self.jump)) * 0.5
-                self.jump -= 0.5
+            if self.jump_power >= -10:
+                self.rect.y -= (self.jump_power * abs(self.jump_power)) * 0.5
+                self.jump_power -= 0.5
             else:
-                self.jump = 10
+                self.jump_power = 10
                 self.is_jump = False
 
         self.rect.x += self.move_x
