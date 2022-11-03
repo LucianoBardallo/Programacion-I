@@ -4,6 +4,7 @@ import player
 import enemigo
 from imagenes import Imagen
 from constantes import *
+from auxiliar import Auxiliar
 from botones import *
 
 #SETEA LA VENTANA
@@ -32,14 +33,7 @@ def play(jugador):
     tiempo = pygame.time.get_ticks()
 
     #ASIGNACION DE CLASSES
-    if jugador == "ONE":
-        player_1 = player.PlayerONE(x = 0, y = 555, speed_walk = 6, gravity = 2, jump_power = 14, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 40)
-    elif jugador == "TWO":
-        player_1 = player.PlayerTWO(x = 0, y = 555, speed_walk = 8, gravity = 2, jump_power = 10, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 80)
-    elif jugador == "THREE":
-        player_1 = player.PlayerTHREE(x = 0, y = 555, speed_walk = 6, gravity = 2, jump_power = 12, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 80)
-    elif jugador == "FOUR":
-        player_1 = player.PlayerFOUR(x = 0, y = 555, speed_walk = 8, gravity = 2, jump_power = 10, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 80)
+    player_1 = Auxiliar.elegir_personaje(jugador)
     enemigo_1 = enemigo.Enemigo(1400,500,2,tiempo)
     muercielagos = enemigo.GrupoBatterflies(1)
 
