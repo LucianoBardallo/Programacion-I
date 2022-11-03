@@ -14,7 +14,8 @@ clock = pygame.time.Clock()
 #CARGA IMAGENES
 fondo_juego = Imagen(PATH_IMAGE + r"locations\mountain\all.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_menu = Imagen(PATH_IMAGE + r"menu\frog.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-cuadro_menu = Imagen(PATH_IMAGE + r"menu\rect.png",ANCHO_VENTANA-int(ANCHO_VENTANA/3),ALTO_VENTANA,0,0)
+fondo_seleccion = Imagen(PATH_IMAGE + r"menu\Background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+#cuadro_menu = Imagen(PATH_IMAGE + r"menu\rect.png",ANCHO_VENTANA-int(ANCHO_VENTANA/3),ALTO_VENTANA,0,0)
 
 #CARGA UNA FUENTE
 def get_font(tamaño):
@@ -25,85 +26,63 @@ def play():
     tiempo = pygame.time.get_ticks()
 
     #ASIGNACION DE CLASSES
-    player_1 = player.Player(0,550,4,8,2,10)
+    player_1 = player.Player(x = 0, y = 560, speed_walk = 5, gravity = 2, jump_power = 10, frame_rate_ms = 40,frame_rate_jump_ms = 15, move_rate_ms = 80)
     enemigo_1 = enemigo.Enemigo(1400,500,2,tiempo)
-    enemigo_2 = enemigo.Enemigo(1500,500,2,tiempo)
-    enemigo_3 = enemigo.Enemigo(1600,500,2,tiempo)
     muercielagos = enemigo.GrupoBatterflies(1)
 
-    #BUBLE PRINCIPAL DEL JUEGO
-    while True:
-        clock.tick(FPS)
-        #TOMA POSICION DEL MOUSE
-        PLAY_MOUSE_POS = pygame.mouse.get_pos()
+    while True: # Bucle del juego
+        delta_ms = clock.tick(FPS) # FPS
+        PLAY_MOUSE_POS = pygame.mouse.get_pos() # Posicion del mouse
         
-        #INICIO DE EVENTOS
-        for event in pygame.event.get():
-            #SALIR
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            #APRETA UNA TECLA
-            if event.type == pygame.KEYDOWN:
-
-                #SALTAR
-                if event.key == pygame.K_SPACE:
-                    player_1.control("JUMP")
-
-            #DEJAR DE APRETAR ALGUNA TECLA
-            if event.type == pygame.KEYUP:
-
-                #QUEDARSE QUIETO
-                if event.key == pygame.K_RIGHT and event.key == pygame.K_LEFT:
-                    player_1.control("STAY")
-                
-        #TECLAS APRETADAS
-        lista_teclas = pygame.key.get_pressed()
-
-        #MOVER A LA DERECHA
-        if(lista_teclas[pygame.K_RIGHT] and not lista_teclas[pygame.K_LEFT]):
-            player_1.direccion = "right"
-            player_1.control("WALK_R")
-
-            #CORRER A LA DERECHA
-            if lista_teclas[pygame.K_LSHIFT]:
-                player_1.control("RUN_R")
-
-        #MOVER A LA IZQUIERDA
-        elif(lista_teclas[pygame.K_LEFT] and not lista_teclas[pygame.K_RIGHT]):
-            player_1.direccion = "left"
-            player_1.control("WALK_L")
-
-            #CORRER A LA IZQUIERDA
-            if lista_teclas[pygame.K_LSHIFT]:
-                player_1.control("RUN_L")
-                
-        #QUEDARSE QUIETO
-        else:
-            player_1.control("STAY")
-
+        lista_teclas = pygame.event.get()
+        lista_precionada = pygame.key.get_pressed() # Teclas apretadas
+        
         #CARGA FONDO
         SCREEN.blit(fondo_juego.surface,fondo_juego.rect)
         
-        #ACTUALIZA JUEGO
-        player_1.draw(SCREEN)
-        player_1.update()
-        enemigo_1.draw(SCREEN)
-        enemigo_1.update()
-        enemigo_1.colicion(player_1.rect)
-        enemigo_2.draw(SCREEN)
-        enemigo_2.update()
-        enemigo_2.colicion(player_1.rect)
-        enemigo_3.draw(SCREEN)
-        enemigo_3.update()
-        enemigo_3.colicion(player_1.rect)
+        #ACTUALIZA JUEGO   
+        player_1.actualizar_personaje(SCREEN,delta_ms,lista_teclas,lista_precionada,player_1.rect)
+        enemigo_1.actualizar_enemigo(SCREEN,delta_ms,player_1.rect)
 
         #DIBUJA EL NIVEL
         muercielagos.updatear_murcielagos(SCREEN,player_1.rect)
         
         #ACTUALIZA PANTALLA
         pygame.display.flip()
+
+def seleccion_personaje():
+    SCREEN.blit(fondo_seleccion.surface, (0,0))
+
+    SELECCION_MOUSE_POS = pygame.mouse.get_pos()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        OPTIONS_BACK = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
+            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+        OSO_NEGRO = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
+            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+        BUNNY = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
+            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+        BUNNY = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
+            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+        BUNNY = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
+            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+
+        OPTIONS_BACK.changeColor(SELECCION_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if OSO_NEGRO.checkForInput(SELECCION_MOUSE_POS):
+                play()
+            if OPTIONS_BACK.checkForInput(SELECCION_MOUSE_POS):
+                main_menu()
+
+    pygame.display.flip()
+
+
 
 #MENU OPCIONES        
 def options():
@@ -112,12 +91,12 @@ def options():
 
         SCREEN.fill("white")
 
-        opcion_text = get_font(45).render("This is the OPTIONS screen.", True, "Black")
+        opcion_text = get_font(45).render("MENU DE OPCIONES.", True, "Black")
         opcion_rect = opcion_text.get_rect(center=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/3)))
         SCREEN.blit(opcion_text, opcion_rect)
 
         OPTIONS_BACK = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
@@ -136,7 +115,7 @@ def options():
 def main_menu():
     while True:
         SCREEN.blit(fondo_menu.surface, (0,0))
-        SCREEN.blit(cuadro_menu.surface, (ANCHO_VENTANA-500,0))
+        #SCREEN.blit(cuadro_menu.surface, (ANCHO_VENTANA-500,0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -146,11 +125,11 @@ def main_menu():
         menu_rect2 = menu_text2.get_rect(center=(ANCHO_VENTANA-250, 140))
 
         PLAY_BUTTON = Button(image=None, pos=(ANCHO_VENTANA-250, 240), 
-                            text_input="JUGAR", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+            text_input="JUGAR", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
         OPTIONS_BUTTON = Button(image=None, pos=(ANCHO_VENTANA-250, 320), 
-                            text_input="OPTIONES", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+            text_input="OPTIONES", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
         QUIT_BUTTON = Button(image=None, pos=(ANCHO_VENTANA-250, 400), 
-                            text_input="SALIR", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+            text_input="SALIR", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
 
         SCREEN.blit(menu_text, menu_rect)
         SCREEN.blit(menu_text2, menu_rect2)
@@ -224,3 +203,8 @@ main_menu()
 # SCREEN.blit(layer03.surface,layer03.rect)
 # SCREEN.blit(layer02.surface,layer02.rect)
 # SCREEN.blit(layer01.surface,layer01.rect)
+
+# if lista_teclas[pygame.K_LSHIFT]: # Correr
+        #     player_1.movement = player_1.speed_run
+        # elif not lista_teclas[pygame.K_LSHIFT]:
+        #     player_1.movement = player_1.speed_walk

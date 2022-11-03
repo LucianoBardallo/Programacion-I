@@ -27,7 +27,7 @@ class Enemigo:
         self.rect = pygame.Rect(x,y,50,50)
         
         
-    def update(self):
+    def update(self,delta_ms):
         #EVENTOS QUE PASAN POR TIEMPO
         tiempo_actual = pygame.time.get_ticks()
         if(tiempo_actual - self.tiempo > 300 and self.tiempo > 0):
@@ -81,6 +81,10 @@ class Enemigo:
                 if self.move <= 1000:
                     self.animation = self.muerte_l
 
+    def actualizar_enemigo(self,screen,delta_ms,pos_xy):
+        self.draw(screen)
+        self.update(delta_ms)
+        self.colicion(pos_xy)
 
 
 class Batterfly:
