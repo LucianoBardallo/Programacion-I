@@ -13,20 +13,33 @@ clock = pygame.time.Clock()
 
 #CARGA IMAGENES
 fondo_juego = Imagen(PATH_IMAGE + r"locations\mountain\all.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-fondo_menu = Imagen(PATH_IMAGE + r"menu\frog.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+fondo_menu = Imagen(PATH_IMAGE + r"menu\Background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_seleccion = Imagen(PATH_IMAGE + r"menu\Background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+bear = Imagen(PATH_IMAGE + r"caracters\black_bear\face.png",150,150,650,250)
+bunny = Imagen(PATH_IMAGE + r"caracters\rabbit\face.png",150,150,500,250)
+puppet = Imagen(PATH_IMAGE + r"caracters\puppet\face.png",150,150,500,400)
+chicken = Imagen(PATH_IMAGE + r"caracters\chicken\face.png",150,150,650,400)
 #cuadro_menu = Imagen(PATH_IMAGE + r"menu\rect.png",ANCHO_VENTANA-int(ANCHO_VENTANA/3),ALTO_VENTANA,0,0)
 
 #CARGA UNA FUENTE
 def get_font(tamaño):
     return pygame.font.Font(PATH_IMAGE + r"\menu\font.ttf", tamaño)
 
+jugador = "ONE"
+
 #CODIGO DEL JUEGO
-def play():
+def play(jugador):
     tiempo = pygame.time.get_ticks()
 
     #ASIGNACION DE CLASSES
-    player_1 = player.Player(x = 0, y = 560, speed_walk = 5, gravity = 2, jump_power = 10, frame_rate_ms = 40,frame_rate_jump_ms = 15, move_rate_ms = 80)
+    if jugador == "ONE":
+        player_1 = player.PlayerONE(x = 0, y = 555, speed_walk = 6, gravity = 2, jump_power = 14, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 40)
+    elif jugador == "TWO":
+        player_1 = player.PlayerTWO(x = 0, y = 555, speed_walk = 8, gravity = 2, jump_power = 10, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 80)
+    elif jugador == "THREE":
+        player_1 = player.PlayerTHREE(x = 0, y = 555, speed_walk = 6, gravity = 2, jump_power = 12, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 80)
+    elif jugador == "FOUR":
+        player_1 = player.PlayerFOUR(x = 0, y = 555, speed_walk = 8, gravity = 2, jump_power = 10, frame_rate_ms = 40,frame_rate_jump_ms = 10, move_rate_ms = 80)
     enemigo_1 = enemigo.Enemigo(1400,500,2,tiempo)
     muercielagos = enemigo.GrupoBatterflies(1)
 
@@ -51,36 +64,65 @@ def play():
         pygame.display.flip()
 
 def seleccion_personaje():
-    SCREEN.blit(fondo_seleccion.surface, (0,0))
+    while True:
+        #SCREEN.blit(fondo_seleccion.surface, (0,0))
+        SELECCION_MOUSE_POS = pygame.mouse.get_pos()
 
-    SELECCION_MOUSE_POS = pygame.mouse.get_pos()
+        SCREEN.blit(fondo_seleccion.surface,fondo_seleccion.rect)
+        SCREEN.blit(bunny.surface,bunny.rect)
+        SCREEN.blit(bear.surface,bear.rect)
+        SCREEN.blit(puppet.surface,puppet.rect)
+        SCREEN.blit(chicken.surface,chicken.rect)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+        opcion_text = get_font(40).render("SELECCION DE PERSONAJES", True, "#b68f40")
+        opcion_rect = opcion_text.get_rect(center=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/10)))
+        SCREEN.blit(opcion_text, opcion_rect)
 
-        OPTIONS_BACK = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
-        OSO_NEGRO = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
-        BUNNY = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
-        BUNNY = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
-        BUNNY = Button(image=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+        OPTIONS_BACK = Button(image=None, pos=(ANCHO_VENTANA//2,ALTO_VENTANA-100), 
+            text_input="BACK", font=get_font(40), base_color="#d7fcd4", hovering_color="Green")
+        BUNNY = Button(image=None, pos=(ANCHO_VENTANA//2-350,300), 
+            text_input="BUNNY", font=get_font(40), base_color="#d7fcd4", hovering_color="Green")    
+        BEAR = Button(image=None, pos=(ANCHO_VENTANA//2+300,300), 
+            text_input="BEAR", font=get_font(40), base_color="#d7fcd4", hovering_color="Green")
+        PUPPET = Button(image=None, pos=(ANCHO_VENTANA//2-350,450), 
+            text_input="PUPPET", font=get_font(40), base_color="#d7fcd4", hovering_color="Green")
+        CHICKEN = Button(image=None, pos=(ANCHO_VENTANA//2+320,450), 
+            text_input="CHICKEN", font=get_font(40), base_color="#d7fcd4", hovering_color="Green")
 
         OPTIONS_BACK.changeColor(SELECCION_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
+        BEAR.changeColor(SELECCION_MOUSE_POS)
+        BEAR.update(SCREEN)
+        BUNNY.changeColor(SELECCION_MOUSE_POS)
+        BUNNY.update(SCREEN)
+        CHICKEN.changeColor(SELECCION_MOUSE_POS)
+        CHICKEN.update(SCREEN)
+        PUPPET.changeColor(SELECCION_MOUSE_POS)
+        PUPPET.update(SCREEN)
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if OSO_NEGRO.checkForInput(SELECCION_MOUSE_POS):
-                play()
-            if OPTIONS_BACK.checkForInput(SELECCION_MOUSE_POS):
-                main_menu()
 
-    pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if BUNNY.checkForInput(SELECCION_MOUSE_POS):
+                    jugador = "ONE"
+                    play(jugador)
+                if BEAR.checkForInput(SELECCION_MOUSE_POS):
+                    jugador = "TWO"
+                    play(jugador)
+                if PUPPET.checkForInput(SELECCION_MOUSE_POS):
+                    jugador = "THREE"
+                    play(jugador)
+                if CHICKEN.checkForInput(SELECCION_MOUSE_POS):
+                    jugador = "FOUR"
+                    play(jugador)
+                if OPTIONS_BACK.checkForInput(SELECCION_MOUSE_POS):
+                    main_menu()
+
+        pygame.display.flip()
 
 
 
@@ -144,7 +186,7 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    play()
+                    seleccion_personaje()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
