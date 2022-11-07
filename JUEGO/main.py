@@ -6,6 +6,7 @@ from imagenes import Imagen
 from constantes import *
 from auxiliar import Auxiliar
 from botones import *
+from plataforma import Platform
 
 #SETEA LA VENTANA
 SCREEN = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA))
@@ -26,8 +27,6 @@ chicken = Imagen(PATH_IMAGE + r"caracters\chicken\face.png",150,150,650,400)
 def get_font(tamaño):
     return pygame.font.Font(PATH_IMAGE + r"\menu\font.ttf", tamaño)
 
-jugador = "ONE"
-
 #CODIGO DEL JUEGO
 def play(jugador):
     tiempo = pygame.time.get_ticks()
@@ -36,6 +35,10 @@ def play(jugador):
     player_1 = Auxiliar.elegir_personaje(jugador)
     enemigo_1 = enemigo.Enemigo(1400,500,2,tiempo)
     muercielagos = enemigo.GrupoBatterflies(1)
+
+    lista_plataformas = []
+    lista_plataformas.append(Platform(400,500,50,50,1))
+    lista_plataformas.append(Platform(480,500,50,50,1))
 
     while True: # Bucle del juego
         delta_ms = clock.tick(FPS) # FPS
@@ -48,8 +51,14 @@ def play(jugador):
         SCREEN.blit(fondo_juego.surface,fondo_juego.rect)
         
         #ACTUALIZA JUEGO   
-        player_1.actualizar_personaje(SCREEN,delta_ms,lista_teclas,lista_precionada,player_1.rect)
+        player_1.actualizar_personaje(SCREEN,delta_ms,lista_teclas,lista_precionada,player_1.rect,lista_plataformas)
+        # player_1.events(delta_ms,lista_teclas,lista_precionada)
+        # player_1.update(delta_ms,lista_plataformas)
+        # player_1.draw(SCREEN)
         enemigo_1.actualizar_enemigo(SCREEN,delta_ms,player_1.rect)
+
+        for plataforma in lista_plataformas:
+            plataforma.draw(SCREEN)
 
         #DIBUJA EL NIVEL
         muercielagos.updatear_murcielagos(SCREEN,player_1.rect)
@@ -57,6 +66,7 @@ def play(jugador):
         #ACTUALIZA PANTALLA
         pygame.display.flip()
 
+#SELECCION DE PERSONAJE
 def seleccion_personaje():
     while True:
         #SCREEN.blit(fondo_seleccion.surface, (0,0))
@@ -117,8 +127,6 @@ def seleccion_personaje():
                     main_menu()
 
         pygame.display.flip()
-
-
 
 #MENU OPCIONES        
 def options():

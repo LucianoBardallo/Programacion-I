@@ -36,6 +36,7 @@ class Player:
         self.frame_rate_jump_ms = frame_rate_jump_ms
         self.tiempo_transcurrido_move = 0
         self.move_rate_ms = move_rate_ms
+        self.rect_ground_collition = pygame.Rect(self.rect.x + self.rect.w / 6, self.rect.y + self.rect.h - GROUND_RECT_H, self.rect.w / 2, GROUND_RECT_H)
         
         
     def walk(self,direction):
@@ -72,24 +73,51 @@ class Player:
         else:
             self.actual_animation = "jump_l"
 
-    def do_movement(self,delta_ms):
+    def do_movement(self,delta_ms,lista_plataformas):
         # Salto
         if self.is_jump:
-            if self.jump_time >= -self.jump_power:
-                self.rect.y -= (self.jump_time * abs(self.jump_time)) * 0.5
-                self.jump_time -= self.jump_power // 10
-            else:
-                self.jump_time = self.jump_power
-                self.is_jump = False
+            self.tiempo_transcurrido_move += delta_ms
+            if(self.tiempo_transcurrido_move >= self.move_rate_ms):
+                if self.jump_time >= -self.jump_power:
+                    salto = self.jump_time
+                    self.add_y(-salto)
+                    self.jump_time -= 0.1
+                else:
+                    self.jump_time = self.jump_power
+                    self.is_jump = False
+                    self.tiempo_transcurrido_move = 0
 
-        # Movimiento de x
-        self.rect.x += self.move_x
+        # Movimiento de x e y
+        self.add_x(self.move_x)
+        self.add_y(-self.move_y)
         
         # Gravedad
-        if(self.rect.y < 555):
-            self.rect.y += self.gravity
-        elif (self.rect.y >= 555):
-            self.rect.y = 555
+        if(self.is_on_platform(lista_plataformas) == False):
+            self.add_y(self.gravity)
+
+    def is_on_platform(self,lista_plataformas):
+        retorno = False
+        if(self.rect.y >= GROUND_LEVEL):     
+            retorno = True
+            if self.rect.y > GROUND_LEVEL:
+                self.rect.y = GROUND_LEVEL
+                self.rect_ground_collition.y = self.rect.y + self.rect.h - GROUND_RECT_H
+        else:
+            for plataforma in lista_plataformas:
+                if(self.rect_ground_collition.colliderect(plataforma.rect_ground_collition)):
+                    print("holas")
+                    retorno = True
+                    break   
+        return retorno
+    
+    def add_x(self,delta_x):
+        self.rect.x += delta_x
+        self.rect_ground_collition.x += delta_x
+
+    def add_y(self,delta_y):
+        print(f"delta_y{delta_y}")
+        self.rect.y += delta_y  
+        self.rect_ground_collition.y += delta_y
 
     def do_animation(self,delta_ms):
         # Tiempo de animaciones
@@ -131,13 +159,15 @@ class Player:
             self.animation_anterior = self.animation
             self.frame = 0
 
-    def update(self,delta_ms):
+    def update(self,delta_ms,lista_plataformas):
         self.do_animation(delta_ms)
-        self.do_movement(delta_ms)
+        self.do_movement(delta_ms,lista_plataformas)
 
 
     def draw(self,screen):
-        #pygame.draw.rect(screen,(255,0,0),self.rect)
+        if(DEBUG):
+            pygame.draw.rect(screen,RED,self.rect)
+            pygame.draw.rect(screen,GREEN,self.rect_ground_collition)
         self.image = self.animation[self.frame]
         screen.blit(self.image,self.rect)
 
@@ -169,9 +199,9 @@ class Player:
         else:
             self.stay() #Quedarse quieto
 
-    def actualizar_personaje(self,screen,delta_ms,teclas,presionada,pos_xy):
+    def actualizar_personaje(self,screen,delta_ms,teclas,presionada,pos_xy,lista_plataformas):
         self.draw(screen)
-        self.update(delta_ms)
+        self.update(delta_ms,lista_plataformas)
         self.events(delta_ms,teclas,presionada)
         self.colicion(pos_xy)
 

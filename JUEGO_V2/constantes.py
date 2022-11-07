@@ -1,0 +1,17 @@
+ANCHO_VENTANA = 1366
+ALTO_VENTANA = 768
+FPS = 240
+
+DIRECTION_L = 0
+DIRECTION_R = 1
+
+DEBUG = True
+
+RED = (255,0,0)
+GREEN = (0,255,0)
+BLUE = (0,0,255)
+
+GROUND_RECT_H = 5
+GROUND_LEVEL = int(ALTO_VENTANA * 0.716)
+
+PATH_IMAGE = r"C:\Users\lucia\Documents\Programacion I\JUEGO_V2\images\\"
