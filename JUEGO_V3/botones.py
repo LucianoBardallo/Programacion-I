@@ -6,7 +6,7 @@ class Button():
 	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
 		self.image = image
 		if self.image != None:
-			self.image = pygame.transform.scale(self.image,(int(ANCHO_VENTANA * 0.2),int(ALTO_VENTANA * 0.5)))
+			self.image = pygame.transform.scale(self.image,(int(ANCHO_VENTANA * 0.15),int(ALTO_VENTANA * 0.3)))
 		self.x_pos = pos[0]
 		self.y_pos = pos[1]
 		self.font = font

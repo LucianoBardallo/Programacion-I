@@ -70,27 +70,6 @@ class Player:
                     self.move_x = -self.speed_walk
                     self.animation = self.walk_l
 
-    def shoot(self,on_off = True):
-        self.is_shoot = on_off
-        if(on_off == True and self.is_jump == False and self.is_fall == False):
-            if(self.animation != self.shoot_r and self.animation != self.shoot_l):
-                self.frame = 0
-                self.is_shoot = True
-                if(self.direction == DIRECTION_R):
-                    self.animation = self.shoot_r
-                else:
-                    self.animation = self.shoot_l       
-
-    def knife(self,on_off = True):
-        self.is_knife = on_off
-        if(on_off == True and self.is_jump == False and self.is_fall == False):
-            if(self.animation != self.knife_r and self.animation != self.knife_l):
-                self.frame = 0
-                if(self.direction == DIRECTION_R):
-                    self.animation = self.knife_r
-                else:
-                    self.animation = self.knife_l      
-
     def jump(self,on_off = True):
         if(on_off and self.is_jump == False and self.is_fall == False):
             self.y_start_jump = self.rect.y
@@ -120,6 +99,29 @@ class Player:
             self.move_x = 0
             self.move_y = 0
             self.frame = 0
+
+    def shoot(self,on_off = True):
+        self.is_shoot = on_off
+        if(on_off == True and self.is_jump == False and self.is_fall == False):
+            if(self.animation != self.shoot_r and self.animation != self.shoot_l):
+                self.frame = 0
+                self.is_shoot = True
+                if(self.direction == DIRECTION_R):
+                    self.animation = self.shoot_r
+                else:
+                    self.animation = self.shoot_l       
+
+    def knife(self,on_off = True):
+        self.is_knife = on_off
+        if(on_off == True and self.is_jump == False and self.is_fall == False):
+            if(self.animation != self.knife_r and self.animation != self.knife_l):
+                self.frame = 0
+                if(self.direction == DIRECTION_R):
+                    self.animation = self.knife_r
+                else:
+                    self.animation = self.knife_l      
+
+
 
     def change_x(self,delta_x):
         self.rect.x += delta_x
@@ -191,7 +193,6 @@ class Player:
     def events(self,delta_ms,keys):
         self.tiempo_transcurrido += delta_ms
 
-
         if(keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]):
             self.walk(DIRECTION_L)
 
@@ -207,19 +208,19 @@ class Player:
         if(keys[pygame.K_SPACE]):
             if((self.tiempo_transcurrido - self.tiempo_last_jump) > self.interval_time_jump):
                 self.jump(True)
-                self.tiempo_last_jump = self.tiempo_transcurrido
-
-        # if(not keys[pygame.K_a]):
-        #     self.shoot(False)  
-
-        # if(not keys[pygame.K_a]):
-        #     self.knife(False)  
-
-        # if(keys[pygame.K_s] and not keys[pygame.K_a]):
-        #     self.shoot()   
+                self.tiempo_last_jump = self.tiempo_transcurrido 
         
-        # if(keys[pygame.K_a] and not keys[pygame.K_s]):
-        #     self.knife()   
+        if(not keys[pygame.K_a]):
+            self.shoot(False)  
+
+        if(not keys[pygame.K_a]):
+            self.knife(False)  
+
+        if(keys[pygame.K_s] and not keys[pygame.K_a]):
+            self.shoot()   
+        
+        if(keys[pygame.K_a] and not keys[pygame.K_s]):
+            self.knife()  
 
 class PlayerONE(Player):
     def __init__(self,x,y,speed_walk,gravity,jump_power,frame_rate_ms,frame_rate_jump_ms,move_rate_ms,jump_height,p_scale=1,interval_time_jump=100):
@@ -257,7 +258,6 @@ class PlayerTWO(Player):
         self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/black_bear/base.png",15,1,True)[:12]
         self.jump_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/black_bear/jump.png",33,1)
         self.jump_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/black_bear/jump.png",33,1,True)
-
 class PlayerTHREE(Player):
     def __init__(self,x,y,speed_walk,gravity,jump_power,frame_rate_ms,frame_rate_jump_ms,move_rate_ms,jump_height,p_scale=1,interval_time_jump=100) -> None:
         super().__init__(x,y,speed_walk,gravity,jump_power,frame_rate_ms,frame_rate_jump_ms,move_rate_ms,jump_height,p_scale=1,interval_time_jump=100)
@@ -275,8 +275,7 @@ class PlayerTHREE(Player):
         self.walk_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/puppet/base.png",15,1)[:12]
         self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/puppet/base.png",15,1,True)[:12]
         self.jump_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/puppet/jump.png",33,1)
-        self.jump_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/puppet/jump.png",33,1,True)
-       
+        self.jump_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/puppet/jump.png",33,1,True)      
 class PlayerFOUR(Player):
     def __init__(self,x,y,speed_walk,gravity,jump_power,frame_rate_ms,frame_rate_jump_ms,move_rate_ms,jump_height,p_scale=1,interval_time_jump=100) -> None:
         super().__init__(x,y,speed_walk,gravity,jump_power,frame_rate_ms,frame_rate_jump_ms,move_rate_ms,jump_height,p_scale=1,interval_time_jump=100)
@@ -295,3 +294,10 @@ class PlayerFOUR(Player):
         self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/fox/base.png",15,1,True)[:12]
         self.jump_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/fox/jump.png",33,1)
         self.jump_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters/players/Glitch/fox/jump.png",33,1,True)
+
+
+
+
+
+
+

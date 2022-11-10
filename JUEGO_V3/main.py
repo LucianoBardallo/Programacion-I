@@ -3,10 +3,12 @@ import sys
 from pygame.locals import *
 from constantes import *
 from player import Player
-from plataforma import Plataform 
+from plataforma import Plataform,Plataform2
 from imagenes import Imagen
 from auxiliar import *
 from botones import Button
+from nivel import Nivel
+from enemigo import Enemigo
 
 flags = DOUBLEBUF
 
@@ -15,14 +17,16 @@ pygame.init()
 clock = pygame.time.Clock()
 
 #CARGA IMAGENES
-fondo_juego = Imagen(PATH_IMAGE + r"locations\set_bg_05\1_game_background\1_game_background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+#PARADAX PRUEBA
+
+
+#fondo_juego = Imagen(PATH_IMAGE + r"locations\set_bg_05\1_game_background\1_game_background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_menu = Imagen(PATH_IMAGE + r"menu\Background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_seleccion = Imagen(PATH_IMAGE + r"menu\screen_selection.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 bonnie = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\rabbit\idleSleepy.png",21,2)[0]
 teddy = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\black_bear\idleSleepy.png",21,2)[0]
 puppet= Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\puppet\idleSleepy.png",21,2)[0]
 foxxie = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\fox\idleSleepy.png",21,2)[0]
-
 
 #CARGA UNA FUENTE
 def get_font(tamaño):
@@ -34,39 +38,59 @@ def play(jugador):
 
     #ASIGNACION DE CLASSES
     player_1 = Auxiliar.elegir_personaje(jugador)
+    enemigo_1 = Enemigo(1100,100,4,8,20,5)
+    nivel_1 = Nivel()
+    nivel_1.crear_paradax(PATH_IMAGE + r"locations\set_bg_05\1_game_background\layers\\",7)
 
+    #PLATAFORMAS
     plataform_list = []
-    plataform_list.append(Plataform(x=350,y=450,width=50,height=50,type=12)) 
-    plataform_list.append(Plataform(x=400,y=450,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=450,y=450,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=500,y=450,width=50,height=50,type=13)) 
-    plataform_list.append(Plataform(x=550,y=450,width=50,height=50,type=14))
+    plataform_list.append(Plataform(x=350,y=400,width=50,height=50,type=0))
+    plataform_list.append(Plataform(x=400,y=400,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=450,y=400,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=500,y=400,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=550,y=400,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=600,y=400,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=650,y=400,width=50,height=50,type=1))  
+    plataform_list.append(Plataform(x=700,y=400,width=50,height=50,type=1))
 
-    plataform_list.append(Plataform(x=600,y=350,width=50,height=50,type=12))
-    plataform_list.append(Plataform(x=650,y=350,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=700,y=350,width=50,height=50,type=14))
+    plataform_list.append(Plataform(x=750,y=250,width=50,height=50,type=0))
+    plataform_list.append(Plataform(x=800,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=850,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=900,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=950,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=1000,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=1050,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=1100,y=250,width=50,height=50,type=1))
 
-    plataform_list.append(Plataform(x=750,y=250,width=50,height=50,type=12))
-    plataform_list.append(Plataform(x=800,y=250,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=850,y=250,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=900,y=250,width=50,height=50,type=14))
+    plataform_list.append(Plataform(x=150,y=100,width=50,height=50,type=0))
+    plataform_list.append(Plataform(x=200,y=100,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=250,y=100,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=300,y=100,width=50,height=50,type=2))
 
-    plataform_list.append(Plataform(x=150,y=100,width=50,height=50,type=12)) 
-    plataform_list.append(Plataform(x=200,y=100,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=250,y=100,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=300,y=100,width=50,height=50,type=14))
+    plataform_list.append(Plataform(x=300,y=250,width=50,height=50,type=0))
+    plataform_list.append(Plataform(x=350,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=400,y=250,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=450,y=250,width=50,height=50,type=1)) 
+    plataform_list.append(Plataform(x=500,y=250,width=50,height=50,type=2))
 
-    plataform_list.append(Plataform(x=300,y=250,width=50,height=50,type=12)) 
-    plataform_list.append(Plataform(x=350,y=250,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=400,y=250,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=450,y=250,width=50,height=50,type=13)) 
-    plataform_list.append(Plataform(x=500,y=250,width=50,height=50,type=14))
+    plataform_list.append(Plataform(x=650,y=100,width=50,height=50,type=0))
+    plataform_list.append(Plataform(x=700,y=100,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=750,y=100,width=50,height=50,type=1))
+    plataform_list.append(Plataform(x=800,y=100,width=50,height=50,type=1)) 
+    plataform_list.append(Plataform(x=850,y=100,width=50,height=50,type=2))
 
-    plataform_list.append(Plataform(x=650,y=100,width=50,height=50,type=12)) 
-    plataform_list.append(Plataform(x=700,y=100,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=750,y=100,width=50,height=50,type=13))
-    plataform_list.append(Plataform(x=800,y=100,width=50,height=50,type=13)) 
-    plataform_list.append(Plataform(x=850,y=100,width=50,height=50,type=14))
+    #PLATAFORMA 2
+    plataform_list2 = []
+    x = 0
+
+    for i in range(0,24):
+        plataform_list2.append(Plataform2(x,y=500,width=50,height=50,type=0))
+        x += 50
+    x = 0
+
+    for i in range(0,24):
+        plataform_list2.append(Plataform2(x,y=550,width=50,height=50,type=1))
+        x += 50
 
 
     while True:
@@ -78,15 +102,24 @@ def play(jugador):
         keys = pygame.key.get_pressed()
 
         delta_ms = clock.tick(FPS)
-        SCREEN.blit(fondo_juego.surface,fondo_juego.rect)
+        
+        # nivel_1.events(keys,player_1.speed_walk)
+        nivel_1.draw_bg(SCREEN,10)
+        #SCREEN.blit(fondo_juego.surface,fondo_juego.rect)
 
         for plataforma in plataform_list:
             plataforma.draw(SCREEN)
 
-
         player_1.events(delta_ms,keys)
         player_1.update(delta_ms,plataform_list)
         player_1.draw(SCREEN)
+
+        for plataforma in plataform_list2:
+            plataforma.draw(SCREEN)
+            
+        enemigo_1.update(delta_ms,plataform_list)
+        enemigo_1.draw(SCREEN)
+        enemigo_1.colicion(player_1.rect)
         
         # enemigos update
         # player dibujarlo
@@ -117,28 +150,20 @@ def seleccion_personaje():
         
 
         OPTIONS_BACK = Button(image=None, pos=(int(ANCHO_VENTANA * 0.125),int(ALTO_VENTANA * 0.94)), 
-            text_input="BACK", font=get_font(int(ANCHO_VENTANA * 0.0165)), base_color="#d7fcd4", hovering_color="Green")
-        BUNNY = Button(image=bonnie, pos=(int(ANCHO_VENTANA * 0.125),int(ALTO_VENTANA * 0.5)), 
-            text_input="", font=get_font(int(ANCHO_VENTANA * 0.0335)), base_color="#d7fcd4", hovering_color="Green")    
-        BEAR = Button(image=teddy, pos=(int(ANCHO_VENTANA * 0.375),int(ALTO_VENTANA * 0.5)), 
-            text_input="", font=get_font(int(ANCHO_VENTANA * 0.0335)), base_color="#d7fcd4", hovering_color="Green")
-        PUPPET = Button(image=puppet, pos=(int(ANCHO_VENTANA * 0.625),int(ALTO_VENTANA * 0.5)), 
-            text_input="", font=get_font(int(ANCHO_VENTANA * 0.0335)), base_color="#d7fcd4", hovering_color="Green")
-        FOX = Button(image=foxxie, pos=(int(ANCHO_VENTANA * 0.875),int(ALTO_VENTANA * 0.5)), 
-            text_input="", font=get_font(int(ANCHO_VENTANA * 0.0335)), base_color="#d7fcd4", hovering_color="Green")
+            text_input="BACK", font=get_font(30), base_color="#d7fcd4", hovering_color="Green")
+        BUNNY = Button(image=bonnie, pos=(int(ANCHO_VENTANA * 0.125),int(ALTO_VENTANA * 0.6)), 
+            text_input="", font=get_font(30), base_color="#d7fcd4", hovering_color="Green")    
+        BEAR = Button(image=teddy, pos=(int(ANCHO_VENTANA * 0.375),int(ALTO_VENTANA * 0.6)), 
+            text_input="", font=get_font(30), base_color="#d7fcd4", hovering_color="Green")
+        PUPPET = Button(image=puppet, pos=(int(ANCHO_VENTANA * 0.625),int(ALTO_VENTANA * 0.6)), 
+            text_input="", font=get_font(30), base_color="#d7fcd4", hovering_color="Green")
+        FOX = Button(image=foxxie, pos=(int(ANCHO_VENTANA * 0.875),int(ALTO_VENTANA * 0.6)), 
+            text_input="", font=get_font(30), base_color="#d7fcd4", hovering_color="Green")
 
-        OPTIONS_BACK.changeColor(SELECCION_MOUSE_POS)
-        OPTIONS_BACK.update(SCREEN)
-        BEAR.changeColor(SELECCION_MOUSE_POS)
-        BEAR.update(SCREEN)
-        BUNNY.changeColor(SELECCION_MOUSE_POS)
-        BUNNY.update(SCREEN)
-        FOX.changeColor(SELECCION_MOUSE_POS)
-        FOX.update(SCREEN)
-        PUPPET.changeColor(SELECCION_MOUSE_POS)
-        PUPPET.update(SCREEN)
-
-
+        for button in [OPTIONS_BACK,BEAR,BUNNY,FOX,PUPPET]:
+            button.changeColor(SELECCION_MOUSE_POS)
+            button.update(SCREEN)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

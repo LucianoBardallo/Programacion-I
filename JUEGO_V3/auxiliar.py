@@ -47,11 +47,11 @@ class Auxiliar:
 
     def elegir_personaje(jugador):
         if jugador == "ONE":
-            player_1 = player.PlayerONE(x = 0, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 10, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+            player_1 = player.PlayerONE(x = 400, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
         elif jugador == "TWO":
-            player_1 = player.PlayerTWO(x = 0, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 10, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+            player_1 = player.PlayerTWO(x = 400, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
         elif jugador == "THREE":
-            player_1 = player.PlayerTHREE(x = 0, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 10, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+            player_1 = player.PlayerTHREE(x = 400, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
         elif jugador == "FOUR":
-            player_1 = player.PlayerFOUR(x = 0, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 10, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+            player_1 = player.PlayerFOUR(x = 400, y = 0, speed_walk = 8, gravity = 12, jump_power = 12, frame_rate_ms = 20,frame_rate_jump_ms = 10, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
         return player_1
