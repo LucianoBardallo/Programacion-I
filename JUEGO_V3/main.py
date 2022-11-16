@@ -21,8 +21,8 @@ clock = pygame.time.Clock()
 
 
 #fondo_juego = Imagen(PATH_IMAGE + r"locations\set_bg_05\1_game_background\1_game_background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-fondo_menu = Imagen(PATH_IMAGE + r"menu\Background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-fondo_seleccion = Imagen(PATH_IMAGE + r"menu\screen_selection.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+fondo_menu = Imagen(PATH_IMAGE + r"menu\fondo\Background.png",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+#fondo_seleccion = Imagen(PATH_IMAGE + r"menu\fondo\screen_selection.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 bonnie = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\rabbit\idleSleepy.png",21,2)[0]
 teddy = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\black_bear\idleSleepy.png",21,2)[0]
 puppet= Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\players\Glitch\puppet\idleSleepy.png",21,2)[0]
@@ -254,7 +254,7 @@ def main_menu():
         pygame.display.flip()
 
 #MENU DEL JUEGO
-main_menu()
+play()
 
 
 # bear = Imagen(PATH_IMAGE + r"caracters\players\Glitch\black_bear\face.png",150,150,650,250)
