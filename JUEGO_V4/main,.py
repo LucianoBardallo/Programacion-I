@@ -7,7 +7,8 @@ from botones import Button
 from imagenes import Imagen
 from plataforma import Plataform, Plataform_back
 from player import Player
-from objets import Object
+from objets import *
+from loot import Loot
 
 flags = DOUBLEBUF
 
@@ -26,46 +27,56 @@ def get_font(tamaño):
 #JUEGO
 def play(nivel):
     tiempo = pygame.time.get_ticks()
-    player_1 = Player(x = 60, y = 50, speed_walk = 8, gravity = 15, jump_power = 15, frame_rate_ms = 40,frame_rate_jump_ms = 85, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+    player_1 = Player(x = 60, y = 40, speed_walk = 8, gravity = 15, jump_power = 15, frame_rate_ms = 40,frame_rate_jump_ms = 85, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
 
     #PLATAFORMAS
     plataform_list = []
-    plataform_back_list = []
-    x = 0
-    for i in range(0,3):
-        plataform_list.append(Plataform(x+50,y=200,width=50,height=50,type=1))
-        plataform_list.append(Plataform(x+150,y=350,width=50,height=50,type=1))
-        plataform_list.append(Plataform(x+350,y=200,width=50,height=50,type=1))
-        x+= 50
-    x = 600
-    for i in range(0,12):
-        plataform_list.append(Plataform(x,y=300,width=50,height=50,type=1))
-        x += 50
-    x = 50
-    for i in range(0,23):
-        plataform_back_list.append(Plataform_back(x,y=550,width=50,height=50,type=1))
-        #plataform_back_list.append(Plataform_back(x,y=550,width=50,height=50,type=4))
-        plataform_back_list.append(Plataform_back(x,y=0,width=50,height=50,type=1,reverso = True))
-        #plataform_back_list.append(Plataform_back(x,y=0,width=50,height=50,type=4))
-        x += 50
-    y = 0
-    for i in range(0,12):
-        plataform_back_list.append(Plataform_back(x=0,y=y,width=50,height=50,type=4))
-        plataform_back_list.append(Plataform_back(x=1150,y=y,width=50,height=50,type=4))
-        y += 50
-    y = 0
-    for i in range(0,8):
-        plataform_back_list.append(Plataform_back(x=300,y=y,width=50,height=50,type=4))
-        y += 50
-
+    wall_list = []
     lista_objetos = []
-    for i in range(0,1):
-        lista_objetos.append(Object(x=70,y=80,width=80,height=120,type=4))
-        lista_objetos.append(Object(x=1050,y=430,width=80,height=120,type=6))
-        lista_objetos.append(Object(x=450,y=475,width=75,height=75,type=2))
-        lista_objetos.append(Object(x=525,y=475,width=75,height=75,type=2))
-        lista_objetos.append(Object(x=485,y=400,width=75,height=75,type=2))
+    lista_objetos_animados = []
+    x = 0
+    y = 0
+    for i in range(0,30):
+        if i < 1:
+            #OBJETOS
+            lista_objetos_animados.append(Animated_Object(x=70,y=80,width=80,height=120,type_desactive=6,type_active=4))
+            lista_objetos_animados.append(Animated_Object(x=1050,y=430,width=80,height=120,type_desactive=5,type_active=4))
+            lista_objetos_animados.append(Animated_Object(x=400,y=125,width=25,height=75,type_desactive=8,type_active=7))
+            lista_objetos.append(Static_Object(x=450,y=475,width=75,height=75,type_desactive=2))
+            lista_objetos.append(Static_Object(x=525,y=475,width=75,height=75,type_desactive=2))
+            lista_objetos.append(Static_Object(x=485,y=400,width=75,height=75,type_desactive=2))
+        if i < 3:
+            plataform_list.append(Plataform(x+50,y=200,width=50,height=50,type=1))
+            plataform_list.append(Plataform(x+150,y=350,width=50,height=50,type=1))
+            plataform_list.append(Plataform(x+350,y=200,width=50,height=50,type=1))
+        if i < 6:
+            plataform_list.append(Plataform(x+900,y=150,width=50,height=50,type=1))
+        if i < 8:
+            wall_list.append(Plataform_back(x=300,y=y,width=50,height=50,type=4))
+        if i < 12:
+            plataform_list.append(Plataform(x+600,y=300,width=50,height=50,type=1))
+            #Cambia Y
+            wall_list.append(Plataform_back(x=0,y=y,width=50,height=50,type=4))
+            wall_list.append(Plataform_back(x=1150,y=y,width=50,height=50,type=4))
+        if i < 23:
+            plataform_list.append(Plataform(x,y=550,width=50,height=50,type=1))
+            wall_list.append(Plataform_back(x,y=0,width=50,height=50,type=1,reverso = True))
+        x += 50
+        y += 50
 
+    x = 0
+    y = 0
+    loot_list = []
+    for i in range(10):
+        if i < 5:
+            loot_list.append(Loot(x+900,y=50,frame_rate_ms=60))
+        loot_list.append(Loot(x+650,y=200,frame_rate_ms=60))
+        x += 50
+    for i in range(5):
+        loot_list.append(Loot(x=230,y=y+50,frame_rate_ms=60))
+        y += 50
+    
+        
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -74,7 +85,8 @@ def play(nivel):
         
         SCREEN.fill("white")
 
-        keys = pygame.key.get_pressed()
+        lista_pressed = pygame.key.get_pressed()
+        lista_keys = pygame.event.get()
 
         delta_ms = clock.tick(FPS)
         
@@ -82,13 +94,19 @@ def play(nivel):
 
         for plataforma in plataform_list:
             plataforma.draw(SCREEN)
+        for objeto2 in lista_objetos_animados:
+            objeto2.draw(SCREEN)
         for objeto in lista_objetos:
             objeto.draw(SCREEN)
-        for plataforma_back in plataform_back_list:
-            plataforma_back.draw(SCREEN)
+        for wall in wall_list:
+            wall.draw(SCREEN)
+        for loot in loot_list:
+            loot.update(delta_ms)
+            loot.draw(SCREEN)
+        
 
-        player_1.events(delta_ms,keys)
-        player_1.update(delta_ms,plataform_list,lista_objetos,plataform_back_list)
+        player_1.events(delta_ms,lista_pressed)
+        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list)
         player_1.draw(SCREEN)
 
 
