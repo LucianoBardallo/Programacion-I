@@ -9,6 +9,7 @@ from plataforma import Plataform, Plataform_back
 from player import Player
 from objets import *
 from loot import Loot
+from enemigo import *
 
 flags = DOUBLEBUF
 
@@ -28,23 +29,27 @@ def get_font(tamaño):
 def play(nivel):
     tiempo = pygame.time.get_ticks()
     player_1 = Player(x = 60, y = 40, speed_walk = 8, gravity = 15, jump_power = 15, frame_rate_ms = 40,frame_rate_jump_ms = 85, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+    enemy_1 = Enemigo(x=1100,y=400,speed_walk=4,gravity=10,frame_rate_ms=20,move_rate_ms=20,pasos=800)
+    enemy_2 = Enemigo(x=1100,y=190,speed_walk=4,gravity=10,frame_rate_ms=20,move_rate_ms=20,pasos=400)
 
     #PLATAFORMAS
     plataform_list = []
     wall_list = []
     lista_objetos = []
     lista_objetos_animados = []
+    final_door = []
+    switch_list = []
     x = 0
     y = 0
     for i in range(0,30):
         if i < 1:
             #OBJETOS
-            lista_objetos_animados.append(Animated_Object(x=70,y=80,width=80,height=120,type_desactive=6,type_active=4))
-            lista_objetos_animados.append(Animated_Object(x=1050,y=430,width=80,height=120,type_desactive=5,type_active=4))
-            lista_objetos_animados.append(Animated_Object(x=400,y=125,width=25,height=75,type_desactive=8,type_active=7))
-            lista_objetos.append(Static_Object(x=450,y=475,width=75,height=75,type_desactive=2))
-            lista_objetos.append(Static_Object(x=525,y=475,width=75,height=75,type_desactive=2))
-            lista_objetos.append(Static_Object(x=485,y=400,width=75,height=75,type_desactive=2))
+            lista_objetos_animados.append(Animated_Object(x=70,y=80,width=80,height=120,type_unlock=6,type_open=4,type_lock=5))
+            final_door.append(Animated_Object(x=1050,y=430,width=80,height=120,type_unlock=6,type_open=4,type_lock=5))
+            switch_list.append(Animated_Object(x=400,y=125,width=25,height=75,type_unlock=8,type_open=7,type_lock=8))
+            lista_objetos.append(Static_Object(x=450,y=475,width=75,height=75,type_unlock=2))
+            lista_objetos.append(Static_Object(x=525,y=475,width=75,height=75,type_unlock=2))
+            lista_objetos.append(Static_Object(x=485,y=400,width=75,height=75,type_unlock=2))
         if i < 3:
             plataform_list.append(Plataform(x+50,y=200,width=50,height=50,type=1))
             plataform_list.append(Plataform(x+150,y=350,width=50,height=50,type=1))
@@ -103,11 +108,19 @@ def play(nivel):
         for loot in loot_list:
             loot.update(delta_ms)
             loot.draw(SCREEN)
+        for switch in switch_list:
+            switch.draw(SCREEN)
+        for door in final_door:
+            door.draw(SCREEN)
         
 
         player_1.events(delta_ms,lista_pressed)
-        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list)
+        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list,switch_list,final_door)
         player_1.draw(SCREEN)
+        enemy_1.update(delta_ms,plataform_list)
+        enemy_1.draw(SCREEN)
+        enemy_2.update(delta_ms,plataform_list)
+        enemy_2.draw(SCREEN)
 
 
         pygame.display.flip()
@@ -129,7 +142,7 @@ def selec_level():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        NIVEL_1 = Button(image=nivel_one, pos=(ANCHO_VENTANA * 0.16, int(ALTO_VENTANA * 0.28)), 
+        NIVEL_1 = Button(image=nivel_one, pos=(ANCHO_VENTANA * 0.15, int(ALTO_VENTANA * 0.28)), 
             text_input="", font=get_font(55), base_color=CYAN, hovering_color="White")
 
         NIVEL_2 = Button(image=nivel_two, pos=(ANCHO_VENTANA * 0.38, int(ALTO_VENTANA * 0.28)), 
@@ -154,7 +167,7 @@ def selec_level():
             text_input="", font=get_font(55), base_color=CYAN, hovering_color="White")
 
         QUIT = Button(image=None, pos=(ANCHO_VENTANA // 2, int(ALTO_VENTANA * 0.9)), 
-        text_input="QUIT", font=get_font(55), base_color=CYAN, hovering_color="White")
+        text_input="QUIT", font=get_font(30), base_color=CYAN, hovering_color="White")
 
 
         for button in [NIVEL_1, NIVEL_2, NIVEL_3, NIVEL_4, NIVEL_5, NIVEL_6, NIVEL_7, NIVEL_8, QUIT]:

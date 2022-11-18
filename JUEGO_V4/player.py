@@ -28,7 +28,7 @@ class Player:
         self.jump_melee_l = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/JumpShoot ({0}).png",5,True,w=100,h=100)
 
         self.frame = 0
-        self.lives = 5
+        self.lives = 1
         self.score = 0
         self.move_x = 0
         self.move_y = 0
@@ -47,6 +47,10 @@ class Player:
         self.ground_collition_rect.height = GROUND_COLLIDE_H
         self.ground_collition_rect.y = y + self.rect.height - GROUND_COLLIDE_H
 
+        self.head_collition_rect = pygame.Rect(self.collition_rect)
+        self.head_collition_rect.height = GROUND_COLLIDE_H
+        self.head_collition_rect.y = y + GROUND_COLLIDE_H
+
         self.is_jump = False
         self.is_fall = False
         self.is_shoot = False
@@ -56,6 +60,7 @@ class Player:
         self.is_jump_shoot = False
         self.is_jump_melee = False
         self.is_wall = False
+        self.can_win = False
 
         self.tiempo_transcurrido_animation = 0
         self.frame_rate_ms = frame_rate_ms 
@@ -64,6 +69,7 @@ class Player:
         self.move_rate_ms = move_rate_ms
         self.y_start_jump = 0
         self.jump_height = jump_height
+        self.tiempo_activate = 0
 
         self.tiempo_transcurrido = 0
         self.tiempo_last_jump = 0 # en base al tiempo transcurrido general
@@ -140,11 +146,13 @@ class Player:
         self.rect.x += delta_x
         self.collition_rect.x += delta_x
         self.ground_collition_rect.x += delta_x
+        self.head_collition_rect.x += delta_x
 
     def change_y(self,delta_y):
         self.rect.y += delta_y
         self.collition_rect.y += delta_y
         self.ground_collition_rect.y += delta_y
+        self.head_collition_rect.y += delta_y
 
     def do_movement(self,delta_ms,plataform_list,object_list,wall_list):
         self.tiempo_transcurrido_move += delta_ms
@@ -179,8 +187,10 @@ class Player:
                     self.change_x(-3)
                 else:
                     self.change_x(3)
-                
-                    
+            if(self.head_collition_rect.colliderect(wall.ground_collition_rect)):
+                self.is_fall = True
+
+
     def is_on_plataform(self,plataform_list,object_list):
         retorno = False
         
@@ -221,26 +231,49 @@ class Player:
                 else: 
                     self.frame = 0
 
-    def do_collition(self,delta_ms,loot_list,object_list):
+    def do_collition(self,delta_ms,loot_list,object_list,switch_list,final_door):
         for loot in loot_list:
             if loot.collition_rect.colliderect(self.collition_rect):
                 loot.is_collected = True
+                self.score += 50
         for object in object_list:
             if object.collition_rect.colliderect(self.collition_rect):
                 object.activate = True
             else:
                 object.activate = False
+        for switch in switch_list:
+            if switch.collition_rect.colliderect(self.collition_rect):
+                switch.activate = True
+                switch.unlock = True
+                self.can_win = True
+            else:
+                self.tiempo_activate += delta_ms
+                if(self.tiempo_activate >= 20000):
+                    switch.activate = False
+                    switch.unlock = False
+                    self.can_win = False
+                    self.tiempo_activate = 0
+        for door in final_door:
+            door.unlock = self.can_win
+            if door.collition_rect.colliderect(self.collition_rect):
+                door.activate = True
+            else:
+                door.activate = False
+            
+            
+                    
  
-    def update(self,delta_ms,plataform_list,object_list,animated_object_list,wall_list,loot_list):
+    def update(self,delta_ms,plataform_list,object_list,animated_object_list,wall_list,loot_list,switch_list,final_door):
         self.do_movement(delta_ms,plataform_list,object_list,wall_list)
         self.do_animation(delta_ms)
-        self.do_collition(delta_ms,loot_list,animated_object_list)
+        self.do_collition(delta_ms,loot_list,animated_object_list,switch_list,final_door)
         
     
     def draw(self,screen):
         if(DEBUG):
             pygame.draw.rect(screen,color=(255,0 ,0),rect=self.collition_rect)
             pygame.draw.rect(screen,color=(255,255,0),rect=self.ground_collition_rect)
+            pygame.draw.rect(screen,color=(255,255,0),rect=self.head_collition_rect)
         
         self.image = self.animation[self.frame]
         screen.blit(self.image,self.rect)

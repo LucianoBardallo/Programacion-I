@@ -28,9 +28,14 @@ class Plataform_back:
         self.rect.x = x
         self.rect.y = y
         self.collition_rect = pygame.Rect(self.rect)
+        self.ground_collition_rect = pygame.Rect(self.rect)
+        self.ground_collition_rect.height = GROUND_COLLIDE_H
+        self.ground_collition_rect.y = y + self.rect.height - GROUND_COLLIDE_H * 2
 
     def draw(self,screen):
         screen.blit(self.image,self.rect)
         if(DEBUG):
-            pygame.draw.rect(screen,color=(255,0 ,0),rect=self.rect)
+            pygame.draw.rect(screen,color=(255,0 ,0),rect=self.collition_rect)
+            pygame.draw.rect(screen,color=(255,255 ,0),rect=self.ground_collition_rect)
+
 

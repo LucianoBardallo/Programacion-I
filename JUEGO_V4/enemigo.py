@@ -1,30 +1,27 @@
-import random
 import pygame
 from auxiliar import Auxiliar
-from constantes import *
+from settings import *
 
 class Enemigo:
-    def __init__(self,x,y,speed_walk,gravity,frame_rate_ms,move_rate_ms):
-        self.stay_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\enemies\set_juju\green\npc_juju_green__x1_idle2_png_1354831737.png",32,11,True)
-        self.stay_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\enemies\set_juju\green\npc_juju_green__x1_idle2_png_1354831737.png",32,11)
-        self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\enemies\set_juju\green\npc_juju_green__x1_move_left_png_1354831724.png",8,2,True)
-        self.walk_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"caracters\enemies\set_juju\green\npc_juju_green__x1_move_left_png_1354831724.png",8,2)
+    def __init__(self,x,y,speed_walk,gravity,frame_rate_ms,move_rate_ms,pasos):
+        self.stay_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,True,scale=0.8)
+        self.stay_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,scale=0.8)
+        self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,scale=0.8)
+        self.walk_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,True,scale=0.8)
         self.frame = 0
         self.move_x = 0
         self.move_y = 0
         self.move = 0
         self.gravity = gravity
         self.vidas = 1
-        self.pasos = 100
+        self.pasos = pasos
         self.speed_walk = speed_walk
         self.animation = self.walk_l
         self.image = self.animation[self.frame]
-        # self.rect_pos = pygame.Rect(x+55,y+110,80,80) 
-        # self.rect = pygame.Rect(x,y,50,50)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.collition_rect = pygame.Rect(x+self.rect.width/3,y,self.rect.width/3,self.rect.height)
+        self.collition_rect = pygame.Rect(x+self.rect.width/3,y+20,self.rect.width/2,self.rect.height-20)
         self.ground_collition_rect = pygame.Rect(self.collition_rect)
         self.ground_collition_rect.height = GROUND_COLLIDE_H
         self.ground_collition_rect.y = y + self.rect.height - GROUND_COLLIDE_H
@@ -102,7 +99,7 @@ class Enemigo:
 
     def draw(self,screen):
         if DEBUG:
-            pygame.draw.rect(screen,(255,0,0),self.rect)
+            pygame.draw.rect(screen,(255,0,0),self.collition_rect)
             pygame.draw.rect(screen,color=(255,255,0),rect=self.ground_collition_rect)
 
         if self.vidas == 1:
