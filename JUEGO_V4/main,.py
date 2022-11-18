@@ -20,10 +20,13 @@ pygame.init()
 fondo_juego = Imagen(PATH_IMAGE + r"Menu\Fondo\space_out.jpg",ANCHO_VENTANA+300,ALTO_VENTANA,0,0)
 fondo_level = Imagen(PATH_IMAGE + r"Menu\Fondo\planets.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_menu = Imagen(PATH_IMAGE + r"Menu\Fondo\menu.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
+fondo_score = Imagen(PATH_IMAGE + r"Menu\Button\07.png",25,25,0,0)
 
 #CARGA UNA FUENTE
 def get_font(tamaño):
     return pygame.font.Font(PATH_IMAGE + r"\Menu\Text\font.ttf", tamaño)
+
+score_font = get_font(25)
 
 #JUEGO
 def play(nivel):
@@ -87,8 +90,6 @@ def play(nivel):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        
-        SCREEN.fill("white")
 
         lista_pressed = pygame.key.get_pressed()
         lista_keys = pygame.event.get()
@@ -112,7 +113,11 @@ def play(nivel):
             switch.draw(SCREEN)
         for door in final_door:
             door.draw(SCREEN)
-        
+    
+        score_text_input = f"{player_1.score}"
+        score_text = score_font.render(score_text_input, True, CYAN)
+        SCREEN.blit(fondo_score.surface,fondo_score.rect)
+        SCREEN.blit(score_text,(30,5))
 
         player_1.events(delta_ms,lista_pressed)
         player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list,switch_list,final_door)

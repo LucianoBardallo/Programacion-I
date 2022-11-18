@@ -4,10 +4,8 @@ from auxiliar import Auxiliar
 
 class Player:
     def __init__(self,x,y,speed_walk,gravity,jump_power,frame_rate_ms,frame_rate_jump_ms,move_rate_ms,jump_height,p_scale=1,interval_time_jump=100) -> None:
-        '''
-        self.walk_r = Auxiliar.getSurfaceFromSpriteSheet("images/caracters/stink/walk.png",15,1,scale=p_scale)[:12]
-        '''
         
+        stay = {}
         self.stay_r = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/Idle ({0}).png",10,False,w=100,h=100)
         self.stay_l = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/Idle ({0}).png",10,True,w=100,h=100)
         self.walk_r = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/Run ({0}).png",8,False,w=100,h=100)
@@ -26,6 +24,8 @@ class Player:
         self.jump_shoot_l = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/JumpMelee ({0}).png",8,True,w=100,h=100)
         self.jump_melee_r = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/JumpShoot ({0}).png",5,False,w=100,h=100)
         self.jump_melee_l = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/JumpShoot ({0}).png",5,True,w=100,h=100)
+        self.slide_r = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/Slide ({0}).png",10,False,w=100,h=100)
+        self.slide_l = Auxiliar.getSurfaceFromSeparateFiles(PATH_IMAGE + "Characters/robot/Slide ({0}).png",10,True,w=100,h=100)
 
         self.frame = 0
         self.lives = 1
@@ -70,6 +70,8 @@ class Player:
         self.y_start_jump = 0
         self.jump_height = jump_height
         self.tiempo_activate = 0
+        self.tiempo_recolected = 0
+        self.tiempo_loot = 0
 
         self.tiempo_transcurrido = 0
         self.tiempo_last_jump = 0 # en base al tiempo transcurrido general
@@ -236,6 +238,8 @@ class Player:
             if loot.collition_rect.colliderect(self.collition_rect):
                 loot.is_collected = True
                 self.score += 50
+                loot_list.remove(loot)
+                    
         for object in object_list:
             if object.collition_rect.colliderect(self.collition_rect):
                 object.activate = True
@@ -248,7 +252,7 @@ class Player:
                 self.can_win = True
             else:
                 self.tiempo_activate += delta_ms
-                if(self.tiempo_activate >= 20000):
+                if(self.tiempo_activate >= 10000):
                     switch.activate = False
                     switch.unlock = False
                     self.can_win = False

@@ -34,6 +34,10 @@ class Loot:
                 self.frame += 1 
             else: 
                 self.frame = 0
+            
+        
+
+
 
             
     
