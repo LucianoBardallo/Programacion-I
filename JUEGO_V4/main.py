@@ -10,6 +10,7 @@ from player import Player
 from objets import *
 from loot import Loot
 from enemigo import *
+from bullets import Bullet
 
 flags = DOUBLEBUF
 
@@ -31,10 +32,8 @@ score_font = get_font(25)
 #JUEGO
 def play(nivel):
     tiempo = pygame.time.get_ticks()
-    player_1 = Player(x = 60, y = 40, speed_walk = 8, gravity = 15, jump_power = 15, frame_rate_ms = 40,frame_rate_jump_ms = 85, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
-    enemy_1 = Enemigo(x=1100,y=400,speed_walk=4,gravity=10,frame_rate_ms=20,move_rate_ms=20,pasos=800)
-    enemy_2 = Enemigo(x=1100,y=190,speed_walk=4,gravity=10,frame_rate_ms=20,move_rate_ms=20,pasos=400)
-
+    player_1 = Player(x = 60, y = 40, speed_walk = 8, gravity = 8, jump_power = 8, frame_rate_ms = 40,frame_rate_jump_ms = 120, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
+    
     #PLATAFORMAS
     plataform_list = []
     wall_list = []
@@ -42,6 +41,7 @@ def play(nivel):
     lista_objetos_animados = []
     final_door = []
     switch_list = []
+    group_enemies = []
     x = 0
     y = 0
     for i in range(0,30):
@@ -83,14 +83,13 @@ def play(nivel):
     for i in range(5):
         loot_list.append(Loot(x=230,y=y+50,frame_rate_ms=60))
         y += 50
-    
-        
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
 
+    enemy_1 = Enemigo(x=1100,y=400,speed_walk=4,gravity=10,frame_rate_ms=20,move_rate_ms=20,pasos=800)
+    enemy_2 = Enemigo(x=1100,y=190,speed_walk=4,gravity=10,frame_rate_ms=20,move_rate_ms=20,pasos=400)
+    group_enemies.append(enemy_1)
+    group_enemies.append(enemy_2)
+
+    while True:
         lista_pressed = pygame.key.get_pressed()
         lista_keys = pygame.event.get()
 
@@ -113,20 +112,21 @@ def play(nivel):
             switch.draw(SCREEN)
         for door in final_door:
             door.draw(SCREEN)
+        for enemy in group_enemies:
+            if enemy.vidas == 0:
+                group_enemies.remove(enemy)
+            enemy.update(delta_ms,plataform_list,player_1.bullet_list)
+            enemy.draw(SCREEN)
     
         score_text_input = f"{player_1.score}"
         score_text = score_font.render(score_text_input, True, CYAN)
         SCREEN.blit(fondo_score.surface,fondo_score.rect)
         SCREEN.blit(score_text,(30,5))
 
-        player_1.events(delta_ms,lista_pressed)
-        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list,switch_list,final_door)
+        player_1.events(delta_ms,lista_pressed,lista_keys)
+        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list,switch_list,final_door,group_enemies)
         player_1.draw(SCREEN)
-        enemy_1.update(delta_ms,plataform_list)
-        enemy_1.draw(SCREEN)
-        enemy_2.update(delta_ms,plataform_list)
-        enemy_2.draw(SCREEN)
-
+        player_1.bullet_update(delta_ms,SCREEN)
 
         pygame.display.flip()
 

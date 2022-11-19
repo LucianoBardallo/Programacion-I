@@ -13,7 +13,7 @@ class Enemigo:
         self.move_y = 0
         self.move = 0
         self.gravity = gravity
-        self.vidas = 1
+        self.vidas = 3
         self.pasos = pasos
         self.speed_walk = speed_walk
         self.animation = self.walk_l
@@ -57,7 +57,7 @@ class Enemigo:
                     self.change_y(self.gravity)  
 
         #MOVIMIENTO DE ENEMIGO
-        if self.vidas == 1:
+        if self.vidas > 0:
             if(self.move <= self.pasos):
                 self.move_x = -self.speed_walk
                 self.animation = self.walk_r
@@ -72,7 +72,6 @@ class Enemigo:
 
     def is_on_plataform(self,plataform_list):
         retorno = False
-        
         if(self.ground_collition_rect.bottom >= GROUND_LEVEL):
             retorno = True     
         else:
@@ -93,25 +92,26 @@ class Enemigo:
                 self.frame = 0
 
 
-    def update(self,delta_ms,plataformas):
+    def update(self,delta_ms,plataformas,bullets):
         self.do_movement(delta_ms,plataformas)
         self.do_animation(delta_ms)
+        self.do_collition(bullets)
 
     def draw(self,screen):
-        if DEBUG:
-            pygame.draw.rect(screen,(255,0,0),self.collition_rect)
-            pygame.draw.rect(screen,color=(255,255,0),rect=self.ground_collition_rect)
-
-        if self.vidas == 1:
+        if self.vidas > 0:
+            if DEBUG:
+                pygame.draw.rect(screen,(255,0,0),self.collition_rect)
+                pygame.draw.rect(screen,color=(255,255,0),rect=self.ground_collition_rect)
             self.image = self.animation[self.frame]
             screen.blit(self.image,self.rect)
 
 
-    def colicion(self,pos_xy):
-        if self.rect.colliderect(pos_xy):
-            self.move_x = 0
-            self.move_y = 0
-            self.vidas = 0
+    def do_collition(self,bullets):
+        for bullet in bullets:
+            if bullet.collition_rect.colliderect(self.collition_rect):
+                bullets.remove(bullet)
+                self.vidas -= 1
+        
 
 
 
