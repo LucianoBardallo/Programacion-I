@@ -88,11 +88,11 @@ class Player:
         self.left_collition_rect.width = GROUND_COLLIDE_H
         self.left_collition_rect.x = x + GROUND_COLLIDE_H * 2
 
-        self.gun_rect = pygame.Rect(self.collition_rect)
-        self.gun_rect.height = GROUND_COLLIDE_H
-        self.gun_rect.width = GROUND_COLLIDE_H
-        self.gun_rect.x = x + 75
-        self.gun_rect.y = y + 50
+        # self.gun_rect = pygame.Rect(self.collition_rect)
+        # self.gun_rect.height = GROUND_COLLIDE_H
+        # self.gun_rect.width = GROUND_COLLIDE_H
+        # self.gun_rect.x = x + 75
+        # self.gun_rect.y = y + 50
     
         self.is_jumping = False
         self.is_falling = False
@@ -121,7 +121,7 @@ class Player:
 
         self.bullet_list = []
         self.shoot_cooldown = 0
-        self.ammo = 30
+        self.ammo = 35
 
 
     def walk(self,direccion):
@@ -145,14 +145,15 @@ class Player:
         else:
             self.is_jumping = False
 
-    def shoot(self,shoot=True):
+    def shoot(self,shoot=True,lista_ammo=[]):
         if shoot:
             self.is_shooting = True
             if self.shoot_cooldown == 0 and self.ammo > 0:
                 self.shoot_cooldown = 40
-                bullet = Bullet(self.gun_rect.x,self.gun_rect.y,frame_rate_ms=20,direction=self.direction)
+                bullet = Bullet(self.collition_rect.centerx + (0.6 * self.collition_rect.size[0] * self.direction),self.collition_rect.centery-20,frame_rate_ms=20,direction=self.direction)
                 self.bullet_list.append(bullet)
                 self.ammo -= 1
+                lista_ammo.remove(lista_ammo[-1])
         else:
             self.is_shooting = False
     
@@ -197,7 +198,7 @@ class Player:
         self.head_collition_rect.x += delta_x
         self.right_collition_rect.x += delta_x
         self.left_collition_rect.x += delta_x
-        self.gun_rect.x += delta_x
+        # self.gun_rect.x += delta_x
 
 
     def change_y(self,delta_y):
@@ -207,7 +208,7 @@ class Player:
         self.head_collition_rect.y += delta_y
         self.right_collition_rect.y += delta_y
         self.left_collition_rect.y += delta_y
-        self.gun_rect.y += delta_y
+        # self.gun_rect.y += delta_y
 
 
 
@@ -273,7 +274,7 @@ class Player:
                 self.tiempo_inmune = 0
                 self.inmune = False
 
-    def do_collition(self,delta_ms,loot_list,object_list,switch_list,final_door,wall_list,enemies):
+    def do_collition(self,delta_ms,loot_list,object_list,switch_list,final_door,wall_list,enemies,lista_corazones):
         for wall in wall_list:
             if wall.collition_rect.colliderect(self.right_collition_rect):
                 self.change_x(-2)
@@ -290,6 +291,8 @@ class Player:
                 if not self.inmune:
                     self.vidas -= 1
                     self.inmune = True
+                    if self.vidas > 0:
+                        lista_corazones.remove(lista_corazones[-1])
 
         for loot in loot_list:
             if loot.collition_rect.colliderect(self.collition_rect):
@@ -323,7 +326,7 @@ class Player:
             else:
                 door.activate = False
     
-    def bullet_update(self,delta_ms,screen):
+    def bullet_update(self,delta_ms,screen,lista_ammo):
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
         for bullet in self.bullet_list:
@@ -331,11 +334,12 @@ class Player:
             bullet.draw(screen)
             if bullet.is_impact:
                 self.bullet_list.remove(bullet)
+                
 
-    def update(self,delta_ms,plataform,objects,animated_objects,walls,loots,switchs,final_door,enemies):
+    def update(self,delta_ms,plataform,objects,animated_objects,walls,loots,switchs,final_door,enemies,lista_corazones):
         self.do_movement(delta_ms,plataform,objects,walls)
         self.do_animation(delta_ms)
-        self.do_collition(delta_ms,loots,animated_objects,switchs,final_door,walls,enemies)
+        self.do_collition(delta_ms,loots,animated_objects,switchs,final_door,walls,enemies,lista_corazones)
         self.update_inmune(delta_ms)
 
     def draw(self,screen):
@@ -346,12 +350,11 @@ class Player:
                 pygame.draw.rect(screen,color=(255,255,0),rect=self.head_collition_rect)
                 pygame.draw.rect(screen,color=(255,255,0),rect=self.right_collition_rect)
                 pygame.draw.rect(screen,color=(255,255,0),rect=self.left_collition_rect)
-                pygame.draw.rect(screen,color=(255,255,255),rect=self.gun_rect)
             
             self.image = self.animation[self.frame]
             screen.blit(self.image,self.rect)
 
-    def events(self,delta_ms,keys,lista_eventos):
+    def events(self,delta_ms,keys,lista_eventos,lista_ammo):
         self.tiempo_transcurrido += delta_ms
 
         for event in lista_eventos:
@@ -364,7 +367,7 @@ class Player:
                     self.jump()
             
                 if event.key == pygame.K_s: # Saltar
-                    self.shoot()
+                    self.shoot(True,lista_ammo)
 
                 if event.key == pygame.K_a: # Saltar
                     self.melee()
@@ -396,12 +399,13 @@ class Player:
         
         if(not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_SPACE]):
             self.stay()
+           
                   
-        if(keys[pygame.K_a] and not keys[pygame.K_s] and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_SPACE]):
-            self.melee()
+        # if(keys[pygame.K_a] and not keys[pygame.K_s] and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_SPACE]):
+        #     self.melee()
 
-        if(not keys[pygame.K_a]):
-            self.melee(False) 
+        # if(not keys[pygame.K_a]):
+        #     self.melee(False) 
 
         # if(keys[pygame.K_s] and not keys[pygame.K_a] and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_SPACE]):
         #     self.shoot()

@@ -13,8 +13,8 @@ FPS = 120
 PATH_IMAGE = r"C:\Users\lucia\Documents\Programacion I\JUEGO_V4\images\\"
 
 #DIRECCION DONDE MIRA EL PERSONAJKE
-LEFT = "LEFT"
-RIGHT = "RIGHT"
+LEFT = -1
+RIGHT = 1
 
 #TAMAÑO DE COLLIDERECT
 GROUND_COLLIDE_H = 8 # Aprox Gravedad/2 + 1

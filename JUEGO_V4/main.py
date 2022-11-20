@@ -21,19 +21,35 @@ pygame.init()
 fondo_juego = Imagen(PATH_IMAGE + r"Menu\Fondo\space_out.jpg",ANCHO_VENTANA+300,ALTO_VENTANA,0,0)
 fondo_level = Imagen(PATH_IMAGE + r"Menu\Fondo\planets.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_menu = Imagen(PATH_IMAGE + r"Menu\Fondo\menu.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
-fondo_score = Imagen(PATH_IMAGE + r"Menu\Button\07.png",25,25,0,0)
+fondo_score = Imagen(PATH_IMAGE + r"Menu\Button\07.png",20,20,1000,10)
+fondo_ammo = Imagen(PATH_IMAGE + r"Menu\Button\08.png",20,20,10,60)
+# fondo_button1 = Imagen(PATH_IMAGE + r"Menu\hologram_UI\Card X2\Card X2.png",200,40,0,0)
+# fondo_button2 = Imagen(PATH_IMAGE + r"Menu\hologram_UI\Card X2\Card X2.png",200,40,250,0)
 
 #CARGA UNA FUENTE
 def get_font(tamaño):
     return pygame.font.Font(PATH_IMAGE + r"\Menu\Text\font.ttf", tamaño)
 
-score_font = get_font(25)
+ui_font = get_font(20)
 
 #JUEGO
 def play(nivel):
     tiempo = pygame.time.get_ticks()
     player_1 = Player(x = 60, y = 40, speed_walk = 8, gravity = 8, jump_power = 8, frame_rate_ms = 40,frame_rate_jump_ms = 120, move_rate_ms = 20, jump_height = 180, p_scale=0.2,interval_time_jump=300)
     
+    lista_corazones = []
+    x = 100
+    for i in range(player_1.vidas):
+        lista_corazones.append(Imagen(PATH_IMAGE + r"Menu\Button\04.png",20,20,x,10))
+        x+=30
+
+    lista_ammo = []
+    x = 100
+    for i in range(player_1.ammo):
+        lista_ammo.append(Imagen(PATH_IMAGE + r"Characters\robot\Objects\Bullet_1.png",20,20,x,ALTO_VENTANA-30))
+        x+=30
+
+
     #PLATAFORMAS
     plataform_list = []
     wall_list = []
@@ -115,18 +131,35 @@ def play(nivel):
         for enemy in group_enemies:
             if enemy.vidas == 0:
                 group_enemies.remove(enemy)
+                player_1.score += 200
             enemy.update(delta_ms,plataform_list,player_1.bullet_list)
             enemy.draw(SCREEN)
+        for corazon in lista_corazones:
+            SCREEN.blit(corazon.surface,corazon.rect)
+        for ammo in lista_ammo:
+            SCREEN.blit(ammo.surface,ammo.rect)
     
-        score_text_input = f"{player_1.score}"
-        score_text = score_font.render(score_text_input, True, CYAN)
+        score_text_input = f"{player_1.score}".zfill(7)
+        score_text = ui_font.render(score_text_input, True, CYAN)
+        ammo_text_input = f"{player_1.ammo}"
+        ammo_text = ui_font.render(ammo_text_input,True,CYAN)
+        vida_text_input = "VIDA"
+        vida_text = ui_font.render(vida_text_input,True,CYAN)
+        ammo_text_input = "AMMO"
+        ammo_text = ui_font.render(ammo_text_input,True,CYAN)
+        # SCREEN.blit(fondo_button1.surface,fondo_button1.rect)
+        # SCREEN.blit(fondo_button2.surface,fondo_button2.rect)
         SCREEN.blit(fondo_score.surface,fondo_score.rect)
-        SCREEN.blit(score_text,(30,5))
+        SCREEN.blit(score_text,(1030,10))
+        SCREEN.blit(vida_text,(10,10))
+        SCREEN.blit(ammo_text,(10,ALTO_VENTANA-30))
+        # SCREEN.blit(fondo_ammo.surface,fondo_ammo.rect)
+        # SCREEN.blit(ammo_text,(30,10))
 
-        player_1.events(delta_ms,lista_pressed,lista_keys)
-        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list,switch_list,final_door,group_enemies)
+        player_1.events(delta_ms,lista_pressed,lista_keys,lista_ammo)
+        player_1.update(delta_ms,plataform_list,lista_objetos,lista_objetos_animados,wall_list,loot_list,switch_list,final_door,group_enemies,lista_corazones)
         player_1.draw(SCREEN)
-        player_1.bullet_update(delta_ms,SCREEN)
+        player_1.bullet_update(delta_ms,SCREEN,lista_ammo)
 
         pygame.display.flip()
 

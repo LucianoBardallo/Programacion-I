@@ -4,31 +4,40 @@ from settings import *
 
 class Enemigo:
     def __init__(self,x,y,speed_walk,gravity,frame_rate_ms,move_rate_ms,pasos):
-        self.stay_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,True,scale=0.8)
-        self.stay_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,scale=0.8)
-        self.walk_l = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,scale=0.8)
-        self.walk_r = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,True,scale=0.8)
+
+        self.direction = RIGHT
+        self.staying = {}
+        self.staying[LEFT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,True,scale=0.8)
+        self.staying[RIGHT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,scale=0.8)
+
+        self.walking = {}
+        self.walking[LEFT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,scale=0.8)
+        self.walking[RIGHT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,True,scale=0.8)
+
+        self.vidas = 3
         self.frame = 0
         self.move_x = 0
         self.move_y = 0
         self.move = 0
         self.gravity = gravity
-        self.vidas = 3
         self.pasos = pasos
         self.speed_walk = speed_walk
-        self.animation = self.walk_l
+        self.animation = self.walking[self.direction]
         self.image = self.animation[self.frame]
+
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
         self.collition_rect = pygame.Rect(x+self.rect.width/3,y+20,self.rect.width/2,self.rect.height-20)
+
         self.ground_collition_rect = pygame.Rect(self.collition_rect)
         self.ground_collition_rect.height = GROUND_COLLIDE_H
         self.ground_collition_rect.y = y + self.rect.height - GROUND_COLLIDE_H
 
         self.tiempo_transcurrido_animation = 0
-        self.frame_rate_ms = frame_rate_ms 
         self.tiempo_transcurrido_move = 0
+        self.frame_rate_ms = frame_rate_ms 
         self.move_rate_ms = move_rate_ms
 
         
@@ -43,45 +52,43 @@ class Enemigo:
         self.collition_rect.y += delta_y
         self.ground_collition_rect.y += delta_y
 
+    def check_plataform(self, plataform_list):
+        self.sobre_plataforma = False
+        for plataform in plataform_list:
+            if self.ground_collition_rect.colliderect(plataform.ground_collition_rect):
+                self.sobre_plataforma = True
+                break
+
+    def apply_gravity(self):
+        if not self.sobre_plataforma:
+            self.move_y = self.gravity
+        else:
+            self.move_y = 0
+
 
     def do_movement(self,delta_ms,plataform_list):
         self.tiempo_transcurrido_move += delta_ms
         if(self.tiempo_transcurrido_move >= self.move_rate_ms):
             self.tiempo_transcurrido_move = 0
 
+            self.check_plataform(plataform_list)
+            self.apply_gravity()
             self.change_x(self.move_x)
             self.change_y(self.move_y)
-
-            if(not self.is_on_plataform(plataform_list)):
-                if(self.move_y == 0):
-                    self.change_y(self.gravity)  
 
         #MOVIMIENTO DE ENEMIGO
         if self.vidas > 0:
             if(self.move <= self.pasos):
                 self.move_x = -self.speed_walk
-                self.animation = self.walk_r
+                self.animation = self.walking[RIGHT]
                 self.move += 1
             elif(self.move <= self.pasos*2):
                 self.move_x = self.speed_walk
-                self.animation = self.walk_l
+                self.animation = self.walking[LEFT]
                 self.move += 1
             else:
                 self.move = 0
         
-
-    def is_on_plataform(self,plataform_list):
-        retorno = False
-        if(self.ground_collition_rect.bottom >= GROUND_LEVEL):
-            retorno = True     
-        else:
-            for plataforma in  plataform_list:
-                if(self.ground_collition_rect.colliderect(plataforma.ground_collition_rect)):
-                    retorno = True
-                    break       
-        return retorno   
-
-
     def do_animation(self,delta_ms):
         self.tiempo_transcurrido_animation += delta_ms
         if(self.tiempo_transcurrido_animation >= self.frame_rate_ms):
@@ -90,7 +97,12 @@ class Enemigo:
                 self.frame += 1 
             else: 
                 self.frame = 0
-
+    
+    def do_collition(self,bullets):
+        for bullet in bullets:
+            if bullet.collition_rect.colliderect(self.collition_rect):
+                bullets.remove(bullet)
+                self.vidas -= 1
 
     def update(self,delta_ms,plataformas,bullets):
         self.do_movement(delta_ms,plataformas)
@@ -105,12 +117,7 @@ class Enemigo:
             self.image = self.animation[self.frame]
             screen.blit(self.image,self.rect)
 
-
-    def do_collition(self,bullets):
-        for bullet in bullets:
-            if bullet.collition_rect.colliderect(self.collition_rect):
-                bullets.remove(bullet)
-                self.vidas -= 1
+    
         
 
 

@@ -4,9 +4,10 @@ from settings import *
 
 class Loot:
     def __init__(self,x,y,frame_rate_ms):
-        self.stay = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + "Items\Fruits\Apple.png",columnas=17,filas=1,scale=2)
+
+        self.staying = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + "Items\Fruits\Apple.png",columnas=17,filas=1,scale=2)
         self.collected = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + "Items\Fruits\Collected.png",columnas=6,filas=1,scale=2)
-        self.animation = self.stay
+        self.animation = self.staying
         self.frame = 0
         self.image = self.animation[self.frame]
         self.rect = self.image.get_rect()
