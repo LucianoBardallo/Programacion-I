@@ -1,39 +1,39 @@
 import pygame
 from auxiliar import Auxiliar
-from settings import *
+from configuraciones import *
 
 class Enemigo:
-    def __init__(self,x,y,speed_walk,gravity,frame_rate_ms,move_rate_ms,pasos):
+    def __init__(self,x,y,velocidad_movimiento,gravedad,frame_rate_ms,move_rate_ms,pasos):
 
-        self.direction = RIGHT
-        self.staying = {}
-        self.staying[LEFT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,True,scale=0.8)
-        self.staying[RIGHT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,scale=0.8)
+        self.direccion = DERECHA
+        self.parado = {}
+        self.parado[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(RUTA_IMAGEN + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,True,scale=0.8)
+        self.parado[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(RUTA_IMAGEN + r"Characters\enemies\set_juju\black\juju_idle2.png",37,9,scale=0.8)
 
-        self.walking = {}
-        self.walking[LEFT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,scale=0.8)
-        self.walking[RIGHT] = Auxiliar.getSurfaceFromSpriteSheet(PATH_IMAGE + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,True,scale=0.8)
+        self.caminando = {}
+        self.caminando[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(RUTA_IMAGEN + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,scale=0.8)
+        self.caminando[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(RUTA_IMAGEN + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,True,scale=0.8)
 
         self.vidas = 3
         self.frame = 0
-        self.move_x = 0
-        self.move_y = 0
-        self.move = 0
-        self.gravity = gravity
+        self.mover_x = 0
+        self.mover_y = 0
+        self.mover = 0
+        self.gravedad = gravedad
         self.pasos = pasos
-        self.speed_walk = speed_walk
-        self.animation = self.walking[self.direction]
-        self.image = self.animation[self.frame]
+        self.velocidad_movimiento = velocidad_movimiento
+        self.animacion = self.caminando[self.direccion]
+        self.imagen = self.animacion[self.frame]
 
-        self.rect = self.image.get_rect()
+        self.rect = self.imagen.get_rect()
         self.rect.x = x
         self.rect.y = y
 
-        self.collition_rect = pygame.Rect(x+self.rect.width/3,y+20,self.rect.width/2,self.rect.height-20)
+        self.rectangulo_colision = pygame.Rect(x+self.rect.width/3,y+20,self.rect.width/2,self.rect.height-20)
 
-        self.ground_collition_rect = pygame.Rect(self.collition_rect)
-        self.ground_collition_rect.height = GROUND_COLLIDE_H
-        self.ground_collition_rect.y = y + self.rect.height - GROUND_COLLIDE_H
+        self.rectangulo_pies = pygame.Rect(self.rectangulo_colision)
+        self.rectangulo_pies.height = ALTURA_PIES
+        self.rectangulo_pies.y = y + self.rect.height - ALTURA_PIES
 
         self.tiempo_transcurrido_animation = 0
         self.tiempo_transcurrido_move = 0
@@ -41,81 +41,81 @@ class Enemigo:
         self.move_rate_ms = move_rate_ms
 
         
-    def change_x(self,delta_x):
+    def cambiar_x(self,delta_x):
         self.rect.x += delta_x
-        self.collition_rect.x += delta_x
-        self.ground_collition_rect.x += delta_x
+        self.rectangulo_colision.x += delta_x
+        self.rectangulo_pies.x += delta_x
 
 
-    def change_y(self,delta_y):
+    def cambiar_y(self,delta_y):
         self.rect.y += delta_y
-        self.collition_rect.y += delta_y
-        self.ground_collition_rect.y += delta_y
+        self.rectangulo_colision.y += delta_y
+        self.rectangulo_pies.y += delta_y
 
-    def check_plataform(self, plataform_list):
+    def verificar_plataforma(self, plataformas):
         self.sobre_plataforma = False
-        for plataform in plataform_list:
-            if self.ground_collition_rect.colliderect(plataform.ground_collition_rect):
+        for plataforma in plataformas:
+            if self.rectangulo_pies.colliderect(plataforma.rectangulo_pies):
                 self.sobre_plataforma = True
                 break
 
-    def apply_gravity(self):
+    def aplicar_gravedad(self):
         if not self.sobre_plataforma:
-            self.move_y = self.gravity
+            self.mover_y = self.gravedad
         else:
-            self.move_y = 0
+            self.mover_y = 0
 
 
-    def do_movement(self,delta_ms,plataform_list):
+    def hacer_movimiento(self,delta_ms,plataform_list):
         self.tiempo_transcurrido_move += delta_ms
         if(self.tiempo_transcurrido_move >= self.move_rate_ms):
             self.tiempo_transcurrido_move = 0
 
-            self.check_plataform(plataform_list)
-            self.apply_gravity()
-            self.change_x(self.move_x)
-            self.change_y(self.move_y)
+            self.verificar_plataforma(plataform_list)
+            self.aplicar_gravedad()
+            self.cambiar_x(self.mover_x)
+            self.cambiar_y(self.mover_y)
 
         #MOVIMIENTO DE ENEMIGO
         if self.vidas > 0:
-            if(self.move <= self.pasos):
-                self.move_x = -self.speed_walk
-                self.animation = self.walking[RIGHT]
-                self.move += 1
-            elif(self.move <= self.pasos*2):
-                self.move_x = self.speed_walk
-                self.animation = self.walking[LEFT]
-                self.move += 1
+            if(self.mover <= self.pasos):
+                self.mover_x = -self.velocidad_movimiento
+                self.animacion = self.caminando[DERECHA]
+                self.mover += 1
+            elif(self.mover <= self.pasos*2):
+                self.mover_x = self.velocidad_movimiento
+                self.animacion = self.caminando[IZQUIERDA]
+                self.mover += 1
             else:
-                self.move = 0
+                self.mover = 0
         
-    def do_animation(self,delta_ms):
+    def hacer_animacion(self,delta_ms):
         self.tiempo_transcurrido_animation += delta_ms
         if(self.tiempo_transcurrido_animation >= self.frame_rate_ms):
             self.tiempo_transcurrido_animation = 0
-            if(self.frame < len(self.animation) - 1):
+            if(self.frame < len(self.animacion) - 1):
                 self.frame += 1 
             else: 
                 self.frame = 0
     
-    def do_collition(self,bullets):
+    def hacer_colision(self,bullets):
         for bullet in bullets:
-            if bullet.collition_rect.colliderect(self.collition_rect):
+            if bullet.rectangulo_colision.colliderect(self.rectangulo_colision):
                 bullets.remove(bullet)
                 self.vidas -= 1
 
-    def update(self,delta_ms,plataformas,bullets):
-        self.do_movement(delta_ms,plataformas)
-        self.do_animation(delta_ms)
-        self.do_collition(bullets)
+    def actualizar(self,delta_ms,plataformas,bullets):
+        self.hacer_movimiento(delta_ms,plataformas)
+        self.hacer_animacion(delta_ms)
+        self.hacer_colision(bullets)
 
-    def draw(self,screen):
+    def renderizar(self,screen):
         if self.vidas > 0:
             if DEBUG:
-                pygame.draw.rect(screen,(255,0,0),self.collition_rect)
-                pygame.draw.rect(screen,color=(255,255,0),rect=self.ground_collition_rect)
-            self.image = self.animation[self.frame]
-            screen.blit(self.image,self.rect)
+                pygame.draw.rect(screen,(255,0,0),self.rectangulo_colision)
+                pygame.draw.rect(screen,color=(255,255,0),rect=self.rectangulo_pies)
+            self.imagen = self.animacion[self.frame]
+            screen.blit(self.imagen,self.rect)
 
     
         

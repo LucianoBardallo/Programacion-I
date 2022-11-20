@@ -1,5 +1,5 @@
 import pygame
-from settings import *
+from configuraciones import *
 
 class Auxiliar:
     @staticmethod
