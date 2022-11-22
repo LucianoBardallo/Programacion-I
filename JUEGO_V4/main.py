@@ -14,7 +14,7 @@ from balas import Bala
 
 flags = DOUBLEBUF
 
-SCREEN = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA), flags, 16)
+PANTALLA = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA), flags, 16)
 reloj = pygame.time.Clock()
 pygame.init()
 
@@ -22,34 +22,33 @@ fondo_juego = Imagen(RUTA_IMAGEN + r"Menu\Fondo\space_out.jpg",ANCHO_VENTANA+300
 fondo_nivel = Imagen(RUTA_IMAGEN + r"Menu\Fondo\planets.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_menu = Imagen(RUTA_IMAGEN + r"Menu\Fondo\menu.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 fondo_puntuacion = Imagen(RUTA_IMAGEN + r"Menu\Button\07.png",20,20,1000,10)
-fondo_municion = Imagen(RUTA_IMAGEN + r"Menu\Button\08.png",20,20,10,60)
-# fondo_button1 = Imagen(PATH_IMAGE + r"Menu\hologram_UI\Card X2\Card X2.png",280,40,-10,0)
-# fondo_button2 = Imagen(PATH_IMAGE + r"Menu\hologram_UI\Card X2\Card X2.png",210,40,980,0)
-# fondo_button3 = Imagen(PATH_IMAGE + r"Menu\hologram_UI\Card X2\Card X2.png",1300,40,-60,ALTO_VENTANA-40)
+fondo_municion = Imagen(RUTA_IMAGEN + r"Menu\Button\08.png",20,20,400,ALTO_VENTANA-30)
+fondo_ganador = Imagen(RUTA_IMAGEN + r"Menu\Fondo\level_complete.jpg",ANCHO_VENTANA,ALTO_VENTANA,0,0)
 
 #CARGA UNA FUENTE
-def get_font(tamaño):
+def obtener_fuente(tamaño):
     return pygame.font.Font(RUTA_IMAGEN + r"\Menu\Text\font.ttf", tamaño)
 
-fuente_interface = get_font(20)
+fuente_interface = obtener_fuente(20)
+
 
 #JUEGO
-def play(nivel):
+def juego(nivel):
     tiempo = pygame.time.get_ticks()
-    jugador = Jugador(x = 60, y = 40, velocidad_movimiento = 8, gravedad = 8, fuerza_salto = 8, frame_rate_ms = 40,frame_rate_jump_ms = 120, move_rate_ms = 20, altura_salto = 180, p_scale=0.2,interval_time_jump=300)
+    jugador = Jugador(x = 60, y = 40, velocidad_movimiento = 8, gravedad = 8, fuerza_salto = 8, frame_rate_ms = 40,frame_rate_jump_ms = 120, move_rate_ms = 20, altura_salto = 180, p_scale=0.2)
+    
     
     corazones = []
     x = 100
-    for i in range(jugador.vidas):
+    for i in range(5):
         corazones.append(Imagen(RUTA_IMAGEN + r"Menu\Button\04.png",20,20,x,10))
         x+=30
 
     municiones = []
-    x = 200
+    x = 500
     for i in range(jugador.municion):
         municiones.append(Imagen(RUTA_IMAGEN + r"Characters\robot\Objects\Bullet_1.png",20,20,x,ALTO_VENTANA-30))
         x+=30
-
 
     #PLATAFORMAS
     plataformas = []
@@ -59,6 +58,7 @@ def play(nivel):
     puerta_final = []
     interruptores = []
     enemigos = []
+    enemigos_rango = []
     x = 0
     y = 0
     for i in range(0,30):
@@ -101,10 +101,12 @@ def play(nivel):
         botínes.append(Botín(x=230,y=y+50,frame_rate_ms=60))
         y += 50
 
-    enemigo_1 = Enemigo(x=1100,y=400,velocidad_movimiento=4,gravedad=10,frame_rate_ms=20,move_rate_ms=20,pasos=800)
-    enemigo_2 = Enemigo(x=1100,y=190,velocidad_movimiento=4,gravedad=10,frame_rate_ms=20,move_rate_ms=20,pasos=400)
+    enemigo_1 = Enemigo_Melee(x=500,y=400,velocidad_movimiento=4,gravedad=10,frame_rate_ms=20,move_rate_ms=20,patrulla=400)
+    enemigo_2 = Enemigo_Melee(x=800,y=190,velocidad_movimiento=4,gravedad=10,frame_rate_ms=20,move_rate_ms=20,patrulla=200)
+    enemigo_3 = Enemigo_Distancia(x=400,y=100,velocidad_movimiento=0,gravedad=10,frame_rate_ms=20,move_rate_ms=20,patrulla=0)
     enemigos.append(enemigo_1)
     enemigos.append(enemigo_2)
+    enemigos_rango.append(enemigo_3)
 
     while True:
         teclas = pygame.key.get_pressed()
@@ -112,128 +114,137 @@ def play(nivel):
 
         delta_ms = reloj.tick(FPS)
         
-        SCREEN.blit(fondo_juego.surface,fondo_juego.rect)
+        PANTALLA.blit(fondo_juego.surface,fondo_juego.rect)
 
         for plataforma in plataformas:
-            plataforma.renderizar(SCREEN)
+            plataforma.renderizar(PANTALLA)
         for objeto in objetos_animados:
-            objeto.renderizar(SCREEN)
+            objeto.renderizar(PANTALLA)
         for objeto in objetos:
-            objeto.renderizar(SCREEN)
+            objeto.renderizar(PANTALLA)
         for muro in muros:
-            muro.renderizar(SCREEN)
+            muro.renderizar(PANTALLA)
         for botín in botínes:
             botín.actualizar(delta_ms)
-            botín.renderizar(SCREEN)
+            botín.renderizar(PANTALLA)
         for interruptor in interruptores:
-            interruptor.renderizar(SCREEN)
+            interruptor.renderizar(PANTALLA)
         for puerta in puerta_final:
-            puerta.renderizar(SCREEN)
+            puerta.renderizar(PANTALLA)
         for enemigo in enemigos:
-            if enemigo.vidas == 0:
+            if not enemigo.vivo:
                 enemigos.remove(enemigo)
                 jugador.puntuacion += 200
-            enemigo.actualizar(delta_ms,plataformas,jugador.municiones)
-            enemigo.renderizar(SCREEN)
+            enemigo.actualizar(PANTALLA,delta_ms,plataformas,jugador.municiones)
+        for enemigo in enemigos_rango:
+            if not enemigo.vivo:
+                enemigos_rango.remove(enemigo)
+                jugador.puntuacion += 200
+            enemigo.actualizar(PANTALLA,delta_ms,plataformas,jugador.municiones,jugador.rectangulo_colision)
 
-        for corazon in corazones:
-            SCREEN.blit(corazon.surface,corazon.rect)
-        for municion in municiones:
-            SCREEN.blit(municion.surface,municion.rect)
-    
-        texto_entrada_puntuacion = f"{jugador.puntuacion}".zfill(7)
-        texto_puntuacion = fuente_interface.render(texto_entrada_puntuacion, True, CYAN)
-        texto_entrada_municion = f"{jugador.municion}"
-        texto_municion = fuente_interface.render(texto_entrada_municion,True,CYAN)
-        texto_entrada_vida = "VIDA"
-        texto_vida = fuente_interface.render(texto_entrada_vida,True,CYAN)
-        texto_entrada_municion = "MUNICION"
-        texto_municion = fuente_interface.render(texto_entrada_municion,True,CYAN)
+        if not jugador.ganar:
+            for corazon in corazones:
+                PANTALLA.blit(corazon.surface,corazon.rect)
+            for municion in municiones:
+                PANTALLA.blit(municion.surface,municion.rect)
         
-        
-        SCREEN.blit(fondo_puntuacion.surface,fondo_puntuacion.rect)
-        SCREEN.blit(texto_puntuacion,(1030,10))
-        SCREEN.blit(texto_vida,(10,10))
-        SCREEN.blit(texto_municion,(10,ALTO_VENTANA-30))
-        
+            texto_entrada_puntuacion = f"{jugador.puntuacion}".zfill(7)
+            texto_puntuacion = fuente_interface.render(texto_entrada_puntuacion, True, CYAN)
+            texto_entrada_municion = f"{jugador.municion}"
+            texto_municion = fuente_interface.render(texto_entrada_municion,True,CYAN)
+            texto_entrada_vida = "VIDA"
+            texto_vida = fuente_interface.render(texto_entrada_vida,True,CYAN)
+            texto_entrada_municion = "MUNICION"
+            texto_municion = fuente_interface.render(texto_entrada_municion,True,CYAN)
+            texto_entrada_muerto = "HAS MUERTO"
+            texto_muerto = fuente_interface.render(texto_entrada_muerto,True,RED)
 
-        jugador.eventos(delta_ms,teclas,eventos,municiones)
-        jugador.actualizar(delta_ms,plataformas,objetos,objetos_animados,muros,botínes,interruptores,puerta_final,enemigos,corazones)
-        jugador.renderizar(SCREEN)
-        jugador.actualizar_bala(delta_ms,SCREEN)
+            PANTALLA.blit(fondo_puntuacion.surface,fondo_puntuacion.rect)
+            PANTALLA.blit(texto_puntuacion,(1030,10))
+            PANTALLA.blit(texto_vida,(10,10))
+            PANTALLA.blit(texto_municion,(300,ALTO_VENTANA-30))
+            if not jugador.vivo:
+                PANTALLA.blit(texto_muerto,(ANCHO_VENTANA//2-50,ALTO_VENTANA//2-50))
+        else:
+            PANTALLA.blit(fondo_ganador.surface,fondo_ganador.rect)
+
+        jugador.actualizar(delta_ms,PANTALLA,teclas,eventos,municiones,plataformas,objetos,objetos_animados,muros,botínes,interruptores,puerta_final,enemigos,corazones,enemigos_rango)   
+        
+        
+        
 
         pygame.display.flip()
 
 #SELECCION DE NIVEL
-def selec_level():
-    nivel_one = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\01.png")
-    nivel_two = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\02.png")
-    nivel_three = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\03.png")
-    nivel_four = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\04.png")
-    nivel_five = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\05.png")
-    nivel_six = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\06.png")
-    nivel_seven = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\07.png")
-    nivel_eight = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\08.png")
+def seleccion_nivel():
+    nivel_1 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\01.png")
+    nivel_2 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\02.png")
+    nivel_3 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\03.png")
+    nivel_4 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\04.png")
+    nivel_5 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\05.png")
+    nivel_6 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\06.png")
+    nivel_7 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\07.png")
+    nivel_8 = pygame.image.load(RUTA_IMAGEN + r"Menu\Levels\08.png")
 
     while True:
-        SCREEN.blit(fondo_nivel.surface, (0,0))
+        PANTALLA.blit(fondo_nivel.surface, (0,0))
         #SCREEN.blit(cuadro_menu.surface, (ANCHO_VENTANA-500,0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        NIVEL_1 = Boton(imagen=nivel_one, pos=(ANCHO_VENTANA * 0.15, int(ALTO_VENTANA * 0.28)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_1 = Boton(imagen=nivel_1, pos=(ANCHO_VENTANA * 0.15, int(ALTO_VENTANA * 0.28)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_2 = Boton(imagen=nivel_two, pos=(ANCHO_VENTANA * 0.38, int(ALTO_VENTANA * 0.28)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_2 = Boton(imagen=nivel_2, pos=(ANCHO_VENTANA * 0.38, int(ALTO_VENTANA * 0.28)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_3 = Boton(imagen=nivel_three, pos=(ANCHO_VENTANA * 0.62, int(ALTO_VENTANA * 0.28)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_3 = Boton(imagen=nivel_3, pos=(ANCHO_VENTANA * 0.62, int(ALTO_VENTANA * 0.28)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_4 = Boton(imagen=nivel_four, pos=(ANCHO_VENTANA * 0.85, int(ALTO_VENTANA * 0.28)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_4 = Boton(imagen=nivel_4, pos=(ANCHO_VENTANA * 0.85, int(ALTO_VENTANA * 0.28)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_5 = Boton(imagen=nivel_five, pos=(ANCHO_VENTANA * 0.15, int(ALTO_VENTANA * 0.70)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_5 = Boton(imagen=nivel_5, pos=(ANCHO_VENTANA * 0.15, int(ALTO_VENTANA * 0.70)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_6 = Boton(imagen=nivel_six, pos=(ANCHO_VENTANA * 0.38, int(ALTO_VENTANA * 0.70)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_6 = Boton(imagen=nivel_6, pos=(ANCHO_VENTANA * 0.38, int(ALTO_VENTANA * 0.70)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_7 = Boton(imagen=nivel_seven, pos=(ANCHO_VENTANA * 0.62, int(ALTO_VENTANA * 0.70)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_7 = Boton(imagen=nivel_7, pos=(ANCHO_VENTANA * 0.62, int(ALTO_VENTANA * 0.70)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
-        NIVEL_8 = Boton(imagen=nivel_eight, pos=(ANCHO_VENTANA * 0.85, int(ALTO_VENTANA * 0.70)), 
-            texto_entrada="", fuente=get_font(55), color_base=CYAN, color_flotante="White")
+        NIVEL_8 = Boton(imagen=nivel_8, pos=(ANCHO_VENTANA * 0.85, int(ALTO_VENTANA * 0.70)), 
+            texto_entrada="", fuente=obtener_fuente(55), color_base=CYAN, color_flotante="White")
 
         QUIT = Boton(imagen=None, pos=(ANCHO_VENTANA // 2, int(ALTO_VENTANA * 0.9)), 
-        texto_entrada="QUIT", fuente=get_font(30), color_base=CYAN, color_flotante="White")
+        texto_entrada="QUIT", fuente=obtener_fuente(30), color_base=CYAN, color_flotante="White")
 
 
-        for button in [NIVEL_1, NIVEL_2, NIVEL_3, NIVEL_4, NIVEL_5, NIVEL_6, NIVEL_7, NIVEL_8, QUIT]:
-            button.cambiar_color(MENU_MOUSE_POS)
-            button.actualizar(SCREEN)
+        for boton in [NIVEL_1, NIVEL_2, NIVEL_3, NIVEL_4, NIVEL_5, NIVEL_6, NIVEL_7, NIVEL_8, QUIT]:
+            boton.cambiar_color(MENU_MOUSE_POS)
+            boton.actualizar(PANTALLA)
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if evento.type == pygame.MOUSEBUTTONDOWN:
                 if NIVEL_1.verificar_entrada(MENU_MOUSE_POS):
-                    play("1")
+                    juego("1")
                 if NIVEL_2.verificar_entrada(MENU_MOUSE_POS):
-                    play("2")
+                    juego("2")
                 if NIVEL_3.verificar_entrada(MENU_MOUSE_POS):
-                    play("3")
+                    juego("3")
                 if NIVEL_4.verificar_entrada(MENU_MOUSE_POS):
-                    play("4")
+                    juego("4")
                 if NIVEL_5.verificar_entrada(MENU_MOUSE_POS):
-                    play("5")
+                    juego("5")
                 if NIVEL_6.verificar_entrada(MENU_MOUSE_POS):
-                    play("6")
+                    juego("6")
                 if NIVEL_7.verificar_entrada(MENU_MOUSE_POS):
-                    play("7")
+                    juego("7")
                 if NIVEL_8.verificar_entrada(MENU_MOUSE_POS):
-                    play("8")
+                    juego("8")
                 if QUIT.verificar_entrada(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -241,70 +252,70 @@ def selec_level():
         pygame.display.flip()
 
 #MENU OPCIONES        
-def options():
+def opciones():
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-        SCREEN.fill("white")
+        PANTALLA.fill("white")
 
-        opcion_text = get_font(45).render("MENU DE OPCIONES.", True, "Black")
-        opcion_rect = opcion_text.get_rect(center=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/3)))
-        SCREEN.blit(opcion_text, opcion_rect)
+        texto_opciones = obtener_fuente(45).render("MENU DE OPCIONES.", True, "Black")
+        rect_opciones = texto_opciones.get_rect(center=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/3)))
+        PANTALLA.blit(texto_opciones, rect_opciones)
 
-        OPTIONS_BACK = Boton(imagen=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
-            texto_entrada="BACK", fuente=get_font(75), color_base="Black", color_flotante="Green")
+        OPCIONES_ATRAS = Boton(imagen=None, pos=(int(ANCHO_VENTANA/2),int(ALTO_VENTANA/2)), 
+            texto_entrada="BACK", fuente=obtener_fuente(75), color_base="Black", color_flotante="Green")
 
-        OPTIONS_BACK.cambiar_color(OPTIONS_MOUSE_POS)
-        OPTIONS_BACK.actualizar(SCREEN)
+        OPCIONES_ATRAS.cambiar_color(OPTIONS_MOUSE_POS)
+        OPCIONES_ATRAS.actualizar(PANTALLA)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if OPTIONS_BACK.verificar_entrada(OPTIONS_MOUSE_POS):
-                    main_menu()
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                if OPCIONES_ATRAS.verificar_entrada(OPTIONS_MOUSE_POS):
+                    menu_principal()
 
         pygame.display.flip()
 
 #MENU PRINCIPAL
-def main_menu():
+def menu_principal():
     while True:
-        SCREEN.blit(fondo_menu.surface, (0,0))
+        PANTALLA.blit(fondo_menu.surface, (0,0))
         #SCREEN.blit(cuadro_menu.surface, (ANCHO_VENTANA-500,0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        menu_text = get_font(50).render("SPACE ADVENTURE", True, DORADO)
-        menu_rect = menu_text.get_rect(center=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.2)))
+        texto_menu = obtener_fuente(50).render("SPACE ADVENTURE", True, DORADO)
+        rect_menu = texto_menu.get_rect(center=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.2)))
 
-        PLAY_BUTTON = Boton(imagen=None, pos=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.4)), 
-            texto_entrada="JUGAR", fuente=get_font(40), color_base=CYAN, color_flotante="White")
-        OPTIONS_BUTTON = Boton(imagen=None, pos=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.55)), 
-            texto_entrada="OPTIONES", fuente=get_font(40), color_base=CYAN, color_flotante="White")
-        QUIT_BUTTON = Boton(imagen=None, pos=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.7)), 
-            texto_entrada="SALIR", fuente=get_font(40), color_base=CYAN, color_flotante="White")
+        JUGAR_BOTON = Boton(imagen=None, pos=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.4)), 
+            texto_entrada="JUGAR", fuente=obtener_fuente(40), color_base=CYAN, color_flotante="White")
+        OPCIONES_BOTON = Boton(imagen=None, pos=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.55)), 
+            texto_entrada="OPTIONES", fuente=obtener_fuente(40), color_base=CYAN, color_flotante="White")
+        SALIR_BOTON = Boton(imagen=None, pos=(ANCHO_VENTANA//2, int(ALTO_VENTANA * 0.7)), 
+            texto_entrada="SALIR", fuente=obtener_fuente(40), color_base=CYAN, color_flotante="White")
 
-        SCREEN.blit(menu_text, menu_rect)
+        PANTALLA.blit(texto_menu, rect_menu)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
-            button.cambiar_color(MENU_MOUSE_POS)
-            button.actualizar(SCREEN)
+        for boton in [JUGAR_BOTON, OPCIONES_BOTON, SALIR_BOTON]:
+            boton.cambiar_color(MENU_MOUSE_POS)
+            boton.actualizar(PANTALLA)
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.verificar_entrada(MENU_MOUSE_POS):
-                    selec_level()
-                if OPTIONS_BUTTON.verificar_entrada(MENU_MOUSE_POS):
-                    options()
-                if QUIT_BUTTON.verificar_entrada(MENU_MOUSE_POS):
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                if JUGAR_BOTON.verificar_entrada(MENU_MOUSE_POS):
+                    seleccion_nivel()
+                if OPCIONES_BOTON.verificar_entrada(MENU_MOUSE_POS):
+                    opciones()
+                if SALIR_BOTON.verificar_entrada(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
 
         pygame.display.flip()
 
 #MENU DEL JUEGO
-main_menu()
+menu_principal()

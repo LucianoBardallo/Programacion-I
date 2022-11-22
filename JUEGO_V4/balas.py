@@ -3,7 +3,7 @@ from configuraciones import *
 from auxiliar import Auxiliar
 
 class Bala:
-    def __init__(self,x,y,frame_rate_ms,direccion):
+    def __init__(self,x,y,frame_rate_ms,direccion,velocidad_disparo):
         self.direccion = direccion
 
         self.disparando = {}
@@ -27,19 +27,17 @@ class Bala:
         self.tiempo_transcurrido_animation = 0
         self.tiempo_trayectoria = 0
         self.impacto = False
-        self.velocidad = 8
+        self.velocidad_disparo = velocidad_disparo
         self.mover_x = 0
 
         self.velocidad_trayectoria = {}
-        self.velocidad_trayectoria[DERECHA] = self.velocidad
-        self.velocidad_trayectoria[IZQUIERDA] = -self.velocidad
+        self.velocidad_trayectoria[DERECHA] = self.velocidad_disparo
+        self.velocidad_trayectoria[IZQUIERDA] = -self.velocidad_disparo
 
     def trayectoria(self):
-        self.velocidad = -8
-        if self.direccion == DERECHA:
-            self.velocidad = 8
-        self.rect.x += self.velocidad
-        self.rectangulo_colision.x += self.velocidad
+        self.velocidad_disparo = self.velocidad_trayectoria[self.direccion]
+        self.rect.x += self.velocidad_disparo
+        self.rectangulo_colision.x += self.velocidad_disparo
         self.tiempo_trayectoria = pygame.time.get_ticks()
 
     def renderizar(self,screen):
@@ -58,11 +56,33 @@ class Bala:
             else: 
                 self.frame = 0
 
-    def actualizar(self,delta_ms):
+    def colisionar(self,objetivos,usuario):
+        for objetivo in objetivos:
+            if objetivo.rectangulo_colision.colliderect(usuario):
+                pass
+
+
+
+    def actualizar(self,delta_ms,screen):
+        self.renderizar(screen)
         self.trayectoria()
         self.actualizar_frames(delta_ms)
     
 
+class Cargador:
+    def __init__(self, usuario) -> None:
+        self.municiones = []
+        self.usuario = usuario
 
+    def agregar_balas(self, x, y, frame_rate_ms, direccion, velocidad_disparo):
+        bala = Bala(x,y,frame_rate_ms,direccion,velocidad_disparo)
+        self.municiones.append(bala)
+
+    def actualizar_cargador(self,delta_ms,screen):
+        for bala in self.municiones:
+            bala.actualizar(delta_ms,screen)
+            # if not disparo.activo:
+            #     self.municiones.remove(bala)
+            
         
     
