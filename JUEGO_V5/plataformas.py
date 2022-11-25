@@ -11,6 +11,7 @@ class Plataforma:
         self.rect.x = x
         self.rect.y = y
         self.collition_rect = pygame.Rect(self.rect)
+        self.rectangulo_colision = pygame.Rect(self.rect)
         self.rectangulo_pies = pygame.Rect(self.rect)
         self.rectangulo_pies.height = ALTURA_PIES
 
@@ -28,6 +29,8 @@ class Muro:
         self.rect.x = x
         self.rect.y = y
         self.rectangulo_colision = pygame.Rect(self.rect)
+        self.rectangulo_pies = pygame.Rect(self.rect)
+        self.rectangulo_pies.height = ALTURA_PIES
 
     def renderizar(self,pantalla):
         pantalla.blit(self.imagen,self.rect)

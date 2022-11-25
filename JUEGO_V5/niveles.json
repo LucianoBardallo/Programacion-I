@@ -1,97 +1,199 @@
 {
-    "niveles": {
-        "nivel_1":{
-            "mapa":["101010101010101010101010101010101010101010101010",
-                    "10-1-1-1-1-110-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-110-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-110-1-1-1-1-1-1-1-1-1-1-1111111111110",
-                    "10111111-1-110111111-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-110-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-110-1-1-1-1-1111111111111111111111110",
-                    "10-1-111111110-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "10-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-110",
-                    "101111111111111111111111111111111111111111111110"],
-            "enemigos":{
-                "soldado":{   
+    "niveles": 
+    {
+        "nivel_1":
+        {
+            "mapa":
+            ["MMMMMMMMMMMMMMMMMMMMMMMM",
+            "MVVVVLMVVVVVVVVVVVLLLLLM",
+            "MVVVVLMVVVVVVVVVVVVVVVVM",
+            "MVVVVLMVVVVVVVVVVVPPPPPM",
+            "MPPPVLMPPVVVVVLLLLLLLLLM",
+            "MVVVVLMVVVVVVVVVVVVVVVVM",
+            "MVVVVLMVVVVPPPPPPPPPPPPM",
+            "MVVPPPMVVVVVVVVVVVVVVVVM",
+            "MVVVVVVVVVVVVVVVVVVVVVVM",
+            "MVVVVVVVVCVVVVVVVVVVVVVM",
+            "MVVVVVVVVCVVVVVVVVVVVVVM",
+            "MPPPPPPPPPPPPPPPPPPPPPPM"],
+            "enemigos":
+            [
+                {
+                    "nombre":"soldado",  
                     "cantidad":2,
-                    "coordenadas":[[500,400],[800,190]]
+                    "coordenadas":[[500,400,400],[800,190,200]]
                 },
-                "artillero":{   
+                {   
+                    "nombre":"artillero",   
                     "cantidad":1,
-                    "coordenadas":[[400,100]]
+                    "coordenadas":[[400,100,0]]
                 }
-            },
-            "objetos":{
-                "estatico":{
-                    "cantidad":3,
-                    "coodenadas":[]
+            ],
+            "objetos":
+            [
+                {
+                "nombre":"inicio",
+                "cantidad":1,
+                "coordenadas":[[70,80]]
                 },
-                "animado":{
-                    "cantidad":3,
-                    "coodenadas":[]
+                {
+                "nombre":"interruptor",
+                "cantidad":1,
+                "coordenadas":[[400,125]]
+                },
+                {
+                "nombre":"final",
+                "cantidad":1,
+                "coordenadas":[[1050,430]]
                 }
-            },
-            "botín":{
-                "cantidad":20
-            } 
+            
+            ],
+            "jugador":
+            {
+                "coordenadas":[[50,40]]
+            }
         },
-        "nivel_2":{
+        "nivel_2":
+        {
+            "mapa":
+            ["MMMMMMMMMMMMMMMMMMMMMMMM",
+            "MVVVVVVVVVVVVVVVVVVVVVVM",
+            "MVVVVLLLLLLLLLLLLLVVVVVM",
+            "MPVVVVVVVVVVVVVVVVVVVVVM",
+            "MVVVVVVVVVVVVVVVVVVVPPPM",
+            "MVPVPVPVPVPVPVPVPVVVVVVM",
+            "MSSSSSSSSSSSSSSSSSCVVVVM",
+            "MPPPPPPPPPPPPPPPPPPPPVCM",
+            "MVVVLLLLLLLLLLLLLLVVVVCM",
+            "MVVVVVVVVVVVVVVVVVVVVVCM",
+            "MVVVVVVVVVVVVVVVVVVVVVCM",
+            "MPPPPPPPPPPPPPPPPPPPPPPM"],
+            "enemigos":[
+                {
+                    "nombre":"soldado",  
+                    "cantidad":1,
+                    "coordenadas":[[500,400]]
+                },
+                {   
+                    "nombre":"artillero",   
+                    "cantidad":2,
+                    "coordenadas":[[580,100],[300,100]]
+                }
+            ],
+            "objetos":
+            [
+                {
+                "nombre":"inicio",
+                "cantidad":1,
+                "coordenadas":[[100,430]]
+                },
+                {
+                "nombre":"interruptor",
+                "cantidad":1,
+                "coordenadas":[[70,75]]
+                },
+                {
+                "nombre":"final",
+                "cantidad":1,
+                "coordenadas":[[1050,80]]
+                }
+            
+            ],
+            "jugador":
+            {
+                "coordenadas":[[150,400]]
+            }
+        },
+        "nivel_3":
+        {
+            "mapa":
+            ["MMMMMMMMMMMMMMMMMMMMMMMM",
+            "MVVVVVLLLLLLLLLLLVVVVVVM",
+            "MVVVVVVVVVVVVVVVVVVVVVVM",
+            "MVVVVVVVVVVVVVVVVVVVVVVM",
+            "MPPPPPPPPPPPPPPPPPPPPVVM",
+            "MVVVVVVVVVVVVVVVVVVVVVVM",
+            "MVVVLLLLLLLLLLLLLVVVVVVM",
+            "MVVVVVVVVVVVVVVVVVVVVVVM",
+            "MVVVPVVPVVPVVPVVPVVPPPPM",
+            "MVVVMVVMVVMVVMVVMVVVVVVM",
+            "MVVVMCVMCVMCVMCVMCVVVVVM",
+            "MPPPPPPPPPPPPPPPPPPPPPPM"],
+            "enemigos":[
+                {
+                    "nombre":"soldado",  
+                    "cantidad":1,
+                    "coordenadas":[[500,400]]
+                },
+                {   
+                    "nombre":"artillero",   
+                    "cantidad":2,
+                    "coordenadas":[[580,100],[300,100]]
+                }
+            ],
+            "objetos":[
+                {
+                "nombre":"inicio",
+                "cantidad":1,
+                "coordenadas":[[70,80]]
+                },
+                {
+                "nombre":"interruptor",
+                "cantidad":1,
+                "coordenadas":[[1100,475]]
+                },
+                {
+                "nombre":"final",
+                "cantidad":1,
+                "coordenadas":[[70,430]]
+                }
+            
+            ],
+            "jugador":
+            {
+                "coordenadas":[[70,80]]
+            }
+        },
+        "nivel_4":
+        {
             "plataformas":"",
             "muros":"",
             "enemigos":"",
             "objetos":"",
-            "obstaculos":"",
             "botín":"" 
         },
-        "nivel_3":{
+        "nivel_5":
+        {
             "plataformas":"",
             "muros":"",
             "enemigos":"",
             "objetos":"",
-            "obstaculos":"",
             "botín":"" 
         },
-        "nivel_4":{
+        "nivel_6":
+        {
             "plataformas":"",
             "muros":"",
             "enemigos":"",
             "objetos":"",
-            "obstaculos":"",
             "botín":"" 
         },
-        "nivel_5":{
+        "nivel_7":
+        {
             "plataformas":"",
             "muros":"",
             "enemigos":"",
             "objetos":"",
-            "obstaculos":"",
             "botín":"" 
         },
-        "nivel_6":{
+        "nivel_final":
+        {
             "plataformas":"",
             "muros":"",
             "enemigos":"",
             "objetos":"",
-            "obstaculos":"",
-            "botín":"" 
-        },
-        "nivel_7":{
-            "plataformas":"",
-            "muros":"",
-            "enemigos":"",
-            "objetos":"",
-            "obstaculos":"",
-            "botín":"" 
-        },
-        "nivel_final":{
-            "plataformas":"",
-            "muros":"",
-            "enemigos":"",
-            "objetos":"",
-            "obstaculos":"",
             "botín":"" 
         }   
-    }
-}    
+        
+    }  
+}  

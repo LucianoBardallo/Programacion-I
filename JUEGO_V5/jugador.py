@@ -2,6 +2,9 @@ import pygame
 from configuraciones import *
 from auxiliar import Auxiliar
 from balas import Bala
+from enemigos import *
+from plataformas import *
+from objetos import *
 import sys
 
 class Jugador:
@@ -121,11 +124,6 @@ class Jugador:
 
     #ACCIONES
     def caminar(self,direccion:int): 
-        '''
-        Este metodo se encarga de darle un valor al movimiento de la X del personaje dependiendo de la direccion a donde este mirando
-
-        Parametros: Recibe la direccion de a donde mira el personaje
-        '''
         if self.vivo:
             self.direccion = direccion
             self.mover_x = self.velocidad_movimiento[self.direccion]
@@ -134,18 +132,10 @@ class Jugador:
                 self.mover_x = self.velocidad_movimiento[self.direccion] // 2
          
     def parar(self):
-        '''
-        Este metodo se encarga de hacer que el personaje se quede parado dandole como valor 0 al movimiento de la x
-        '''
         self.esta_caminando = False
         self.mover_x = 0
 
-    def disparar(self,shoot=True,municiones=[]):
-        '''
-        Este metodo se encarga del disparo del personaje, creardo objetos balas y guardandolo en una lista
-
-        Parametros: Recibe un booleano para saber si el personaje tiene que disparar o no, tambien recibe una lista de municiones que se remueven si se gastan las balas
-        '''
+    def disparar(self,shoot=True):
         if shoot:
             self.esta_disparando = True
             if self.disparo_cooldown == 0 and self.municion > 0:
@@ -153,24 +143,15 @@ class Jugador:
                 bala = Bala(self.rectangulo_colision.centerx + (0.6 * self.rectangulo_colision.size[0] * self.direccion),self.rectangulo_colision.centery-20,frame_rate_ms=20,direccion=self.direccion,velocidad_disparo=8)
                 self.municiones.append(bala)
                 self.municion -= 1
-                municiones.remove(municiones[-1])
         else:
             self.esta_disparando = False
     
     def atacar(self,melee=True):
-        '''
-        Este metodo se encarga del ataque melee del personaje
-        '''
         self.esta_pegando = melee
         if melee:
             self.esta_pegando = True
         
     def saltar(self, jump=True):
-        '''
-        Este metodo se encarga del salto de personaje, dandole un valor al movimiento de Y del personaje, y tomando de donde comenzo el salto
-
-        Parametros: Recibe como parametro un bool para saber si el personaje puede saltar o no.
-        '''
         if jump:
             if self.sobre_plataforma:
                 self.esta_saltando = True
@@ -182,35 +163,21 @@ class Jugador:
 
     #VERIFICACIONES     
     def limitar_salto(self):
-        '''
-        Este metodo se encarga de limitar el salto del personaje, para que no salte infinitamente
-        '''
         if self.rectangulo_pies.y < self.comienzo_salto - 150:
             self.esta_saltando = False
 
 
-    def verificar_plataforma(self, plataformas, objetos):
-        '''
-        Este metodo se encarga de verificar el personaje esta sobre una plataforma comprobando la colision de los pies del jugador con la colision de la plataforma
-
-        Parametros: Recibe como parametro una lista de plataformas y objetos
-        '''
+    def verificar_plataforma(self, plataformas):
         if not self.esta_saltando:
             self.sobre_plataforma = False
-            for plataform in plataformas:
-                if self.rectangulo_pies.colliderect(plataform.rectangulo_pies):
-                    self.sobre_plataforma = True
-                    break
-            for object in objetos:
-                if(self.rectangulo_pies.colliderect(object.rectangulo_pies)):
-                    self.sobre_plataforma = True
-                    break 
+            for plataforma in plataformas:
+                if type(plataforma) == Plataforma or type(plataforma) == Objeto_Estatico:
+                    if self.rectangulo_pies.colliderect(plataforma.rectangulo_pies):
+                        self.sobre_plataforma = True
+                        break
             
 
     def aplicar_gravedad(self):
-        '''
-        Este metodo se encarga de aplicarle gravedad al personaje cuando no esta sobre una superficie o llego al limite del salto
-        '''
         if not self.esta_saltando:
             if not self.sobre_plataforma:
                 self.mover_y = self.gravedad
@@ -220,9 +187,6 @@ class Jugador:
                 self.esta_cayendo = False
 
     def actualizar_invensible(self, delta_ms):
-        '''
-        Es metodo se encarga actualizar la invensibilidad del personaje una vez es golpeado por un enemigo o bala
-        '''
         if self.invensible:
             self.tiempo_inmune += delta_ms
             if self.tiempo_inmune > 1500:
@@ -231,9 +195,6 @@ class Jugador:
 
     
     def actualizar_bala(self,delta_ms,pantalla):
-        '''
-        Este metodo se encarga de actualizar las balas y dibujarlas en pantalla, tambien verifica si estas impactaron con el entorno o no
-        '''
         if self.disparo_cooldown > 0:
             self.disparo_cooldown -= 1
         for bala in self.municiones:
@@ -247,11 +208,6 @@ class Jugador:
     
     #MOVIMIENTO
     def cambiar_x(self,delta_x:int):
-        '''
-        Este metodo se encarga de mover todos los rectangulos en X del personaje, permitendo darle movimiento al jugador
-
-        Parametros: Recibe un entero que representa el move_x del personaje
-        '''
         self.rect.x += delta_x
         self.rectangulo_colision.x += delta_x
         self.rectangulo_pies.x += delta_x
@@ -261,11 +217,6 @@ class Jugador:
 
 
     def cambiar_y(self,delta_y):
-        '''
-        Este metodo se encarga de mover todos los rectangulos en Y del personaje, permitendo darle movimiento al jugador
-
-        Parametros: Recibe un entero que representa el move_y del personaje
-        '''
         self.rect.y += delta_y
         self.rectangulo_colision.y += delta_y
         self.rectangulo_pies.y += delta_y
@@ -275,9 +226,6 @@ class Jugador:
 
     #ANIMACIONES
     def animaciones(self):
-        '''
-        Este metodo se encarga de cambiar la animacion actual del personaje
-        '''
         if self.vivo:
             if self.esta_saltando:
                 self.cambiar_animacion(self.saltando)
@@ -296,18 +244,12 @@ class Jugador:
 
 
     def cambiar_animacion(self, animation):
-        '''
-        Este metodo se encarga de resetear la animacion del personaje dependiendo si es distinta a la anterior y le da un nuevo valor
-        '''
         if self.animacion != animation[DERECHA] and self.animacion != animation[IZQUIERDA]:
             self.frame = 0
         self.animacion = animation[self.direccion]
 
 
     def actualizar_frames(self,delta_ms):
-        '''
-        Este metodo se encarga de actualizar los frames de una animacion dependiendo del tiempo pasado por parametro
-        '''
         self.tiempo_transcurrido_animacion += delta_ms
         if self.esta_saltando or self.esta_cayendo:
             if(self.tiempo_transcurrido_animacion >= self.frame_rate_jump_ms):
@@ -330,11 +272,6 @@ class Jugador:
                         self.frame = len(self.animacion) - 1 
 
     def renderizar(self,pantalla):
-        '''
-        Este metodo se encarga de dibujar el personaje en la pantalla
-
-        Parametros: Recibe como parametro la pantalla donde se van a fundir las imaganes
-        '''
         if(DEBUG):
             pygame.draw.rect(pantalla,color=(255,0 ,0),rect=self.rectangulo_colision)
             pygame.draw.rect(pantalla,color=(255,255,0),rect=self.rectangulo_pies)
@@ -345,7 +282,7 @@ class Jugador:
         self.imagen = self.animacion[self.frame]
         pantalla.blit(self.imagen,self.rect)
 
-    def eventos(self,teclas,eventos,municiones):
+    def eventos(self,teclas,eventos):
         #EVENTOS
         for evento in eventos:
             if evento.type == pygame.QUIT: # Salir
@@ -357,7 +294,7 @@ class Jugador:
                     self.saltar()
             
                 if evento.key == pygame.K_s: # Saltar
-                    self.disparar(True,municiones)
+                    self.disparar(True)
 
                 if evento.key == pygame.K_a: # Saltar
                     self.atacar()
@@ -386,92 +323,15 @@ class Jugador:
             self.parar()  
         
         if(not teclas[pygame.K_LEFT] and not teclas[pygame.K_RIGHT] and not teclas[pygame.K_SPACE]):
-            self.parar()
-
-    #COLISIONES
-    def hacer_colisiones(self,delta_ms:int,botínes:list,objetos:list,interruptores:list,puerta_final:list,muros:list,enemigos:list,corazones:list,enemigos_rango:list):
-        '''
-        Este metodo se encarga de verificar todas las colisiones del personaje con el entorno del juego
-        '''
-        for muro in muros:
-            if muro.rectangulo_colision.colliderect(self.rectangulo_derecha):
-                self.cambiar_x(-1)
-            elif muro.rectangulo_colision.colliderect(self.rectangulo_izquierda):
-                self.cambiar_x(1)
-            elif muro.rectangulo_colision.colliderect(self.rectangulo_cabeza):
-                self.comienzo_salto = ALTO_VENTANA
-            for bala in self.municiones:
-                if bala.rectangulo_colision.colliderect(muro.rectangulo_colision):
-                    self.municiones.remove(bala)
-
-        for enemigo in enemigos:
-            if enemigo.rectangulo_colision.colliderect(self.rectangulo_colision):
-                if not self.invensible:
-                    self.vidas -= 1
-                    self.invensible = True
-                    if self.vidas >= 0:
-                        corazones.remove(corazones[-1])
-        
-        for enemigo in enemigos_rango:
-            if enemigo.rectangulo_colision.colliderect(self.rectangulo_colision):
-                if not self.invensible:
-                    self.vidas -= 1
-                    self.invensible = True
-                    if self.vidas >= 0:
-                        corazones.remove(corazones[-1])
-            for bala in enemigo.municiones:
-                if bala.rectangulo_colision.colliderect(self.rectangulo_colision):
-                    if not self.invensible:
-                        self.vidas -= 1
-                        self.invensible = True
-                        if self.vidas >= 0:
-                            corazones.remove(corazones[-1])
-
-
-        for botín in botínes:
-            if botín.rectangulo_colision.colliderect(self.rectangulo_colision):
-                botín.recolectado = True
-                self.puntuacion += 50
-                botínes.remove(botín)
-                    
-        for objeto in objetos:
-            objeto.activado = False
-            if objeto.rectangulo_colision.colliderect(self.rectangulo_colision):
-                objeto.activado = True
-                
-        for interruptor in interruptores:
-            if interruptor.rectangulo_colision.colliderect(self.rectangulo_colision):
-                
-                interruptor.activado = True
-                interruptor.desbloqueado = True
-                self.puede_ganar = True
-            else:
-                if interruptor.activado:
-                    self.tiempo_activado += delta_ms
-                if(self.tiempo_activado >= 10000):
-                    interruptor.activado = False
-                    interruptor.desbloqueado = False
-                    self.puede_ganar = False
-                    self.tiempo_activado = 0
-
-        for puerta in puerta_final:
-            puerta.desbloqueado = self.puede_ganar
-            puerta.activado = False
-            if puerta.rectangulo_colision.colliderect(self.rectangulo_colision) and self.puede_ganar:
-                puerta.activado = True
-                self.ganar = True
-                
+            self.parar()      
 
     #MOVIMIENTO
-    def hacer_movimiento(self,delta_ms,plataformas,objetos):
-        '''
-        Este metodo se encarga de agrupar todos los metodos que esten dandole movimiento al personaje
-        '''
+    def hacer_movimiento(self,delta_ms,plataformas):
         self.tiempo_transcurrido_movimiento += delta_ms
         if(self.tiempo_transcurrido_movimiento >= self.move_rate_ms):
             self.tiempo_transcurrido_movimiento = 0
 
-            self.verificar_plataforma(plataformas,objetos)
+            self.verificar_plataforma(plataformas)
             self.aplicar_gravedad()
             self.cambiar_y(self.mover_y)
             if self.vivo:
@@ -481,23 +341,16 @@ class Jugador:
 
     #ANIMACIONES
     def hacer_animaciones(self,delta_ms):
-        '''
-        Este metodo se encarga de agrupar todos los metodos que esten dandole animacion al personaje
-        '''
         self.animaciones()
         self.actualizar_frames(delta_ms)      
 
     #ACTUALIZACION PRINCIPAL
-    def actualizar(self,delta_ms,pantalla,teclas,eventos,municiones,plataformas,objetos,objetos_animados,muros,botínes,interruptores,puerta_final,enemigos,corazones,enemigos_rango):
-        '''
-        Este metodo es el principal del personaje, donde se agrupan todos los metodos usados anteriormente para hacer que el personaje funcione de manera correcta
-        '''
-        self.eventos(teclas,eventos,municiones)
+    def actualizar(self,delta_ms,pantalla,teclas,eventos,plataformas):
+        self.eventos(teclas,eventos)
         if not self.ganar:
             self.comprobar_vidas()
-            self.hacer_movimiento(delta_ms,plataformas,objetos)
+            self.hacer_movimiento(delta_ms,plataformas)
             self.hacer_animaciones(delta_ms)
-            self.hacer_colisiones(delta_ms,botínes,objetos_animados,interruptores,puerta_final,muros,enemigos,corazones,enemigos_rango)
             self.actualizar_invensible(delta_ms)
             self.actualizar_bala(delta_ms,pantalla)
             self.renderizar(pantalla)

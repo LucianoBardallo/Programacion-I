@@ -1,6 +1,8 @@
 import pygame
 from auxiliar import Auxiliar
 from configuraciones import *
+from plataformas import *
+from objetos import *
 from balas import Bala
 
 class Enemigo:
@@ -15,7 +17,7 @@ class Enemigo:
         self.caminando[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(RUTA_IMAGEN + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,True,scale=0.8)
         self.caminando[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(RUTA_IMAGEN + r"Characters\enemies\set_juju\black\juju_move_right.png",8,2,scale=0.8)
 
-        self.vidas = 3
+        self.vidas = 1
         self.frame = 0
         self.mover_x = 0
         self.mover_y = 0
@@ -45,6 +47,7 @@ class Enemigo:
         self.vivo = True
 
         self.comienzo_patrulla = self.rect.centerx
+       
         
     def cambiar_x(self,delta_x):
         self.rect.x += delta_x
@@ -59,9 +62,10 @@ class Enemigo:
     def verificar_plataforma(self, plataformas):
         self.sobre_plataforma = False
         for plataforma in plataformas:
-            if self.rectangulo_pies.colliderect(plataforma.rectangulo_pies):
-                self.sobre_plataforma = True
-                break
+            if type(plataforma) == Plataforma or type(plataforma) == Objeto_Estatico:
+                if self.rectangulo_pies.colliderect(plataforma.rectangulo_pies):
+                    self.sobre_plataforma = True
+                    break
 
     def aplicar_gravedad(self):
         if not self.sobre_plataforma:
@@ -88,12 +92,7 @@ class Enemigo:
             else: 
                 self.frame = 0
     
-    def actualizar_vida(self,balas):
-        for bala in balas:
-            if bala.rectangulo_colision.colliderect(self.rectangulo_colision):
-                balas.remove(bala)
-                self.vidas -= 1
-
+    def actualizar_vida(self):
         if self.vidas < 1:
             self.vivo = False
 
@@ -105,11 +104,10 @@ class Enemigo:
             self.imagen = self.animacion[self.frame]
             pantalla.blit(self.imagen,self.rect)
 
-    def actualizar(self,pantalla,delta_ms,plataformas,bullets):
+    def actualizar(self,delta_ms,plataformas,municiones):
         self.hacer_movimiento(delta_ms,plataformas)
         self.hacer_animacion(delta_ms)
-        self.actualizar_vida(bullets)
-        self.renderizar(pantalla)
+        self.actualizar_vida()
 
 class Enemigo_Melee(Enemigo):
     def __init__(self,x,y,velocidad_movimiento,gravedad,frame_rate_ms,move_rate_ms,patrulla=0):
@@ -165,11 +163,6 @@ class Enemigo_Distancia(Enemigo):
         self.rectangulo_vision.y += delta_y    
 
     def disparar(self,shoot=True):
-        '''
-        Este metodo se encarga del disparo del personaje, creardo objetos balas y guardandolo en una lista
-
-        Parametros: Recibe un booleano para saber si el personaje tiene que disparar o no, tambien recibe una lista de municiones que se remueven si se gastan las balas
-        '''
         self.esta_disparando = False
         if shoot:
             self.esta_disparando = True
@@ -179,9 +172,6 @@ class Enemigo_Distancia(Enemigo):
                 self.municiones.append(bala)
 
     def actualizar_bala(self,delta_ms,pantalla):
-        '''
-        Este metodo se encarga de actualizar las balas y dibujarlas en pantalla, tambien verifica si estas impactaron con el entorno o no
-        '''
         if self.disparo_cooldown > 0:
             self.disparo_cooldown -= 1
         for bala in self.municiones:
@@ -190,13 +180,12 @@ class Enemigo_Distancia(Enemigo):
                 self.municiones.remove(bala)
 
     def renderizar(self,pantalla):
-        if self.vivo:
-            if DEBUG:
-                pygame.draw.rect(pantalla,(255,0,0),self.rectangulo_colision)
-                pygame.draw.rect(pantalla,color=(255,255,0),rect=self.rectangulo_pies)
-                pygame.draw.rect(pantalla,color=(255,255,0),rect=self.rectangulo_vision)
-            self.imagen = self.animacion[self.frame]
-            pantalla.blit(self.imagen,self.rect)
+        if DEBUG:
+            pygame.draw.rect(pantalla,(255,0,0),self.rectangulo_colision)
+            pygame.draw.rect(pantalla,color=(255,255,0),rect=self.rectangulo_pies)
+            pygame.draw.rect(pantalla,color=(255,255,0),rect=self.rectangulo_vision)
+        self.imagen = self.animacion[self.frame]
+        pantalla.blit(self.imagen,self.rect)
 
     def hacer_movimiento(self,delta_ms,plataform_list):
         self.tiempo_transcurrido_move += delta_ms
@@ -215,13 +204,12 @@ class Enemigo_Distancia(Enemigo):
             if bala.rectangulo_colision.colliderect(pos_xy):
                 self.municiones.remove(bala)
             
-    def actualizar(self,pantalla,delta_ms,plataformas,balas,pos_xy):
+    def actualizar(self,pantalla,delta_ms,plataformas,pos_xy):
         self.hacer_movimiento(delta_ms,plataformas)
         self.hacer_animacion(delta_ms)
         self.hacer_colision(pos_xy)
-        self.actualizar_vida(balas)
+        self.actualizar_vida()
         self.actualizar_bala(delta_ms,pantalla)
-        self.renderizar(pantalla)
 
 
 

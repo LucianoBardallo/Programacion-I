@@ -3,9 +3,9 @@ from configuraciones import *
 from auxiliar import Auxiliar
 
 class Objeto:
-    def __init__(self, x, y,ancho, alto, tipo_desbloqueado=1,reverso = False):
+    def __init__(self, x, y,ancho, alto, tipo_desbloqueado=1):
 
-        self.imagenes= Auxiliar.getSurfaceFromSeparateFiles(RUTA_IMAGEN + "TileSet\space_ship\Objects\Object ({0}).png",9,flip=False,w=ancho,h=alto,reverse=reverso)
+        self.imagenes= Auxiliar.getSurfaceFromSeparateFiles(RUTA_IMAGEN + "TileSet\space_ship\Objects\Object ({0}).png",9,flip=False,w=ancho,h=alto)
         self.imagen = self.imagenes[tipo_desbloqueado]
         self.rect = self.imagen.get_rect()
         self.rect.x = x
@@ -20,15 +20,16 @@ class Objeto:
             pygame.draw.rect(pantalla,color=(255,0 ,0),rect=self.rectangulo_colision)
 
 class Objeto_Estatico(Objeto):
-    def __init__(self, x, y,ancho, alto, tipo_desbloqueado=1,reverso = False):
-        super().__init__(x, y,ancho, alto, tipo_desbloqueado=1,reverso = False)
+    def __init__(self, x, y,ancho, alto, tipo_desbloqueado=1):
+        super().__init__(x, y,ancho, alto, tipo_desbloqueado=1)
         self.imagen = self.imagenes[tipo_desbloqueado]
         self.rectangulo_pies = pygame.Rect(self.rect)
         self.rectangulo_pies.height = ALTURA_PIES
 
 class Objeto_Animado(Objeto):
-    def __init__(self, x, y,ancho, alto, tipo_desbloqueado=1,reverso = False ,tipo_abierto =1,tipo_bloqueado = 1):
-        super().__init__(x, y,ancho, alto, tipo_desbloqueado=1,reverso = False)
+    def __init__(self,nombre, x, y,ancho, alto, tipo_desbloqueado=1 ,tipo_abierto =1,tipo_bloqueado = 1):
+        super().__init__(x, y,ancho, alto, tipo_desbloqueado=1)
+        self.nombre = nombre
         self.tipo_abierto = tipo_abierto
         self.tipo_desbloqueado = tipo_desbloqueado
         self.tipo_bloqueado = tipo_bloqueado
@@ -43,6 +44,7 @@ class Objeto_Animado(Objeto):
         pantalla.blit(self.imagen,self.rect)
         if(DEBUG):
             pygame.draw.rect(pantalla,color=(255,0 ,0),rect=self.rectangulo_colision)
+
 
         
     
